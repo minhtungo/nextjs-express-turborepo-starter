@@ -4,15 +4,19 @@
   "compilerOptions": {
     "plugins": [{ "name": "next" }],
     "allowJs": true,
+    "skipLibCheck": true,
     "declaration": false,
     "declarationMap": false,
     "incremental": true,
     "jsx": "preserve",
     "lib": ["dom", "dom.iterable", "esnext"],
     "module": "esnext",
-    "resolveJsonModule": true,
     "strict": true,
-    "target": "es5"
+    "noEmit": true,
+    "esModuleInterop": true,
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
   },
   "include": ["src", "next-env.d.ts"],
   "exclude": ["node_modules"]
