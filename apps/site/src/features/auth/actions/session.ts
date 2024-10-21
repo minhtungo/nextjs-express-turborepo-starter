@@ -24,7 +24,7 @@ export const createSession = async (payload: Session) => {
     .setExpirationTime(cookie.accessToken.expires)
     .sign(encodedKey);
 
-  cookies().set(cookie.accessToken.name, session, {
+  (await cookies()).set(cookie.accessToken.name, session, {
     httpOnly: true,
     secure: env.NODE_ENV === 'production',
     sameSite: 'lax',
@@ -34,7 +34,7 @@ export const createSession = async (payload: Session) => {
 };
 
 export const getSession = async () => {
-  const session = cookies().get(cookie.accessToken.name)?.value;
+  const session = (await cookies()).get(cookie.accessToken.name)?.value;
 
   if (!session) return null;
 
@@ -50,12 +50,12 @@ export const getSession = async () => {
   }
 };
 
-export const deleteSession = () => {
-  cookies().delete(cookie.accessToken.name);
+export const deleteSession = async () => {
+  (await cookies()).delete(cookie.accessToken.name);
 };
 
 export const updateTokens = async ({ accessToken, refreshToken }: { accessToken: string; refreshToken: string }) => {
-  const session = cookies().get(cookie.accessToken.name)?.value;
+  const session = (await cookies()).get(cookie.accessToken.name)?.value;
 
   if (!session) return null;
 
