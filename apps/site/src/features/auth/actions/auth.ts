@@ -15,9 +15,9 @@ export const signInAction = actionClient.schema(signInSchema).action(async ({ pa
 export const forgotPasswordAction = actionClient
   .schema(forgotPasswordSchema)
   .action(async ({ parsedInput: { email } }) => {
-    return forgotPasswordService(email);
+    return forgotPasswordService({ email });
   });
 
 export const verifyEmailAction = actionClient.schema(verifyEmailSchema).action(async ({ parsedInput: { token } }) => {
-  return verifyEmailService(token);
+  return verifyEmailService({ token });
 });

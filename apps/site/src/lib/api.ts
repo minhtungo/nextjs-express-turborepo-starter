@@ -34,52 +34,61 @@ export const ApiResponseSchema = z.object({
 
 export type ApiResponseType = z.infer<typeof ApiResponseSchema>;
 
-const handleApiResponse = async (response: Response) => {
+const handleApiResponse = async <T>(response: Response): Promise<ApiResponse<T>> => {
   if (!response.ok) {
-    return ApiResponse.failure('Something went wrong', null, response.status);
+    return ApiResponse.failure('Something went wrong', null as T, response.status);
   }
 
   const data = await response.json();
 
-  return ApiResponse.success('Success', data, response.status);
+  return ApiResponse.success('Success', data as T, response.status);
 };
 
+interface FetchOptions extends RequestInit {
+  body: any;
+}
+
 export const api = {
-  get: async (path: string, options?: Omit<RequestInit, 'method'>): Promise<ApiResponseType> => {
+  get: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
     const response = await authFetch(`${env.SERVER_URL}${path}`, {
       ...options,
+      ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
       method: 'GET',
     });
 
     return handleApiResponse(response);
   },
-  post: async (path: string, options?: Omit<RequestInit, 'method'>): Promise<ApiResponseType> => {
+  post: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
     const response = await authFetch(`${env.SERVER_URL}${path}`, {
       ...options,
+      ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
       method: 'POST',
     });
 
     return handleApiResponse(response);
   },
-  put: async (path: string, options?: Omit<RequestInit, 'method'>): Promise<ApiResponseType> => {
+  put: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
     const response = await authFetch(`${env.SERVER_URL}${path}`, {
       ...options,
+      ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
       method: 'PUT',
     });
 
     return handleApiResponse(response);
   },
-  patch: async (path: string, options?: Omit<RequestInit, 'method'>): Promise<ApiResponseType> => {
+  patch: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
     const response = await authFetch(`${env.SERVER_URL}${path}`, {
       ...options,
+      ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
       method: 'PATCH',
     });
 
     return handleApiResponse(response);
   },
-  delete: async (path: string, options?: Omit<RequestInit, 'method'>): Promise<ApiResponseType> => {
+  delete: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
     const response = await authFetch(`${env.SERVER_URL}${path}`, {
       ...options,
+      ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
       method: 'DELETE',
     });
 

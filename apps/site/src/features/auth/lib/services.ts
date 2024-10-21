@@ -1,34 +1,37 @@
 import { apiRoutes } from '@/config';
 import { forgotPasswordProps, signInProps, signUpProps, verifyEmailProps } from '@/features/auth/lib/schemas';
-import { api } from '@/lib/api';
+import { api, type ApiResponse } from '@/lib/api';
+import { ForgotPasswordDTO, SignInDTO, SignUpDTO, VerifyEmailDTO } from '@/types/dto/auth';
 
-export const signUpService = async (values: signUpProps) => {
-  const response = await api.post(apiRoutes.signUp, {
-    body: JSON.stringify(values),
+export const signUpService = async (values: signUpProps): Promise<ApiResponse<SignUpDTO>> => {
+  const response = await api.post<SignUpDTO>(apiRoutes.signUp, {
+    body: values,
   });
 
   return response;
 };
 
-export const signInService = async (values: signInProps) => {
-  const response = await api.post(apiRoutes.signIn, {
-    body: JSON.stringify(values),
+export const signInService = async (values: signInProps): Promise<ApiResponse<SignInDTO>> => {
+  const response = await api.post<SignInDTO>(apiRoutes.signIn, {
+    body: values,
   });
 
   return response;
 };
 
-export const forgotPasswordService = async ({ email }: forgotPasswordProps) => {
-  const response = await api.post(apiRoutes.forgotPassword, {
-    body: JSON.stringify({ email }),
+export const forgotPasswordService = async ({
+  email,
+}: forgotPasswordProps): Promise<ApiResponse<ForgotPasswordDTO>> => {
+  const response = await api.post<ForgotPasswordDTO>(apiRoutes.forgotPassword, {
+    body: { email },
   });
 
   return response;
 };
 
-export const verifyEmailService = async ({ token }: verifyEmailProps) => {
-  const response = await api.post(apiRoutes.verifyEmail, {
-    body: JSON.stringify({ token }),
+export const verifyEmailService = async ({ token }: verifyEmailProps): Promise<ApiResponse<VerifyEmailDTO>> => {
+  const response = await api.post<VerifyEmailDTO>(apiRoutes.verifyEmail, {
+    body: { token },
   });
 
   return response;
