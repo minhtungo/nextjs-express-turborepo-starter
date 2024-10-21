@@ -45,40 +45,40 @@ const handleApiResponse = async (response: Response) => {
 };
 
 export const api = {
-  get: async (options?: Omit<RequestInit, 'method'>): Promise<ApiResponseType> => {
-    const response = await authFetch(env.SERVER_URL, {
+  get: async (path: string, options?: Omit<RequestInit, 'method'>): Promise<ApiResponseType> => {
+    const response = await authFetch(`${env.SERVER_URL}${path}`, {
       ...options,
       method: 'GET',
     });
 
     return handleApiResponse(response);
   },
-  post: async (options?: Omit<RequestInit, 'method'>): Promise<ApiResponseType> => {
-    const response = await authFetch(env.SERVER_URL, {
+  post: async (path: string, options?: Omit<RequestInit, 'method'>): Promise<ApiResponseType> => {
+    const response = await authFetch(`${env.SERVER_URL}${path}`, {
       ...options,
       method: 'POST',
     });
 
     return handleApiResponse(response);
   },
-  put: async (options?: Omit<RequestInit, 'method'>): Promise<ApiResponseType> => {
-    const response = await authFetch(env.SERVER_URL, {
+  put: async (path: string, options?: Omit<RequestInit, 'method'>): Promise<ApiResponseType> => {
+    const response = await authFetch(`${env.SERVER_URL}${path}`, {
       ...options,
       method: 'PUT',
     });
 
     return handleApiResponse(response);
   },
-  patch: async (options?: Omit<RequestInit, 'method'>): Promise<ApiResponseType> => {
-    const response = await authFetch(env.SERVER_URL, {
+  patch: async (path: string, options?: Omit<RequestInit, 'method'>): Promise<ApiResponseType> => {
+    const response = await authFetch(`${env.SERVER_URL}${path}`, {
       ...options,
       method: 'PATCH',
     });
 
     return handleApiResponse(response);
   },
-  delete: async (options?: Omit<RequestInit, 'method'>): Promise<ApiResponseType> => {
-    const response = await authFetch(env.SERVER_URL, {
+  delete: async (path: string, options?: Omit<RequestInit, 'method'>): Promise<ApiResponseType> => {
+    const response = await authFetch(`${env.SERVER_URL}${path}`, {
       ...options,
       method: 'DELETE',
     });

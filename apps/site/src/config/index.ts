@@ -17,3 +17,10 @@ export const authRoutes = {
   forgotPassword: '/forgot-password',
   verifyEmail: '/verify-email',
 };
+
+export const apiRoutes = {
+  signIn: '/auth/signin',
+  signUp: '/auth/signup',
+  forgotPassword: '/auth/forgot-password',
+  verifyEmail: '/auth/verify-email',
+};
