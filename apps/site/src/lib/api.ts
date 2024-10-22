@@ -49,21 +49,33 @@ interface FetchOptions extends RequestInit {
 }
 
 export const api = {
-  get: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${env.SERVER_URL}${path}`, {
-      ...options,
-      ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
-      method: 'GET',
-    });
+  get: async <T>(path: string, options?: Omit<FetchOptions, 'method'>, isPublic?: boolean): Promise<ApiResponse<T>> => {
+    const response = await authFetch(
+      `${env.SERVER_URL}${path}`,
+      {
+        ...options,
+        ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
+        method: 'GET',
+      },
+      isPublic
+    );
 
     return handleApiResponse(response);
   },
-  post: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${env.SERVER_URL}${path}`, {
-      ...options,
-      ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
-      method: 'POST',
-    });
+  post: async <T>(
+    path: string,
+    options?: Omit<FetchOptions, 'method'>,
+    isPublic?: boolean
+  ): Promise<ApiResponse<T>> => {
+    const response = await authFetch(
+      `${env.SERVER_URL}${path}`,
+      {
+        ...options,
+        ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
+        method: 'POST',
+      },
+      isPublic
+    );
 
     return handleApiResponse(response);
   },

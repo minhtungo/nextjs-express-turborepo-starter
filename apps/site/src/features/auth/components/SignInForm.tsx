@@ -5,9 +5,12 @@ import SubmitButton from '@/components/SubmitButton';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { authRoutes } from '@/config';
+import useSignIn from '@/features/auth/api/use-sign-in';
 import AuthFormWrapper from '@/features/auth/components/AuthFormWrapper';
+import FormResponse from '@/features/auth/components/FormResponse';
 
 import OAuthButtons from '@/features/auth/components/OAuthButtons';
+import { signInSchema } from '@/features/auth/lib/schemas';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
@@ -22,19 +25,24 @@ const SignInForm = () => {
 
   const urlError = searchParams.get('error') === 'OAuthAccountNotLinked' ? 'error.OAuthAccountNotLinked' : '';
 
-  //   const { isPending, execute, data, error } = useServerAction(signInWithCredentialsAction);
+  const {
+    isPending,
+    execute,
+    result: { data, serverError },
+  } = useSignIn();
 
-  //   const form = useForm<z.infer<typeof signInSchema>>({
-  //     resolver: zodResolver(signInSchema),
-  //     defaultValues: {
-  //       email: '',
-  //       password: '',
-  //     },
-  //   });
+  const form = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+      code: '',
+    },
+  });
 
-  //   const onSubmit = async (values: z.infer<typeof signInSchema>) => {
-  //     await execute({ values, redirectURL });
-  //   };
+  const onSubmit = async (values: z.infer<typeof signInSchema>) => {
+    execute(values);
+  };
 
   return (
     <AuthFormWrapper title='Sign in' description='Sign in to your account' noBorderMobile>
@@ -85,14 +93,15 @@ const SignInForm = () => {
                   </FormItem>
                 )}
               />
-              <FormSuccess message='Success' />
+              <FormResponse variant='success' message='Success' />
             </>
           )}
-          {(error || urlError) && <FormError message={error?.message} />}
-          {/* {successMessage && <FormSuccess message={successMessage} />} */}
+          {(serverError || urlError) && <FormResponse variant='error' message={serverError || urlError} />}
+
           <div className='pt-2'>
             <SubmitButton className='w-full' isPending={isPending}>
-              {data && data.twoFactor ? 'Confirm' : 'Sign In'}
+              Sign In
+              {/* {data && data.twoFactor ? 'Confirm' : 'Sign In'} */}
             </SubmitButton>
           </div>
         </form>
