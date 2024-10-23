@@ -13,14 +13,7 @@ interface SubmitButtonProps extends ButtonProps {
   type?: 'submit' | 'button';
 }
 
-const SubmitButton: FC<SubmitButtonProps> = ({
-  className,
-  children,
-  isPending,
-  disabled,
-  type = 'submit',
-  ...props
-}) => {
+const SubmitButton = ({ className, children, isPending, disabled, type = 'submit', ...props }: SubmitButtonProps) => {
   return (
     <Button
       type={type}

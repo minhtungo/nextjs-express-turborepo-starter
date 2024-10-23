@@ -11,4 +11,23 @@ export const env = cleanEnv(process.env, {
   COMMON_RATE_LIMIT_MAX_REQUESTS: num({ devDefault: testOnly(1000) }),
   COMMON_RATE_LIMIT_WINDOW_MS: num({ devDefault: testOnly(1000) }),
   DATABASE_URL: str(),
+  ACCESS_TOKEN_SECRET: str(),
+  REFRESH_TOKEN_SECRET: str(),
+  JWT_ALGORITHM: str({
+    choices: [
+      'HS256',
+      'HS384',
+      'HS512',
+      'RS256',
+      'RS384',
+      'RS512',
+      'ES256',
+      'ES384',
+      'ES512',
+      'PS256',
+      'PS384',
+      'PS512',
+      'none',
+    ],
+  }),
 });
