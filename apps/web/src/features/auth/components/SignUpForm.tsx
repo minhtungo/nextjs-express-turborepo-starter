@@ -7,36 +7,14 @@ import SubmitButton from '@/components/SubmitButton';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { authRoutes } from '@/config';
-import useSignUp from '@/features/auth/api/use-sign-up';
 import AuthFormWrapper from '@/features/auth/components/AuthFormWrapper';
 import OAuthButtons from '@/features/auth/components/OAuthButtons';
-import { signUpSchema } from '@/features/auth/lib/schemas';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useSignUpForm } from '@/features/auth/hooks/useSignUpForm';
 import { Suspense } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import FormResponse from '@/features/auth/components/FormResponse';
 
 const SignUpForm = () => {
-  const {
-    isPending,
-    execute,
-    result: { data, serverError },
-  } = useSignUp();
-
-  const form = useForm<z.infer<typeof signUpSchema>>({
-    resolver: zodResolver(signUpSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-      confirm_password: '',
-      name: '',
-    },
-  });
-
-  const onSubmit = async (values: z.infer<typeof signUpSchema>) => {
-    execute(values);
-  };
-
+  const { form, onSubmit, isPending, hasSucceeded, error } = useSignUpForm();
   return (
     <AuthFormWrapper title='Sign Up' description='Sign up an account' noBorderMobile>
       <Suspense>
@@ -95,7 +73,7 @@ const SignUpForm = () => {
           {/* @ts-ignore*/}
           {error && <FormError message={t(error.message)} />}
           {/* @ts-ignore*/}
-          {data && data.message && <FormSuccess message={t(data.message)} />}
+          {hasSucceeded && <FormResponse message="You've successfully signed up" />}
           <div className='grid gap-3 pt-2'>
             <SubmitButton className='w-full' isPending={isPending}>
               Sign Up

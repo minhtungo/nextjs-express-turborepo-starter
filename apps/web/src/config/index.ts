@@ -16,6 +16,7 @@ export const authRoutes = {
   signUp: '/signup',
   forgotPassword: '/forgot-password',
   verifyEmail: '/verify-email',
+  resetPassword: '/reset-password',
 };
 
 export const apiRoutes = {
@@ -23,4 +24,6 @@ export const apiRoutes = {
   signUp: '/auth/signup',
   forgotPassword: '/auth/forgot-password',
   verifyEmail: '/auth/verify-email',
+  resetPassword: '/auth/reset-password',
+  sendVerificationEmail: '/auth/send-verification-email',
 };

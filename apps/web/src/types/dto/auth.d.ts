@@ -27,3 +27,12 @@ export interface VerifyEmailDTO {
 export interface ResetPasswordDTO {
   message: string;
 }
+
+export interface RefreshTokenDTO {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface SendVerificationEmailDTO {
+  message: string;
+}

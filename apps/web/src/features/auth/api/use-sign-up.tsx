@@ -1,5 +1,3 @@
-'use client';
-
 import { signUpAction } from '@/features/auth/actions/auth';
 import { useAction } from 'next-safe-action/hooks';
 

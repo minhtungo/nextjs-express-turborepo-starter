@@ -1,13 +1,12 @@
-import Page from '@/components/layout/Page';
-import SignInForm from '@/features/auth/components/SignInForm';
+import SignUpForm from '@/features/auth/components/SignUpForm';
 import { Suspense } from 'react';
 
 export default function SignUp() {
   return (
-    <Page className='flex h-full w-full items-center justify-center'>
+    <div className='flex h-full w-full items-center justify-center'>
       <Suspense>
         <SignUpForm />
       </Suspense>
-    </Page>
+    </div>
   );
 }

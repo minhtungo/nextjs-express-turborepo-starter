@@ -83,3 +83,9 @@ export const refreshTokenSchema = z.object({
 });
 
 export type refreshTokenProps = z.infer<typeof refreshTokenSchema>;
+
+export const sendVerificationEmailSchema = z.object({
+  token: z.string().min(1, 'Token is required'),
+});
+
+export type sendVerificationEmailProps = z.infer<typeof sendVerificationEmailSchema>;
