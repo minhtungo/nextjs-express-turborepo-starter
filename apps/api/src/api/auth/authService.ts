@@ -4,14 +4,8 @@ import type { LoginResponse, Tokens } from './authModel';
 
 import type { SignIn, SignUp } from '@/api/auth/authModel';
 import { ServiceResponse } from '@/common/models/serviceResponse';
-import { applicationName, jwt } from '@/config';
-import { updatePassword } from '@/data-access/accounts';
 
-import {
-  createResetPasswordToken,
-  deleteResetPasswordToken,
-  getResetPasswordToken,
-} from '@/data-access/resetPasswordTokens';
+import { createResetPasswordToken, getResetPasswordToken } from '@/data-access/resetPasswordTokens';
 
 import {
   deleteAllRefreshTokens,
@@ -33,10 +27,11 @@ import {
   getVerificationToken,
 } from '@/data-access/verificationToken';
 
+import { comparePassword, createAccessToken, createRefreshToken } from '@/common/auth/utils';
+import { applicationName, cookie } from '@/common/utils/config';
+import { sendEmail } from '@/common/utils/mail';
 import { logger } from '@/server';
 import { TokenExpiredError, decode, verify } from 'jsonwebtoken';
-import { comparePassword, createAccessToken, createRefreshToken } from '@/common/auth/utils';
-import { sendEmail } from '@/common/utils/mail';
 
 export class AuthService {
   async signUp({ email, name, password }: SignUp): Promise<ServiceResponse<{ id: string } | null>> {
@@ -249,19 +244,19 @@ export class AuthService {
     try {
       const cookies = req.cookies;
 
-      const refreshToken = cookies[jwt.refreshToken.cookie_name];
+      const refreshToken = cookies[cookie.refreshToken.name];
 
       if (!refreshToken) return ServiceResponse.failure('No refresh token found', null, StatusCodes.UNAUTHORIZED);
 
       const existingToken = await getRefreshToken(refreshToken);
 
       if (!existingToken) {
-        res.clearCookie(jwt.refreshToken.cookie_name);
+        res.clearCookie(cookie.refreshToken.name);
         return ServiceResponse.success<null>('', null, StatusCodes.NO_CONTENT);
       }
 
       await deleteRefreshToken(refreshToken);
-      res.clearCookie(jwt.refreshToken.cookie_name);
+      res.clearCookie(cookie.refreshToken.name);
       return ServiceResponse.success<null>('', null, StatusCodes.NO_CONTENT);
     } catch (ex) {
       const errorMessage = `Error logging out: $${(ex as Error).message}`;
@@ -306,7 +301,7 @@ export class AuthService {
 
   async handleRefreshToken(req: Request, res: Response) {
     try {
-      const refreshToken = req.cookies[jwt.refreshToken.cookie_name];
+      const refreshToken = req.cookies[cookie.refreshToken.name];
       if (!refreshToken) {
         return ServiceResponse.failure('Unauthorized', null, StatusCodes.FORBIDDEN);
       }
@@ -319,7 +314,7 @@ export class AuthService {
 
       if (!existingToken) {
         // Detected refresh token reuse (invalid token)
-        verify(refreshToken, jwt.refreshToken.secret, async (err: unknown, payload: any) => {
+        verify(refreshToken, cookie.refreshToken.name, async (err: unknown, payload: any) => {
           const decodedToken = decode(refreshToken);
 
           logger.warn(`Refresh token reuse detected for user: ${decodedToken?.sub}`);
@@ -330,7 +325,7 @@ export class AuthService {
         return ServiceResponse.failure('Unauthorized', null, StatusCodes.FORBIDDEN);
       }
 
-      verify(refreshToken, jwt.refreshToken.secret, async (err: unknown, payload: any) => {
+      verify(refreshToken, cookie.refreshToken.secret, async (err: unknown, payload: any) => {
         if (err instanceof TokenExpiredError) {
           const decodedToken = decode(refreshToken);
 
@@ -341,10 +336,10 @@ export class AuthService {
             provider: decodedToken?.provider,
           });
           await saveRefreshToken(decodedToken?.sub, newRefreshToken);
-          res.clearCookie(jwt.refreshToken.cookie_name);
-          res.cookie(jwt.refreshToken.cookie_name, newRefreshToken, {
+          res.clearCookie(cookie.refreshToken.name);
+          res.cookie(cookie.refreshToken.name, newRefreshToken, {
             httpOnly: true,
-            expires: new Date(Date.now() + jwt.refreshToken.expires),
+            expires: new Date(Date.now() + cookie.refreshToken.expires),
           });
           error = 'Expired';
           return;

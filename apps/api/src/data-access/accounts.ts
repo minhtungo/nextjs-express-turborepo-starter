@@ -1,8 +1,8 @@
-import { saltRounds } from "@/config";
-import { db } from "@/db";
-import { type InsertAccount, accounts, users } from "@/db/schema";
-import bcrypt from "bcryptjs";
-import { and, eq } from "drizzle-orm";
+import { saltRounds } from '@/common/utils/config';
+import { db } from '@/db';
+import { type InsertAccount, accounts, users } from '@/db/schema';
+import bcrypt from 'bcryptjs';
+import { eq } from 'drizzle-orm';
 
 export const getAccountByUserId = async (userId: string) => {
   const account = await db.query.accounts.findFirst({
@@ -18,7 +18,9 @@ export const createAccount = async (data: InsertAccount) => {
     .values({
       ...data,
     })
-    .returning();
+    .returning({
+      id: accounts.id,
+    });
 
   return account;
 };

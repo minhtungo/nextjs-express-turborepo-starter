@@ -17,10 +17,10 @@ import {
   TokensSchema,
   VerifyEmailSchema,
 } from '@/api/auth/authModel';
+import { createAccessToken } from '@/common/auth/utils';
+import { cookie } from '@/common/utils/config';
 import { validateRequest } from '@/common/utils/httpHandlers';
 import passport from 'passport';
-import { createAccessToken } from '@/common/auth/utils';
-import { jwt } from '@/common/utils/config';
 
 export const authRegistry = new OpenAPIRegistry();
 export const authRouter: Router = express.Router();
@@ -181,9 +181,9 @@ authRouter.get(
       provider: 'google',
     });
 
-    res.cookie('x-auth-cookie', accessToken, {
+    res.cookie(cookie.accessToken.name, accessToken, {
       httpOnly: true,
-      expires: new Date(Date.now() + jwt.refreshToken.expires * 2),
+      expires: new Date(Date.now() + cookie.refreshToken.expires * 2),
       path: '/',
     });
 

@@ -3,8 +3,8 @@ import type { Request, RequestHandler, Response } from 'express';
 import { authService } from '@/api/auth/authService';
 import { handleServiceResponse } from '@/common/utils/httpHandlers';
 
+import { cookie } from '@/common/utils/config';
 import { StatusCodes } from 'http-status-codes';
-import { jwt } from '@/common/utils/config';
 
 class AuthController {
   public signUp: RequestHandler = async (req: Request, res: Response) => {
@@ -29,9 +29,9 @@ class AuthController {
     });
 
     if (serviceResponse.statusCode === StatusCodes.OK) {
-      res.cookie(jwt.refreshToken.cookie_name, serviceResponse.data?.refreshToken, {
+      res.cookie(cookie.refreshToken.name, serviceResponse.data?.refreshToken, {
         httpOnly: true,
-        expires: new Date(Date.now() + jwt.refreshToken.expires * 2),
+        expires: new Date(Date.now() + cookie.refreshToken.expires * 2),
       });
     }
 

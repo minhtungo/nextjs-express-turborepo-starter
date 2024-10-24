@@ -1,7 +1,6 @@
-import { jwt } from "@/config";
-import { db } from "@/db";
-import { refreshTokens } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { db } from '@/db';
+import { refreshTokens } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 
 export const saveRefreshToken = async (userId: string, token: string) => {
   await db.insert(refreshTokens).values({

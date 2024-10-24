@@ -11,7 +11,11 @@ export const createUser = async (data: InsertUser) => {
   const [user] = await db
     .insert(users)
     .values({ ...rest, ...(password ? { password } : {}) })
-    .returning();
+    .returning({
+      id: users.id,
+    });
+
+  return user;
 };
 
 export const getUserByEmail = async (email?: string) => {

@@ -1,4 +1,4 @@
-import { jwt, saltRounds } from '@/common/utils/config';
+import { cookie, saltRounds } from '@/common/utils/config';
 import bcrypt from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 
@@ -11,8 +11,9 @@ export const createAccessToken = ({
   email: string;
   provider?: 'google' | 'email';
 }) => {
-  return sign({ sub: id, uid: id, email, provider }, jwt.accessToken.secret, {
-    expiresIn: jwt.accessToken.expiresIn,
+  return sign({ sub: id, uid: id, email, provider }, cookie.accessToken.secret, {
+    expiresIn: cookie.accessToken.expiresIn,
+    algorithm: cookie.accessToken.algorithm,
   });
 };
 
@@ -25,8 +26,9 @@ export const createRefreshToken = ({
   email?: string;
   provider?: string;
 }) => {
-  return sign({ sub: id, uid: id, email, provider }, jwt.refreshToken.secret, {
-    expiresIn: jwt.refreshToken.expiresIn,
+  return sign({ sub: id, uid: id, email, provider }, cookie.refreshToken.secret, {
+    expiresIn: cookie.refreshToken.expiresIn,
+    algorithm: cookie.refreshToken.algorithm,
   });
 };
 
