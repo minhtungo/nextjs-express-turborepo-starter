@@ -16,7 +16,9 @@ export default passport.use(
     const email = profile?.emails?.[0].value;
 
     if (!email) return done(null, undefined);
+
     let existingUser = undefined;
+
     try {
       existingUser = await getUserByEmail(email);
 

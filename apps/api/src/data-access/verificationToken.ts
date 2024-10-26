@@ -1,13 +1,12 @@
-import { tokenLength, tokenTtl } from "@/config";
-import { db } from "@/db";
-import { verificationTokens } from "@/db/schema";
-import { generateRandomToken } from "@/lib/utils";
-import { eq } from "drizzle-orm";
+import { tokenLength, tokenTtl } from '@/common/utils/config';
+import { generateRandomToken } from '@/common/utils/token';
+import { db } from '@/db';
+import { verificationTokens } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 
 export const createVerificationToken = async (userId: string) => {
   const token = await generateRandomToken(tokenLength);
   const expires = new Date(Date.now() + tokenTtl);
-
   await db
     .insert(verificationTokens)
     .values({
@@ -22,7 +21,6 @@ export const createVerificationToken = async (userId: string) => {
         expires,
       },
     });
-
   return token;
 };
 

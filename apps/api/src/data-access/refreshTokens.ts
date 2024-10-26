@@ -10,6 +10,15 @@ export const saveRefreshToken = async (userId: string, token: string) => {
   });
 };
 
+export const updateRefreshToken = async (userId: string, token: string) => {
+  return await db
+    .update(refreshTokens)
+    .set({
+      token,
+    })
+    .where(eq(refreshTokens.userId, userId));
+};
+
 export const getRefreshToken = async (token: string) => {
   return await db.query.refreshTokens.findFirst({ where: eq(refreshTokens.token, token) });
 };

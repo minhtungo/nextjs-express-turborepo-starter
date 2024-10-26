@@ -1,10 +1,11 @@
-import type { Request, RequestHandler, Response } from 'express';
+import type { Request, RequestHandler, Response } from "express";
 
-import { authService } from '@/api/auth/authService';
-import { handleServiceResponse } from '@/common/utils/httpHandlers';
+import { authService } from "@/api/auth/authService";
+import { handleServiceResponse } from "@/common/utils/httpHandlers";
 
-import { cookie } from '@/common/utils/config';
-import { StatusCodes } from 'http-status-codes';
+import { generateTokens } from "@/api/user/userService";
+import { ServiceResponse } from "@/common/models/serviceResponse";
+import { StatusCodes } from "http-status-codes";
 
 class AuthController {
   public signUp: RequestHandler = async (req: Request, res: Response) => {
@@ -20,20 +21,11 @@ class AuthController {
   };
 
   public login: RequestHandler = async (req: Request, res: Response) => {
-    const { email, password, code } = req.body;
+    const user = req.user;
 
-    const serviceResponse = await authService.login({
-      email,
-      password,
-      code,
-    });
+    const { accessToken, refreshToken } = generateTokens(user?.id);
 
-    if (serviceResponse.statusCode === StatusCodes.OK) {
-      res.cookie(cookie.refreshToken.name, serviceResponse.data?.refreshToken, {
-        httpOnly: true,
-        expires: new Date(Date.now() + cookie.refreshToken.expires * 2),
-      });
-    }
+    const serviceResponse = ServiceResponse.success("Login successful", { accessToken, refreshToken }, StatusCodes.OK);
 
     return handleServiceResponse(serviceResponse, res);
   };
@@ -79,6 +71,21 @@ class AuthController {
 
   public handleRefreshToken: RequestHandler = async (req: Request, res: Response) => {
     const serviceResponse = await authService.handleRefreshToken(req, res);
+
+    return handleServiceResponse(serviceResponse, res);
+  };
+
+  public handleGoogleCallback: RequestHandler = async (req: Request, res: Response) => {
+    const { accessToken, refreshToken } = generateTokens(req?.user?.id);
+
+    const response = {
+      accessToken,
+      refreshToken,
+      id: req?.user?.id,
+      email: req?.user?.email,
+    };
+
+    const serviceResponse = ServiceResponse.success<typeof response>("Success", response, StatusCodes.OK);
 
     return handleServiceResponse(serviceResponse, res);
   };

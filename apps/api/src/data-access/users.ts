@@ -1,4 +1,4 @@
-import { hashPassword } from '@/common/auth/utils';
+import { authService } from '@/api/auth/authService';
 import { db } from '@/db';
 import { type InsertUser, type InsertUserSettings, SelectUser, userSettings, users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
@@ -6,11 +6,11 @@ import { eq } from 'drizzle-orm';
 export const createUser = async (data: InsertUser) => {
   const { password: plainPassword, ...rest } = data;
 
-  const password = plainPassword ? await hashPassword(plainPassword) : undefined;
+  const password = plainPassword ? await authService.hashPassword(plainPassword) : undefined;
 
   const [user] = await db
     .insert(users)
-    .values({ ...rest, ...(password ? { password } : {}) })
+    .values({ ...rest, password })
     .returning({
       id: users.id,
     });
@@ -18,10 +18,11 @@ export const createUser = async (data: InsertUser) => {
   return user;
 };
 
-export const getUserByEmail = async (email?: string) => {
+export const getUserByEmail = async (email?: string, columns?: UserColumns) => {
   if (!email) return;
   const user = await db.query.users.findFirst({
     where: eq(users.email, email),
+    columns,
   });
 
   return user;

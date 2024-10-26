@@ -1,48 +1,56 @@
-import { commonValidations } from '@/common/utils/commonValidation';
-import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
-import { z } from 'zod';
+import { commonValidations } from "@/common/utils/commonValidation";
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { z } from "zod";
 
 extendZodWithOpenApi(z);
 
-export const SignUpSchema = z.object({
-  name: z.string({
-    required_error: 'Name is required',
-  }),
-  email: commonValidations.email,
-  password: commonValidations.password,
-});
-
-export const PostSignUpSchema = z.object({
-  body: SignUpSchema,
-});
-
-export type SignUp = z.infer<typeof SignUpSchema>;
-
-export const LoginSchema = z.object({
+export const LoginInputSchema = z.object({
   email: commonValidations.email,
   password: commonValidations.password,
   code: z.string().optional(),
 });
 
-export type SignIn = z.infer<typeof LoginSchema>;
+export type LoginInput = z.infer<typeof LoginInputSchema>;
 
-export const PostLoginSchema = z.object({
-  body: LoginSchema,
-});
-
-export const LoginResponseSchema = z.object({
+export const AuthResponseSchema = z.object({
   accessToken: z.string(),
   refreshToken: z.string(),
 });
 
+export type AuthResponse = z.infer<typeof AuthResponseSchema>;
+
+export const AuthServiceResponseSchema = z.object({
+  success: z.boolean(),
+  message: z.string(),
+  data: AuthResponseSchema.nullable(),
+});
+
+export type AuthServiceResponse = z.infer<typeof AuthServiceResponseSchema>;
+
+export const LoginResponseSchema = z.object({
+  id: z.string(),
+  email: commonValidations.email,
+  accessToken: z.string(),
+});
+
 export type LoginResponse = z.infer<typeof LoginResponseSchema>;
+
+export const SignUpInputSchema = z.object({
+  name: z.string({
+    required_error: "Name is required",
+  }),
+  email: commonValidations.email,
+  password: commonValidations.password,
+});
+
+export type SignUpInput = z.infer<typeof SignUpInputSchema>;
 
 export const ResetPasswordSchema = z.object({
   token: z.string({
-    required_error: 'Token is required',
+    required_error: "Token is required",
   }),
   password: z.string({
-    required_error: 'Password is required',
+    required_error: "Password is required",
   }),
 });
 
@@ -55,10 +63,10 @@ export type ResetPassword = z.infer<typeof ResetPasswordSchema>;
 
 export const ChangePasswordSchema = z.object({
   token: z.string({
-    required_error: 'Token is required',
+    required_error: "Token is required",
   }),
   password: z.string({
-    required_error: 'Password is required',
+    required_error: "Password is required",
   }),
 });
 
@@ -70,7 +78,7 @@ export type ChangePassword = z.infer<typeof ChangePasswordSchema>;
 
 export const VerifyEmailSchema = z.object({
   token: z.string({
-    required_error: 'Token is required',
+    required_error: "Token is required",
   }),
 });
 
@@ -78,7 +86,7 @@ export type VerifyEmail = z.infer<typeof VerifyEmailSchema>;
 
 export const LogoutSchema = z.object({
   token: z.string({
-    required_error: 'Token is required',
+    required_error: "Token is required",
   }),
 });
 

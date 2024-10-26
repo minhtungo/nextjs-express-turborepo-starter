@@ -12,6 +12,9 @@ import requestLogger from '@/common/middleware/requestLogger';
 import { env } from '@/common/utils/env';
 import { authRouter } from '@/api/auth/authRouter';
 import isAuthenticated from '@/common/middleware/isAuthenticated';
+import passport from 'passport';
+import '@/api/auth/strategies/jwt';
+import '@/api/auth/strategies/google';
 
 const logger = pino({ name: 'server start' });
 const app: Express = express();
@@ -20,6 +23,7 @@ const app: Express = express();
 app.set('trust proxy', true);
 
 // Middlewares
+app.use(passport.initialize());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
