@@ -1,13 +1,11 @@
 export const cookie = {
   accessToken: {
     name: 'x-access-token',
-    expires: 60 * 60 * 24 * 1000,
     maxAge: 60 * 60 * 24,
   },
   refreshToken: {
     name: 'x-refresh-token',
-    expires: 60 * 60 * 24 * 1000 * 7,
-    maxAge: 60 * 60 * 24 * 30,
+    maxAge: 60 * 60 * 24 * 7,
   },
 };
 
