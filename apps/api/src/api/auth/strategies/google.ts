@@ -20,7 +20,9 @@ export default passport.use(
     let existingUser = undefined;
 
     try {
-      existingUser = await getUserByEmail(email);
+      existingUser = await getUserByEmail(email, {
+        id: true,
+      });
 
       if (existingUser) {
         return done(null, existingUser);

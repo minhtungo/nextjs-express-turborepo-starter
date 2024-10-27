@@ -1,3 +1,4 @@
+import type { LoginResponse } from "@/api/auth/authModel";
 import { authService } from "@/api/auth/authService";
 import { logger } from "@/server";
 import passport from "passport";
@@ -21,7 +22,7 @@ export default passport.use(
         return done(null, false, { message: result.message });
       }
 
-      return done(null, { user: result.data });
+      return done(null, { user: result.data as LoginResponse });
     } catch (error) {
       logger.error("Local strategy error:", error);
       return done(error);

@@ -174,8 +174,4 @@ authRouter.get(
   }),
 );
 
-authRouter.get(
-  "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/auth/login", session: false }),
-  authController.handleGoogleCallback,
-);
+authRouter.get("/google/callback", passport.authenticate("google", { failureRedirect: "/auth/login", session: false }));

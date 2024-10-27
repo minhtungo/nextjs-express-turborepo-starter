@@ -1,7 +1,7 @@
-import { authService } from '@/api/auth/authService';
-import { db } from '@/db';
-import { type InsertUser, type InsertUserSettings, SelectUser, userSettings, users } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { authService } from "@/api/auth/authService";
+import { db } from "@/db";
+import { type InsertUser, type InsertUserSettings, type SelectUser, userSettings, users } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export const createUser = async (data: InsertUser) => {
   const { password: plainPassword, ...rest } = data;
@@ -18,8 +18,7 @@ export const createUser = async (data: InsertUser) => {
   return user;
 };
 
-export const getUserByEmail = async (email?: string, columns?: UserColumns) => {
-  if (!email) return;
+export const getUserByEmail = async (email: string, columns?: UserColumns) => {
   const user = await db.query.users.findFirst({
     where: eq(users.email, email),
     columns,
@@ -52,7 +51,7 @@ export const updateUserEmailVerification = async (userId: string) => {
 };
 
 export const updateProfile = async ({ userId, data }: { userId: string; data: Partial<InsertUser> }) => {
-  console.log('data', data);
+  console.log("data", data);
   await db.update(users).set(data).where(eq(users.id, userId));
 };
 

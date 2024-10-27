@@ -6,6 +6,7 @@
     "paths": {
       "@/*": ["src/*"]
     },
+    "typeRoots": ["./src/common/types"],
     "moduleResolution": "Node",
     "outDir": "dist",
     "importsNotUsedAsValues": "remove",
