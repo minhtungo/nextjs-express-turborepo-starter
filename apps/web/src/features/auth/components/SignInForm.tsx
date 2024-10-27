@@ -7,12 +7,11 @@ import { Input } from '@/components/ui/input';
 import { authRoutes } from '@/config';
 import AuthFormWrapper from '@/features/auth/components/AuthFormWrapper';
 import FormResponse from '@/features/auth/components/FormResponse';
+import GoogleSignInButton from '@/features/auth/components/GoogleSignInButton';
 
-import OAuthButtons from '@/features/auth/components/OAuthButtons';
 import { useSignInForm } from '@/features/auth/hooks/useSignInForm';
 
 import Link from 'next/link';
-import { Suspense } from 'react';
 
 const SignInForm = () => {
   const { form, onSubmit, isPending, error, urlError, hasSucceeded } = useSignInForm();
@@ -23,9 +22,7 @@ const SignInForm = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
           {!hasSucceeded ? (
             <>
-              <Suspense>
-                <OAuthButtons />
-              </Suspense>
+              <GoogleSignInButton />
               <FormField
                 control={form.control}
                 name='email'

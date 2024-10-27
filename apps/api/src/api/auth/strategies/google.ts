@@ -22,6 +22,7 @@ export default passport.use(
     try {
       existingUser = await getUserByEmail(email, {
         id: true,
+        email: true,
       });
 
       if (existingUser) {

@@ -13,6 +13,7 @@ export const createUser = async (data: InsertUser) => {
     .values({ ...rest, password })
     .returning({
       id: users.id,
+      email: users.email,
     });
 
   return user;

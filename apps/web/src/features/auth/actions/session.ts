@@ -24,12 +24,14 @@ export const createSession = async (payload: Session) => {
     .setExpirationTime(cookie.accessToken.expires)
     .sign(encodedKey);
 
-  (await cookies()).set(cookie.accessToken.name, session, {
+  const cookieStore = await cookies();
+
+  cookieStore.set(cookie.accessToken.name, session, {
     httpOnly: true,
     secure: env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
-    expires: cookie.accessToken.expires,
+    maxAge: cookie.accessToken.maxAge,
   });
 };
 

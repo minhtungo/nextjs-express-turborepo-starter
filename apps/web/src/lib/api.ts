@@ -51,7 +51,7 @@ interface FetchOptions extends RequestInit {
 export const api = {
   get: async <T>(path: string, options?: Omit<FetchOptions, 'method'>, isPublic?: boolean): Promise<ApiResponse<T>> => {
     const response = await authFetch(
-      `${env.SERVER_URL}${path}`,
+      `${env.SERVER_BASE_URL}${path}`,
       {
         ...options,
         ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
@@ -68,7 +68,7 @@ export const api = {
     isPublic?: boolean
   ): Promise<ApiResponse<T>> => {
     const response = await authFetch(
-      `${env.SERVER_URL}${path}`,
+      `${env.SERVER_BASE_URL}${path}`,
       {
         ...options,
         ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
@@ -80,7 +80,7 @@ export const api = {
     return handleApiResponse(response);
   },
   put: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${env.SERVER_URL}${path}`, {
+    const response = await authFetch(`${env.SERVER_BASE_URL}${path}`, {
       ...options,
       ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
       method: 'PUT',
@@ -89,7 +89,7 @@ export const api = {
     return handleApiResponse(response);
   },
   patch: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${env.SERVER_URL}${path}`, {
+    const response = await authFetch(`${env.SERVER_BASE_URL}${path}`, {
       ...options,
       ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
       method: 'PATCH',
@@ -98,7 +98,7 @@ export const api = {
     return handleApiResponse(response);
   },
   delete: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${env.SERVER_URL}${path}`, {
+    const response = await authFetch(`${env.SERVER_BASE_URL}${path}`, {
       ...options,
       ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
       method: 'DELETE',
