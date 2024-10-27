@@ -1,5 +1,6 @@
 import type { LoginResponse } from "@/api/auth/authModel";
 import { authService } from "@/api/auth/authService";
+import type { AuthJwtUser } from "@/common/types/auth";
 import { logger } from "@/server";
 import passport from "passport";
 import { type IStrategyOptionsWithRequest, Strategy } from "passport-local";
@@ -14,15 +15,28 @@ const opts: IStrategyOptionsWithRequest = {
 export default passport.use(
   new Strategy(opts, async (req, email, password, done) => {
     try {
+      console.log("local strategy", req.body);
       const { code } = req.body;
 
       const result = await authService.login({ email, password, code });
 
+      console.log("local strategy result", result);
+
       if (!result.success) {
-        return done(null, false, { message: result.message });
+        return done(
+          {
+            message: result.message,
+          },
+          false,
+        );
       }
 
-      return done(null, { user: result.data as LoginResponse });
+      const user: AuthJwtUser = {
+        id: result.data?.id!,
+        email: result.data?.email!,
+      };
+
+      return done(null, user);
     } catch (error) {
       logger.error("Local strategy error:", error);
       return done(error);

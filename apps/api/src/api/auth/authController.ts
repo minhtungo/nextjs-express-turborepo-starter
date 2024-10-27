@@ -1,11 +1,11 @@
-import type { Request, RequestHandler, Response } from 'express';
+import type { Request, RequestHandler, Response } from "express";
 
-import { authService } from '@/api/auth/authService';
-import { handleServiceResponse } from '@/common/utils/httpHandlers';
+import { authService } from "@/api/auth/authService";
+import { handleServiceResponse } from "@/common/utils/httpHandlers";
 
-import { generateTokens } from '@/api/user/userService';
-import { ServiceResponse } from '@/common/models/serviceResponse';
-import { StatusCodes } from 'http-status-codes';
+import { generateTokens } from "@/api/user/userService";
+import { ServiceResponse } from "@/common/models/serviceResponse";
+import { StatusCodes } from "http-status-codes";
 
 class AuthController {
   public signUp: RequestHandler = async (req: Request, res: Response) => {
@@ -21,16 +21,17 @@ class AuthController {
   };
 
   public login: RequestHandler = async (req: Request, res: Response) => {
+    console.log("login controller called", req.user);
     const user = req.user;
 
     if (!user) {
-      const serviceResponse = ServiceResponse.failure('User not found', StatusCodes.UNAUTHORIZED);
+      const serviceResponse = ServiceResponse.failure("User not found", StatusCodes.UNAUTHORIZED);
       return handleServiceResponse(serviceResponse, res);
     }
 
     const { accessToken, refreshToken } = generateTokens(user.id);
 
-    const serviceResponse = ServiceResponse.success('Login successful', { accessToken, refreshToken }, StatusCodes.OK);
+    const serviceResponse = ServiceResponse.success("Login successful", { accessToken, refreshToken }, StatusCodes.OK);
 
     return handleServiceResponse(serviceResponse, res);
   };
@@ -81,7 +82,7 @@ class AuthController {
   };
 
   public handleGoogleCallback: RequestHandler = async (req: Request, res: Response) => {
-    console.log('Google callback', req.user);
+    console.log("Google callback", req.user);
     const { accessToken, refreshToken } = generateTokens(req?.user?.id!);
 
     const response = {
@@ -89,7 +90,7 @@ class AuthController {
       refreshToken,
     };
 
-    const serviceResponse = ServiceResponse.success<typeof response>('Success', response, StatusCodes.OK);
+    const serviceResponse = ServiceResponse.success<typeof response>("Success", response, StatusCodes.OK);
 
     return handleServiceResponse(serviceResponse, res);
   };

@@ -31,13 +31,13 @@ type UserColumns = {
   [key in keyof SelectUser]?: boolean;
 };
 
-export const getUserById = async (id: string, columns?: UserColumns) => {
+export const getUserById = async <T>(id: string, columns?: UserColumns): Promise<T> => {
   const user = await db.query.users.findFirst({
     where: eq(users.id, id),
     columns,
   });
 
-  return user;
+  return user as T;
 };
 
 export const getUserSettingsByUserId = async (userId: string) => {

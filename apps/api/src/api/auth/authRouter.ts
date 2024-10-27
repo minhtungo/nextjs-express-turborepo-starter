@@ -1,5 +1,5 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
-import express, { type Router } from "express";
+import express, { type NextFunction, type Request, type Response, type Router } from "express";
 import { z } from "zod";
 
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
@@ -12,12 +12,14 @@ import {
   PostResetPasswordSchema,
   PostVerifyEmailSchema,
   ResetPasswordSchema,
-  SignUpInput,
   SignUpInputSchema,
   TokensSchema,
   VerifyEmailSchema,
 } from "@/api/auth/authModel";
-import { validateRequest } from "@/common/utils/httpHandlers";
+import { ServiceResponse } from "@/common/models/serviceResponse";
+import type { AuthJwtUser } from "@/common/types/auth";
+import { handleServiceResponse, validateRequest } from "@/common/utils/httpHandlers";
+import { StatusCodes } from "http-status-codes";
 import passport from "passport";
 
 export const authRegistry = new OpenAPIRegistry();
@@ -42,7 +44,22 @@ authRegistry.registerPath({
 authRouter.post(
   "/login",
   validateRequest(z.object({ body: LoginInputSchema })),
-  passport.authenticate("local", { session: false, failWithError: true }),
+  (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate("local", { session: false }, (error: any, user: AuthJwtUser | false) => {
+      console.log("passport local middeweare", user);
+      if (error || !user) {
+        const failureResponse = ServiceResponse.failure(
+          error.message || "Authentication failed",
+          null,
+          StatusCodes.UNAUTHORIZED,
+        );
+        return handleServiceResponse(failureResponse, res);
+      }
+      // Authentication succeeded
+      req.user = user;
+      next();
+    })(req, res, next);
+  },
   authController.login,
 );
 
