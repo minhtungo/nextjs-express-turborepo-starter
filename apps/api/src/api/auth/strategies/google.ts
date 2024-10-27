@@ -1,14 +1,14 @@
-import { env } from '@/common/utils/env';
-import { createAccount } from '@/data-access/accounts';
-import { createUser, getUserByEmail } from '@/data-access/users';
-import passport from 'passport';
-import { Strategy, type StrategyOptions } from 'passport-google-oauth20';
+import { env } from "@/common/config/env";
+import { createAccount } from "@/data-access/accounts";
+import { createUser, getUserByEmail } from "@/data-access/users";
+import passport from "passport";
+import { Strategy, type StrategyOptions } from "passport-google-oauth20";
 
 const opts: StrategyOptions = {
   clientID: env.GOOGLE_CLIENT_ID,
   clientSecret: env.GOOGLE_CLIENT_SECRET,
   callbackURL: env.GOOGLE_CALLBACK_URL,
-  scope: ['profile', 'email'],
+  scope: ["profile", "email"],
 };
 
 export default passport.use(
@@ -43,8 +43,8 @@ export default passport.use(
 
       await createAccount({
         userId: newUser.id,
-        type: 'google',
-        provider: 'google',
+        type: "google",
+        provider: "google",
         providerAccountId: profile.id,
         access_token: accessToken,
         refresh_token: refreshToken,
@@ -54,5 +54,5 @@ export default passport.use(
     } catch (error) {
       return done(error, undefined);
     }
-  })
+  }),
 );

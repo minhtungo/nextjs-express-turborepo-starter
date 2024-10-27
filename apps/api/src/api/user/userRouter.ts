@@ -21,12 +21,12 @@ userRegistry.registerPath({
 
 userRouter.get("/", userController.getUsers);
 
-userRegistry.registerPath({
-  method: "get",
-  path: "/users/{id}",
-  tags: ["User"],
-  request: { params: GetUserSchema.shape.params },
-  responses: createApiResponse(UserSchema, "Success"),
-});
+// userRegistry.registerPath({
+//   method: "get",
+//   path: "/users/{id}",
+//   tags: ["User"],
+//   request: { params: GetUserSchema.shape.params },
+//   responses: createApiResponse(UserSchema, "Success"),
+// });
 
-userRouter.get("/:id", validateRequest(GetUserSchema), userController.getUser);
+// userRouter.get("/:id", validateRequest(GetUserSchema), userController.getUser);

@@ -2,8 +2,8 @@ import express from "express";
 import { StatusCodes } from "http-status-codes";
 import request from "supertest";
 
-import errorHandler from "@/common/middleware/errorHandler";
-import requestLogger from "@/common/middleware/requestLogger";
+import errorHandler from "@/middleware/errorHandler";
+import requestLogger from "@/middleware/requestLogger";
 
 describe("Request Logger Middleware", () => {
   const app = express();

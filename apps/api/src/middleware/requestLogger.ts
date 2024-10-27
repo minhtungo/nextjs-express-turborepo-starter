@@ -1,20 +1,20 @@
-import { randomUUID } from 'node:crypto';
-import type { IncomingMessage, ServerResponse } from 'node:http';
-import type { Request, RequestHandler, Response } from 'express';
-import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-import type { LevelWithSilent } from 'pino';
-import { type CustomAttributeKeys, type Options, pinoHttp } from 'pino-http';
+import { randomUUID } from "node:crypto";
+import type { IncomingMessage, ServerResponse } from "node:http";
+import type { Request, RequestHandler, Response } from "express";
+import { StatusCodes, getReasonPhrase } from "http-status-codes";
+import type { LevelWithSilent } from "pino";
+import { type CustomAttributeKeys, type Options, pinoHttp } from "pino-http";
 
-import { env } from '@/common/utils/env';
+import { env } from "@/common/config/env";
 
 enum LogLevel {
-  Fatal = 'fatal',
-  Error = 'error',
-  Warn = 'warn',
-  Info = 'info',
-  Debug = 'debug',
-  Trace = 'trace',
-  Silent = 'silent',
+  Fatal = "fatal",
+  Error = "error",
+  Warn = "warn",
+  Info = "info",
+  Debug = "debug",
+  Trace = "trace",
+  Silent = "silent",
 }
 
 type PinoCustomProps = {
@@ -27,7 +27,7 @@ type PinoCustomProps = {
 const requestLogger = (options?: Options): RequestHandler[] => {
   const pinoOptions: Options = {
     enabled: env.isProduction,
-    customProps: customProps as unknown as Options['customProps'],
+    customProps: customProps as unknown as Options["customProps"],
     redact: [],
     genReqId,
     customLogLevel,
@@ -41,10 +41,10 @@ const requestLogger = (options?: Options): RequestHandler[] => {
 };
 
 const customAttributeKeys: CustomAttributeKeys = {
-  req: 'request',
-  res: 'response',
-  err: 'error',
-  responseTime: 'timeTaken',
+  req: "request",
+  res: "response",
+  err: "error",
+  responseTime: "timeTaken",
 };
 
 const customProps = (req: Request, res: Response): PinoCustomProps => ({
@@ -80,10 +80,10 @@ const customSuccessMessage = (req: IncomingMessage, res: ServerResponse<Incoming
 };
 
 const genReqId = (req: IncomingMessage, res: ServerResponse<IncomingMessage>) => {
-  const existingID = req.id ?? req.headers['x-request-id'];
+  const existingID = req.id ?? req.headers["x-request-id"];
   if (existingID) return existingID;
   const id = randomUUID();
-  res.setHeader('X-Request-Id', id);
+  res.setHeader("X-Request-Id", id);
   return id;
 };
 

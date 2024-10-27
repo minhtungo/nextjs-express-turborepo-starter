@@ -30,7 +30,7 @@ import {
   getVerificationToken,
 } from "@/data-access/verificationToken";
 
-import { applicationName, cookie, saltRounds } from "@/common/utils/config";
+import { applicationName, cookie, saltRounds } from "@/common/config/config";
 import { sendEmail } from "@/common/utils/mail";
 import { logger } from "@/server";
 import { TokenExpiredError, decode, sign, verify } from "jsonwebtoken";
