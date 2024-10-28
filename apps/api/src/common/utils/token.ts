@@ -1,6 +1,6 @@
-import crypto from 'crypto';
+import crypto from "node:crypto";
 
-export const generateRandomToken = async (length: number = 32) => {
+export const generateRandomToken = async (length = 32) => {
   const buf = await new Promise<Buffer>((resolve, reject) => {
     crypto.randomBytes(Math.ceil(length / 2), (err, buf) => {
       if (err !== null) {
@@ -11,5 +11,5 @@ export const generateRandomToken = async (length: number = 32) => {
     });
   });
 
-  return buf.toString('hex').slice(0, length);
+  return buf.toString("hex").slice(0, length);
 };

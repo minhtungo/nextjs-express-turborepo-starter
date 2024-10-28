@@ -30,10 +30,22 @@ import {
   getVerificationToken,
 } from "@/data-access/verificationToken";
 
+import { userService } from "@/api/user/userService";
 import { applicationName, cookie, saltRounds } from "@/common/config/config";
 import { sendEmail } from "@/common/utils/mail";
 import { logger } from "@/server";
 import { TokenExpiredError, decode, sign, verify } from "jsonwebtoken";
+
+const login = async (userId: string) => {
+  const { accessToken, refreshToken } = generateTokens(userId);
+  const hashedRefreshToken = await userService.hashRefreshToken(refreshToken);
+  console.log("hashedRefreshToken", hashedRefreshToken);
+  await updateRefreshToken(userId, hashedRefreshToken);
+
+  const serviceResponse = ServiceResponse.success("Login successful", { accessToken, refreshToken }, StatusCodes.OK);
+
+  return serviceResponse;
+};
 
 const signUp = async ({ email, name, password }: SignUpInput): Promise<ServiceResponse<{ id: string } | null>> => {
   try {
@@ -66,7 +78,11 @@ const signUp = async ({ email, name, password }: SignUpInput): Promise<ServiceRe
   }
 };
 
-const login = async ({ email, password, code }: LoginInput): Promise<ServiceResponse<LoginResponse | null>> => {
+const validateLocalUser = async ({
+  email,
+  password,
+  code,
+}: LoginInput): Promise<ServiceResponse<LoginResponse | null>> => {
   try {
     const user = await getUserByEmail(email);
 
@@ -376,7 +392,7 @@ export const validateGoogleUser = async (email: string, password: string) => {
 
 export const authService = {
   signUp,
-  login,
+  validateLocalUser,
   forgotPassword,
   resetPassword,
   verifyEmail,
@@ -387,4 +403,5 @@ export const authService = {
   validateGoogleUser,
   hashPassword,
   comparePassword,
+  login,
 };

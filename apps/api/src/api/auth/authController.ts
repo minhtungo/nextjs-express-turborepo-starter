@@ -1,12 +1,12 @@
-import type { RequestHandler } from 'express';
+import type { RequestHandler } from "express";
 
-import { authService } from '@/api/auth/authService';
-import { handleServiceResponse } from '@/common/utils/httpHandlers';
+import { authService } from "@/api/auth/authService";
+import { handleServiceResponse } from "@/common/utils/httpHandlers";
 
-import { userService } from '@/api/user/userService';
-import { env } from '@/common/config/env';
-import { ServiceResponse } from '@/common/models/serviceResponse';
-import { StatusCodes } from 'http-status-codes';
+import { userService } from "@/api/user/userService";
+import { env } from "@/common/config/env";
+import { ServiceResponse } from "@/common/models/serviceResponse";
+import { StatusCodes } from "http-status-codes";
 
 const signUp: RequestHandler = async (req, res) => {
   const { name, email, password } = req.body;
@@ -21,17 +21,14 @@ const signUp: RequestHandler = async (req, res) => {
 };
 
 const login: RequestHandler = async (req, res) => {
-  console.log('login controller called', req.user);
   const user = req.user;
 
   if (!user) {
-    const serviceResponse = ServiceResponse.failure('User not found', StatusCodes.UNAUTHORIZED);
+    const serviceResponse = ServiceResponse.failure("User not found", StatusCodes.UNAUTHORIZED);
     return handleServiceResponse(serviceResponse, res);
   }
 
-  const { accessToken, refreshToken } = userService.generateTokens(user.id);
-
-  const serviceResponse = ServiceResponse.success('Login successful', { accessToken, refreshToken }, StatusCodes.OK);
+  const serviceResponse = await authService.login(user.id);
 
   return handleServiceResponse(serviceResponse, res);
 };
@@ -85,25 +82,25 @@ const handleGoogleCallback: RequestHandler = async (req, res) => {
   const user = req.user;
 
   if (!user) {
-    const serviceResponse = ServiceResponse.failure('User not found', StatusCodes.UNAUTHORIZED);
+    const serviceResponse = ServiceResponse.failure("User not found", StatusCodes.UNAUTHORIZED);
     return handleServiceResponse(serviceResponse, res);
   }
 
   const { accessToken, refreshToken } = userService.generateTokens(user.id);
 
   const serviceResponse = ServiceResponse.success(
-    'Success',
+    "Success",
     {
       accessToken,
       refreshToken,
       id: user.id,
       email: user.email,
     },
-    StatusCodes.OK
+    StatusCodes.OK,
   );
 
   res.redirect(
-    `${env.SITE_BASE_URL}/api/auth/google/callback?userId=${user.id}&email=${user.email}&accessToken=${accessToken}&refreshToken=${refreshToken}`
+    `${env.SITE_BASE_URL}/api/auth/google/callback?userId=${user.id}&email=${user.email}&accessToken=${accessToken}&refreshToken=${refreshToken}`,
   );
 };
 

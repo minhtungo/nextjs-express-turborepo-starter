@@ -1,22 +1,27 @@
-import { db } from '@/db';
-import { refreshTokens } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { db } from "@/db";
+import { refreshTokens } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export const saveRefreshToken = async (userId: string, token: string) => {
   await db.insert(refreshTokens).values({
     userId,
     token,
-    expires: new Date(Date.now()),
   });
 };
 
 export const updateRefreshToken = async (userId: string, token: string) => {
   return await db
-    .update(refreshTokens)
-    .set({
+    .insert(refreshTokens)
+    .values({
+      userId,
       token,
     })
-    .where(eq(refreshTokens.userId, userId));
+    .onConflictDoUpdate({
+      target: refreshTokens.userId,
+      set: {
+        token,
+      },
+    });
 };
 
 export const getRefreshToken = async (token: string) => {
