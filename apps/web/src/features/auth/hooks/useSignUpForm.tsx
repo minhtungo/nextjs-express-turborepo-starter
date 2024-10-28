@@ -1,6 +1,7 @@
-import useSignUp from '@/features/auth/api/use-sign-up';
+import { signUpAction } from '@/features/auth/actions/auth';
 import { signUpSchema } from '@/features/auth/lib/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAction } from 'next-safe-action/hooks';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -8,9 +9,9 @@ export const useSignUpForm = () => {
   const {
     isPending,
     execute,
-    result: { serverError },
+    result: { serverError, data },
     hasSucceeded,
-  } = useSignUp();
+  } = useAction(signUpAction);
 
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -30,7 +31,8 @@ export const useSignUpForm = () => {
     form,
     onSubmit,
     isPending,
-    error: serverError,
+    error: data?.error || serverError,
     hasSucceeded,
+    success: data?.success,
   };
 };

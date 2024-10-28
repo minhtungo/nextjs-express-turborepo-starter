@@ -1,12 +1,10 @@
 import { passwordRegex } from '@/lib/regex';
+import { commonValidations } from '@/lib/validation';
 import { z } from 'zod';
 
 export const signInSchema = z.object({
-  email: z
-    .string({ required_error: 'Email is required' })
-    .min(1, 'Email is required')
-    .email({ message: 'Invalid email' }),
-  password: z.string({ required_error: 'auth.error.password' }).min(1, 'auth.error.password'),
+  email: commonValidations.email,
+  password: commonValidations.password,
   code: z.optional(z.string()),
 });
 
@@ -14,18 +12,8 @@ export type signInProps = z.infer<typeof signInSchema>;
 
 export const signUpSchema = z
   .object({
-    email: z
-      .string({ required_error: 'Email is required' })
-      .min(1, 'Email is required')
-      .email({ message: 'Invalid email' }),
-    password: z
-      .string({ required_error: 'Password is required' })
-      .min(8, 'Password must be at least 8 characters')
-      .max(64, 'Max password length is 64 characters')
-      .regex(
-        passwordRegex,
-        'Password must contain at least one uppercase letter, one lowercase letter, and one number'
-      ),
+    email: commonValidations.email,
+    password: commonValidations.password,
     confirm_password: z
       .string({
         required_error: 'Confirm password is required',
@@ -41,24 +29,14 @@ export const signUpSchema = z
 export type signUpProps = z.infer<typeof signUpSchema>;
 
 export const forgotPasswordSchema = z.object({
-  email: z
-    .string({ required_error: 'Email is required' })
-    .min(1, 'auth.error.email')
-    .email({ message: 'auth.error.invalidEmail' }),
+  email: commonValidations.email,
 });
 
 export type forgotPasswordProps = z.infer<typeof forgotPasswordSchema>;
 
 export const resetPasswordSchema = z
   .object({
-    password: z
-      .string({ required_error: 'Password is required' })
-      .min(8, 'Password must be at least 8 characters')
-      .max(64, 'Password must be at most 64 characters')
-      .regex(
-        passwordRegex,
-        'Password must contain at least one uppercase letter, one lowercase letter, and one number'
-      ),
+    password: commonValidations.password,
     confirm_password: z
       .string({
         required_error: 'Confirm password is required',

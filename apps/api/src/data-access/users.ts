@@ -1,22 +1,31 @@
-import { authService } from '@/api/auth/authService';
-import { db } from '@/db';
-import { type InsertUser, type InsertUserSettings, type SelectUser, userSettings, users } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { authService } from "@/api/auth/authService";
+import { db } from "@/db";
+import { type InsertUser, type InsertUserSettings, type SelectUser, userSettings, users } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export const createUser = async (data: InsertUser) => {
   const { password: plainPassword, ...rest } = data;
 
   const password = plainPassword ? await authService.hashPassword(plainPassword) : undefined;
 
-  const [user] = await db
-    .insert(users)
-    .values({ ...rest, password })
-    .returning({
-      id: users.id,
-      email: users.email,
+  // Using a transaction to ensure both operations succeed or fail together
+  return await db.transaction(async (tx) => {
+    const [user] = await tx
+      .insert(users)
+      .values({ ...rest, password })
+      .returning({
+        id: users.id,
+        email: users.email,
+      });
+
+    // Create default user settings
+    await tx.insert(userSettings).values({
+      userId: user.id,
+      // Add any default settings here
     });
 
-  return user;
+    return user;
+  });
 };
 
 export const getUserByEmail = async (email: string, columns?: UserColumns) => {
@@ -52,7 +61,7 @@ export const updateUserEmailVerification = async (userId: string) => {
 };
 
 export const updateProfile = async ({ userId, data }: { userId: string; data: Partial<InsertUser> }) => {
-  console.log('data', data);
+  console.log("data", data);
   await db.update(users).set(data).where(eq(users.id, userId));
 };
 
@@ -61,7 +70,7 @@ export const updateSettings = async ({ userId, data }: { userId: string; data: P
 };
 
 export const updatePassword = async ({ userId, newPassword }: { userId: string; newPassword: string }) => {
-  const hashedPassword = await hashPassword(newPassword);
+  const hashedPassword = await authService.hashPassword(newPassword);
 
   await db.update(users).set({ password: hashedPassword }).where(eq(users.id, userId));
 };

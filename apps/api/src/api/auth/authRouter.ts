@@ -28,7 +28,7 @@ export const authRouter: Router = express.Router();
 authRegistry.registerPath({
   method: "post",
   tags: ["Auth"],
-  path: "/auth/login",
+  path: "/auth/sign-in",
   request: {
     body: {
       content: {
@@ -42,7 +42,7 @@ authRegistry.registerPath({
 });
 
 authRouter.post(
-  "/login",
+  "/sign-in",
   validateRequest(z.object({ body: LoginInputSchema })),
   (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate("local", { session: false }, (error: any, user: AuthJwtUser | false) => {
@@ -59,13 +59,13 @@ authRouter.post(
       next();
     })(req, res, next);
   },
-  authController.login,
+  authController.signIn,
 );
 
 authRegistry.registerPath({
   method: "post",
   tags: ["Auth"],
-  path: "/auth/signup",
+  path: "/auth/sign-up",
   request: {
     body: {
       content: {
@@ -78,7 +78,7 @@ authRegistry.registerPath({
   responses: createApiResponse(AuthResponseSchema, "Success"),
 });
 
-authRouter.post("/signup", validateRequest(z.object({ body: SignUpInputSchema })), authController.signUp);
+authRouter.post("/sign-up", validateRequest(z.object({ body: SignUpInputSchema })), authController.signUp);
 
 authRegistry.registerPath({
   method: "post",

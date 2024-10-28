@@ -10,7 +10,7 @@ import FormResponse from '@/features/auth/components/FormResponse';
 import { useForgotPasswordForm } from '@/features/auth/hooks/useForgotPassword';
 
 const ForgotPasswordForm = () => {
-  const { form, onSubmit, isPending, error } = useForgotPasswordForm();
+  const { form, onSubmit, isPending, error, success } = useForgotPasswordForm();
 
   return (
     <AuthFormWrapper
@@ -36,7 +36,7 @@ const ForgotPasswordForm = () => {
           />
 
           {error && <FormResponse variant='error' message={error} />}
-          {data && data.message && <FormResponse message={data.message} />}
+          {success && <FormResponse message={success} />}
           <SubmitButton className='w-full' isPending={isPending}>
             Reset Password
           </SubmitButton>

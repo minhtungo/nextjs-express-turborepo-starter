@@ -43,9 +43,7 @@ export const signInService = async (values: signInProps): Promise<ApiResponse<Si
   return response;
 };
 
-export const forgotPasswordService = async ({
-  email,
-}: forgotPasswordProps): Promise<ApiResponse<ForgotPasswordDTO>> => {
+export const forgotPasswordService = async (email: string): Promise<ApiResponse<ForgotPasswordDTO>> => {
   const response = await api.post<ForgotPasswordDTO>(
     apiRoutes.forgotPassword,
     {

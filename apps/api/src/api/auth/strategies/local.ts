@@ -1,4 +1,3 @@
-import type { LoginResponse } from "@/api/auth/authModel";
 import { authService } from "@/api/auth/authService";
 import type { AuthJwtUser } from "@/common/types/auth";
 import { logger } from "@/server";

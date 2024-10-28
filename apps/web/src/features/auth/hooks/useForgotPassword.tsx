@@ -1,6 +1,7 @@
-import useSignUp from '@/features/auth/api/use-sign-up';
-import { signUpSchema } from '@/features/auth/lib/schemas';
+import { forgotPasswordAction } from '@/features/auth/actions/auth';
+import { forgotPasswordSchema } from '@/features/auth/lib/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAction } from 'next-safe-action/hooks';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -8,29 +9,28 @@ export const useForgotPasswordForm = () => {
   const {
     isPending,
     execute,
-    result: { serverError },
+    result: { serverError, data },
     hasSucceeded,
-  } = useSignUp();
+  } = useAction(forgotPasswordAction);
 
-  const form = useForm<z.infer<typeof signUpSchema>>({
-    resolver: zodResolver(signUpSchema),
+  const form = useForm<z.infer<typeof forgotPasswordSchema>>({
+    resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
       email: '',
-      password: '',
-      confirm_password: '',
-      name: '',
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof signUpSchema>) => {
+  const onSubmit = async (values: z.infer<typeof forgotPasswordSchema>) => {
     execute(values);
+    form.reset();
   };
 
   return {
     form,
     onSubmit,
     isPending,
-    error: serverError,
+    error: data?.error || serverError,
+    success: data?.success,
     hasSucceeded,
   };
 };

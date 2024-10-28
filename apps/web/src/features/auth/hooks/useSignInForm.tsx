@@ -1,8 +1,8 @@
-import useSignIn from '@/features/auth/api/use-sign-in';
-
+import { signInAction } from '@/features/auth/actions/auth';
 import { signInSchema } from '@/features/auth/lib/schemas';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAction } from 'next-safe-action/hooks';
 import { useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -18,7 +18,7 @@ export const useSignInForm = () => {
     execute,
     result: { serverError, data },
     hasSucceeded,
-  } = useSignIn();
+  } = useAction(signInAction);
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),

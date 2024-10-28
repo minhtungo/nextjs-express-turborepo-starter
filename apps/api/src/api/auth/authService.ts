@@ -36,14 +36,14 @@ import { sendEmail } from "@/common/utils/mail";
 import { logger } from "@/server";
 import { TokenExpiredError, decode, sign, verify } from "jsonwebtoken";
 
-const login = async (userId: string, email: string, isTwoFactorEnabled: boolean) => {
+const signIn = async (userId: string, email: string, isTwoFactorEnabled: boolean) => {
   const { accessToken, refreshToken } = generateTokens(userId);
   const hashedRefreshToken = await userService.hashRefreshToken(refreshToken);
   console.log("hashedRefreshToken", hashedRefreshToken);
   await updateRefreshToken(userId, hashedRefreshToken);
 
   const serviceResponse = ServiceResponse.success(
-    "Login successful",
+    "Sign in successful",
     { accessToken, refreshToken, user: { id: userId, email }, isTwoFactorEnabled },
     StatusCodes.OK,
   );
@@ -67,8 +67,6 @@ const signUp = async ({ email, name, password }: SignUpInput): Promise<ServiceRe
       name,
       password,
     });
-
-    await createUserSettings({ userId: user.id });
 
     const token = await createVerificationToken(user.id);
 
@@ -132,7 +130,7 @@ const validateLocalUser = async ({
     }
 
     return ServiceResponse.success<LoginResponse>(
-      "Login successful",
+      "Sign in successful",
       {
         id: user.id,
         email: user.email,
@@ -152,14 +150,22 @@ const forgotPassword = async (email: string): Promise<ServiceResponse<null>> => 
     const user = await getUserByEmail(email);
 
     if (!user || !user.emailVerified) {
-      return ServiceResponse.failure("User not found or email not verified", null, StatusCodes.NOT_FOUND);
+      return ServiceResponse.success(
+        "If a matching account is found, a password reset email will be sent",
+        null,
+        StatusCodes.OK,
+      );
     }
 
     const token = await createResetPasswordToken(user.id);
 
     await sendEmail(email, `Reset your password for ${applicationName}`, token);
 
-    return ServiceResponse.success<null>("Password reset email sent", null, StatusCodes.OK);
+    return ServiceResponse.success<null>(
+      "If a matching account is found, a password reset email will be sent",
+      null,
+      StatusCodes.OK,
+    );
   } catch (ex) {
     const errorMessage = `Error resetting password: $${(ex as Error).message}`;
     logger.error(errorMessage);
@@ -409,5 +415,5 @@ export const authService = {
   validateGoogleUser,
   hashPassword,
   comparePassword,
-  login,
+  signIn,
 };

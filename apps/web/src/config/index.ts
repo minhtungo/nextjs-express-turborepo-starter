@@ -20,7 +20,7 @@ export const authRoutes = {
 };
 
 export const apiRoutes = {
-  signIn: '/auth/login',
+  signIn: '/auth/sign-in',
   signUp: '/auth/sign-up',
   forgotPassword: '/auth/forgot-password',
   verifyEmail: '/auth/verify-email',

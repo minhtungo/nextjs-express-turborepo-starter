@@ -78,9 +78,9 @@ const SignInForm = () => {
         </form>
       </Form>
       <div className='mt-6 text-center text-sm'>
-        Already have an account?{' '}
-        <Link href={authRoutes.signIn} className='underline'>
-          Sign In
+        Don't have an account?{' '}
+        <Link href={authRoutes.signUp} className='underline'>
+          Sign Up
         </Link>
       </div>
       <div className='mt-2 text-center'>

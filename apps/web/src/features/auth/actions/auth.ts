@@ -27,20 +27,17 @@ import { z } from 'zod';
 export const signUpAction = actionClient.schema(signUpSchema).action(async ({ parsedInput }) => {
   const result = await signUpService(parsedInput);
 
+  console.log('resulttest', result);
+
   if (!result.success) {
-    throw new Error(result.message);
+    return {
+      error: result.message || 'An error occurred during sign in',
+    };
   }
 
-  await createSession({
-    user: {
-      id: result.data.user.id,
-      email: result.data.user.email,
-    },
-    accessToken: result.data.accessToken,
-    refreshToken: result.data.refreshToken,
-  });
-
-  redirect('/');
+  return {
+    success: 'Please check your email to verify your account',
+  };
 });
 
 export const signInAction = actionClient
@@ -52,8 +49,6 @@ export const signInAction = actionClient
   )
   .action(async ({ parsedInput }) => {
     const result = await signInService(parsedInput.values);
-
-    console.log('resulttest', result);
 
     if (!result.success) {
       return {
@@ -82,7 +77,17 @@ export const signInAction = actionClient
 export const forgotPasswordAction = actionClient
   .schema(forgotPasswordSchema)
   .action(async ({ parsedInput: { email } }) => {
-    return forgotPasswordService({ email });
+    const result = await forgotPasswordService(email);
+
+    if (!result.success) {
+      return {
+        error: result.message || 'An error occurred during forgot password',
+      };
+    }
+
+    return {
+      success: result.message || 'If a matching account is found, a password reset email will be sent',
+    };
   });
 
 export const verifyEmailAction = actionClient.schema(verifyEmailSchema).action(async ({ parsedInput: { token } }) => {
