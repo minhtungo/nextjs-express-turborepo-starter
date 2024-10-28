@@ -46,7 +46,6 @@ authRouter.post(
   validateRequest(z.object({ body: LoginInputSchema })),
   (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate("local", { session: false }, (error: any, user: AuthJwtUser | false) => {
-      console.log("passport local middeweare", user);
       if (error || !user) {
         const failureResponse = ServiceResponse.failure(
           error.message || "Authentication failed",

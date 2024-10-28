@@ -14,13 +14,13 @@ import { useSignInForm } from '@/features/auth/hooks/useSignInForm';
 import Link from 'next/link';
 
 const SignInForm = () => {
-  const { form, onSubmit, isPending, error, urlError, hasSucceeded } = useSignInForm();
+  const { form, onSubmit, isPending, error, urlError, isTwoFactorEnabled } = useSignInForm();
 
   return (
     <AuthFormWrapper title='Sign in' description='Sign in to your account' noBorderMobile>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
-          {!hasSucceeded ? (
+          {!isTwoFactorEnabled ? (
             <>
               <GoogleSignInButton />
               <FormField
@@ -63,9 +63,10 @@ const SignInForm = () => {
                   </FormItem>
                 )}
               />
-              <FormResponse variant='success' message='Success' />
+              <FormResponse variant='success' message='Please enter the code sent to your email' />
             </>
           )}
+
           {(error || urlError) && <FormResponse variant='error' message={error || urlError} />}
 
           <div className='pt-2'>

@@ -1,5 +1,6 @@
 'use server';
 
+import { afterLoginUrl } from '@/config';
 import { createSession } from '@/features/auth/actions/session';
 import {
   forgotPasswordSchema,
@@ -50,10 +51,20 @@ export const signInAction = actionClient
     })
   )
   .action(async ({ parsedInput }) => {
-    const result = await signInService(parsedInput);
+    const result = await signInService(parsedInput.values);
+
+    console.log('resulttest', result);
 
     if (!result.success) {
-      throw new Error(result.message);
+      return {
+        error: result.message || 'An error occurred during sign in',
+      };
+    }
+
+    if (result.data.isTwoFactorEnabled) {
+      return {
+        isTwoFactorEnabled: true,
+      };
     }
 
     await createSession({
@@ -65,7 +76,7 @@ export const signInAction = actionClient
       refreshToken: result.data.refreshToken,
     });
 
-    redirect('/');
+    redirect(afterLoginUrl);
   });
 
 export const forgotPasswordAction = actionClient

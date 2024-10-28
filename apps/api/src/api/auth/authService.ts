@@ -36,13 +36,17 @@ import { sendEmail } from "@/common/utils/mail";
 import { logger } from "@/server";
 import { TokenExpiredError, decode, sign, verify } from "jsonwebtoken";
 
-const login = async (userId: string) => {
+const login = async (userId: string, email: string, isTwoFactorEnabled: boolean) => {
   const { accessToken, refreshToken } = generateTokens(userId);
   const hashedRefreshToken = await userService.hashRefreshToken(refreshToken);
   console.log("hashedRefreshToken", hashedRefreshToken);
   await updateRefreshToken(userId, hashedRefreshToken);
 
-  const serviceResponse = ServiceResponse.success("Login successful", { accessToken, refreshToken }, StatusCodes.OK);
+  const serviceResponse = ServiceResponse.success(
+    "Login successful",
+    { accessToken, refreshToken, user: { id: userId, email }, isTwoFactorEnabled },
+    StatusCodes.OK,
+  );
 
   return serviceResponse;
 };
@@ -95,6 +99,7 @@ const validateLocalUser = async ({
     }
 
     const isValidPassword = await comparePassword(password, user.password!);
+
     if (!isValidPassword) {
       return ServiceResponse.failure("Invalid credentials", null, StatusCodes.UNAUTHORIZED);
     }
@@ -131,6 +136,7 @@ const validateLocalUser = async ({
       {
         id: user.id,
         email: user.email,
+        isTwoFactorEnabled: userSettings?.isTwoFactorEnabled!,
       },
       StatusCodes.OK,
     );

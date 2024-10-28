@@ -31,13 +31,7 @@ export const signUpService = async (values: signUpProps): Promise<ApiResponse<Si
   return response;
 };
 
-export const signInService = async ({
-  values,
-  redirectTo,
-}: {
-  values: signInProps;
-  redirectTo: string | null;
-}): Promise<ApiResponse<SignInDTO>> => {
+export const signInService = async (values: signInProps): Promise<ApiResponse<SignInDTO>> => {
   const response = await api.post<SignInDTO>(
     apiRoutes.signIn,
     {

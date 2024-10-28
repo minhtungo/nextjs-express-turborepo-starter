@@ -16,7 +16,7 @@ export const useSignInForm = () => {
   const {
     isPending,
     execute,
-    result: { serverError },
+    result: { serverError, data },
     hasSucceeded,
   } = useSignIn();
 
@@ -37,8 +37,9 @@ export const useSignInForm = () => {
     form,
     onSubmit,
     isPending,
-    error: serverError,
+    error: data?.error || serverError,
     urlError,
     hasSucceeded,
+    isTwoFactorEnabled: data?.isTwoFactorEnabled,
   };
 };

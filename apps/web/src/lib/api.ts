@@ -35,13 +35,8 @@ export const ApiResponseSchema = z.object({
 export type ApiResponseType = z.infer<typeof ApiResponseSchema>;
 
 const handleApiResponse = async <T>(response: Response): Promise<ApiResponse<T>> => {
-  if (!response.ok) {
-    return ApiResponse.failure('Something went wrong', null as T, response.status);
-  }
-
-  const data = await response.json();
-
-  return ApiResponse.success('Success', data as T, response.status);
+  const result = await response.json();
+  return result;
 };
 
 interface FetchOptions extends RequestInit {
@@ -72,6 +67,10 @@ export const api = {
       {
         ...options,
         ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
+        headers: {
+          'Content-Type': 'application/json',
+          ...(options?.headers ? options.headers : {}),
+        },
         method: 'POST',
       },
       isPublic
@@ -83,6 +82,10 @@ export const api = {
     const response = await authFetch(`${env.SERVER_BASE_URL}${path}`, {
       ...options,
       ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
+      headers: {
+        'Content-Type': 'application/json',
+        ...(options?.headers ? options.headers : {}),
+      },
       method: 'PUT',
     });
 
@@ -92,6 +95,10 @@ export const api = {
     const response = await authFetch(`${env.SERVER_BASE_URL}${path}`, {
       ...options,
       ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
+      headers: {
+        'Content-Type': 'application/json',
+        ...(options?.headers ? options.headers : {}),
+      },
       method: 'PATCH',
     });
 
@@ -101,6 +108,10 @@ export const api = {
     const response = await authFetch(`${env.SERVER_BASE_URL}${path}`, {
       ...options,
       ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
+      headers: {
+        'Content-Type': 'application/json',
+        ...(options?.headers ? options.headers : {}),
+      },
       method: 'DELETE',
     });
 

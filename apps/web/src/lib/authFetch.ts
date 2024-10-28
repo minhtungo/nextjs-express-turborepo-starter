@@ -5,22 +5,22 @@ export const authFetch = async (url: string | URL, options: RequestInit = {}, is
 
   options.headers = {
     ...options.headers,
-    Authorization: `Bearer ${session?.accessToken}`,
+    ...(session?.accessToken ? { Authorization: `Bearer ${session.accessToken}` } : {}),
   };
 
   const response = await fetch(url, options);
 
-  if (response.status === 401 && !isPublic) {
-    if (!session?.refreshToken) {
-      throw new Error('No refresh token found');
+  // if (response.status === 401 && !isPublic) {
+  //   if (!session?.refreshToken) {
+  //     throw new Error('No refresh token found');
 
-      //   const newAccessToken = await refreshToken(session.refreshToken);
+  //     //   const newAccessToken = await refreshToken(session.refreshToken);
 
-      //   if (newAccessToken) {
-      //     options.headers.Authorization = `Bearer ${newAccessToken}`;
-      //     response = await fetch(url, options);
-      //   }
-    }
-  }
+  //     //   if (newAccessToken) {
+  //     //     options.headers.Authorization = `Bearer ${newAccessToken}`;
+  //     //     response = await fetch(url, options);
+  //     //   }
+  //   }
+  // }
   return response;
 };

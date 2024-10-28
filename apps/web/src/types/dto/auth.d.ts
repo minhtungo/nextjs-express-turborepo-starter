@@ -14,6 +14,7 @@ export interface SignInDTO {
     id: string;
     email: string;
   };
+  isTwoFactorEnabled: boolean;
 }
 
 export interface ForgotPasswordDTO {

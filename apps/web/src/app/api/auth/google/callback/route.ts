@@ -9,14 +9,10 @@ import { type NextRequest } from 'next/server';
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
 
-  console.log('searchParams', searchParams);
-
   const accessToken = searchParams.get('accessToken');
   const refreshToken = searchParams.get('refreshToken');
   const userId = searchParams.get('userId');
   const email = searchParams.get('email');
-
-  console.log('searchParams accessToken', accessToken);
 
   if (!accessToken || !refreshToken || !userId || !email) {
     return Response.json(ApiResponse.failure('Failed to authenticate with Google', null, StatusCodes.BAD_REQUEST), {
