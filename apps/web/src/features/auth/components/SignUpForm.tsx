@@ -1,7 +1,7 @@
 'use client';
 
 import PasswordInput from '@/components/PasswordInput';
-import SubmitButton from '@/components/SubmitButton';
+import LoaderButton from '@/components/LoaderButton';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { authRoutes } from '@/config';
@@ -69,9 +69,9 @@ const SignUpForm = () => {
           {error && <FormResponse variant='error' message={error} />}
           {success && <FormResponse variant='success' message={success} />}
           <div className='grid gap-3 pt-2'>
-            <SubmitButton className='w-full' isPending={isPending}>
+            <LoaderButton className='w-full' isPending={isPending}>
               Sign Up
-            </SubmitButton>
+            </LoaderButton>
           </div>
         </form>
       </Form>

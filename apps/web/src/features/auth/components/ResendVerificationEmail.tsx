@@ -1,4 +1,4 @@
-import SubmitButton from '@/components/SubmitButton';
+import LoaderButton from '@/components/LoaderButton';
 import { sendVerificationEmailAction } from '@/features/auth/actions/auth';
 import FormResponse from '@/features/auth/components/FormResponse';
 import { cn } from '@/lib/utils';
@@ -24,14 +24,14 @@ const ResendVerificationEmail = ({ className, token }: ResendVerificationEmailPr
     <>
       {error && <FormResponse variant='error' className='mt-4' message={error} />}
       {hasSucceeded && <FormResponse variant='success' message='Verification email sent' />}
-      <SubmitButton
+      <LoaderButton
         type='button'
         className={cn('w-full', className)}
         onClick={onResendVerificationEmail}
         isPending={isPending}
       >
         Resend Verification Email
-      </SubmitButton>
+      </LoaderButton>
     </>
   );
 };

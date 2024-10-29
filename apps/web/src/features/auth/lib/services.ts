@@ -103,3 +103,8 @@ export const sendVerificationEmailService = async ({
 
   return response;
 };
+
+export const signOutService = async (): Promise<string> => {
+  const response = await api.post<string>(apiRoutes.auth.signOut);
+  return response;
+};

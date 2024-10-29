@@ -17,6 +17,7 @@ import {
   resetPasswordService,
   sendVerificationEmailService,
   signInService,
+  signOutService,
   signUpService,
   verifyEmailService,
 } from '@/features/auth/lib/services';
@@ -125,5 +126,8 @@ export const sendVerificationEmailAction = actionClient
   });
 
 export const signOutAction = actionClient.action(async () => {
+  await signOutService();
   await deleteSession();
+
+  redirect('/');
 });

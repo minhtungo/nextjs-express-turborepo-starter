@@ -1,6 +1,6 @@
 'use client';
 
-import SubmitButton from '@/components/SubmitButton';
+import LoaderButton from '@/components/LoaderButton';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { authRoutes } from '@/config';
@@ -37,9 +37,9 @@ const ForgotPasswordForm = () => {
 
           {error && <FormResponse variant='error' message={error} />}
           {success && <FormResponse message={success} />}
-          <SubmitButton className='w-full' isPending={isPending}>
+          <LoaderButton className='w-full' isPending={isPending}>
             Reset Password
-          </SubmitButton>
+          </LoaderButton>
         </form>
       </Form>
     </AuthFormWrapper>
