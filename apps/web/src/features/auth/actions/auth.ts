@@ -1,7 +1,7 @@
 'use server';
 
 import { afterLoginUrl } from '@/config';
-import { createSession } from '@/features/auth/actions/session';
+import { createSession, deleteSession } from '@/features/auth/actions/session';
 import {
   forgotPasswordSchema,
   refreshTokenSchema,
@@ -115,7 +115,7 @@ export const resetPasswordAction = actionClient.schema(resetPasswordSchema).acti
 export const refreshTokenAction = actionClient
   .schema(refreshTokenSchema)
   .action(async ({ parsedInput: { refreshToken } }) => {
-    return refreshTokenService({ refreshToken });
+    return refreshTokenService(refreshToken);
   });
 
 export const sendVerificationEmailAction = actionClient
@@ -123,3 +123,7 @@ export const sendVerificationEmailAction = actionClient
   .action(async ({ parsedInput }) => {
     return sendVerificationEmailService(parsedInput);
   });
+
+export const signOutAction = actionClient.action(async () => {
+  await deleteSession();
+});

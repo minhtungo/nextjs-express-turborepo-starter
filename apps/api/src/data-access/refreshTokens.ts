@@ -24,7 +24,7 @@ export const updateRefreshToken = async (userId: string, token: string) => {
     });
 };
 
-export const getRefreshToken = async (token: string) => {
+export const getRefreshTokenByToken = async (token: string) => {
   return await db.query.refreshTokens.findFirst({ where: eq(refreshTokens.token, token) });
 };
 

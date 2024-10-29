@@ -10,6 +10,7 @@ import {
   LoginInputSchema,
   PostForgotPasswordSchema,
   PostResetPasswordSchema,
+  PostSignOutSchema,
   PostVerifyEmailSchema,
   ResetPasswordSchema,
   SignUpInputSchema,
@@ -19,6 +20,7 @@ import {
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import type { AuthJwtUser } from "@/common/types/auth";
 import { handleServiceResponse, validateRequest } from "@/common/utils/httpHandlers";
+import isAuthenticated from "@/middleware/isAuthenticated";
 import { StatusCodes } from "http-status-codes";
 import passport from "passport";
 
@@ -55,6 +57,7 @@ authRouter.post(
         return handleServiceResponse(failureResponse, res);
       }
       // Authentication succeeded
+      console.log("Authentication succeeded", req.user);
       req.user = user;
       next();
     })(req, res, next);
@@ -119,15 +122,6 @@ authRouter.post("/forgot-password", validateRequest(PostForgotPasswordSchema), a
 authRegistry.registerPath({
   method: "post",
   tags: ["Auth"],
-  path: "/auth/logout",
-  request: {},
-  responses: createApiResponse(z.string().nullable(), "Success"),
-});
-authRouter.post("/logout", authController.logout);
-
-authRegistry.registerPath({
-  method: "post",
-  tags: ["Auth"],
   path: "/auth/verify-email",
   request: {
     body: {
@@ -142,6 +136,8 @@ authRegistry.registerPath({
 });
 
 authRouter.post("/verify-email", validateRequest(PostVerifyEmailSchema), authController.verifyEmail);
+
+authRouter.post("/sign-out", isAuthenticated, authController.signOut);
 
 authRegistry.registerPath({
   method: "post",

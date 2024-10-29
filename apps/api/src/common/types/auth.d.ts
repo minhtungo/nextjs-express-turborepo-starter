@@ -5,5 +5,5 @@ export type AuthJwtPayload = {
 export type AuthJwtUser = {
   id: string;
   email: string;
-  isTwoFactorEnabled: boolean;
+  isTwoFactorEnabled?: boolean;
 };

@@ -1,6 +1,6 @@
-import { commonValidations } from '@/common/utils/commonValidation';
-import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
-import { z } from 'zod';
+import { commonValidations } from "@/common/utils/commonValidation";
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { z } from "zod";
 
 extendZodWithOpenApi(z);
 
@@ -44,7 +44,7 @@ export type LoginResponse = z.infer<typeof LoginResponseSchema>;
 
 export const SignUpInputSchema = z.object({
   name: z.string({
-    required_error: 'Name is required',
+    required_error: "Name is required",
   }),
   email: commonValidations.email,
   password: commonValidations.password,
@@ -70,10 +70,10 @@ export type SignUpResponse = z.infer<typeof SignUpResponseSchema>;
 
 export const ResetPasswordSchema = z.object({
   token: z.string({
-    required_error: 'Token is required',
+    required_error: "Token is required",
   }),
   password: z.string({
-    required_error: 'Password is required',
+    required_error: "Password is required",
   }),
 });
 
@@ -85,10 +85,10 @@ export type ResetPassword = z.infer<typeof ResetPasswordSchema>;
 
 export const ChangePasswordSchema = z.object({
   token: z.string({
-    required_error: 'Token is required',
+    required_error: "Token is required",
   }),
   password: z.string({
-    required_error: 'Password is required',
+    required_error: "Password is required",
   }),
 });
 
@@ -100,7 +100,7 @@ export type ChangePassword = z.infer<typeof ChangePasswordSchema>;
 
 export const VerifyEmailSchema = z.object({
   token: z.string({
-    required_error: 'Token is required',
+    required_error: "Token is required",
   }),
 });
 
@@ -108,7 +108,7 @@ export type VerifyEmail = z.infer<typeof VerifyEmailSchema>;
 
 export const LogoutSchema = z.object({
   token: z.string({
-    required_error: 'Token is required',
+    required_error: "Token is required",
   }),
 });
 
@@ -136,5 +136,7 @@ export const PostRefreshTokenSchema = z.object({
     refreshToken: z.string(),
   }),
 });
+
+export const PostSignOutSchema = z.object({});
 
 export type Tokens = z.infer<typeof TokensSchema>;

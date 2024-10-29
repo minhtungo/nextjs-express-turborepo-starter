@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import type { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { hashToken, verifyToken } from "./../../common/utils/token";
 import type { LoginInput, LoginResponse, SignUpInput } from "./authModel";
@@ -12,12 +11,7 @@ import {
   getResetPasswordToken,
 } from "@/data-access/resetPasswordTokens";
 
-import {
-  deleteRefreshToken,
-  getRefreshToken,
-  getRefreshTokenByUserId,
-  updateRefreshToken,
-} from "@/data-access/refreshTokens";
+import { deleteRefreshToken, getRefreshTokenByUserId, updateRefreshToken } from "@/data-access/refreshTokens";
 
 import {
   createTwoFactorConfirmation,
@@ -279,24 +273,22 @@ const verifyEmail = async (token: string): Promise<ServiceResponse<null>> => {
   }
 };
 
-const logout = async (req: Request, res: Response): Promise<ServiceResponse<null>> => {
+const signOut = async (userId: string): Promise<ServiceResponse<null>> => {
   try {
-    const cookies = req.cookies;
-
-    const refreshToken = cookies[cookie.refreshToken.name];
-
-    if (!refreshToken) return ServiceResponse.failure("No refresh token found", null, StatusCodes.UNAUTHORIZED);
-
-    const existingToken = await getRefreshToken(refreshToken);
+    const existingToken = await getRefreshTokenByUserId(userId);
 
     if (!existingToken) {
-      res.clearCookie(cookie.refreshToken.name);
-      return ServiceResponse.success<null>("", null, StatusCodes.NO_CONTENT);
+      return ServiceResponse.failure("Invalid refresh token", null, StatusCodes.UNAUTHORIZED);
     }
 
-    await deleteRefreshToken(refreshToken);
-    res.clearCookie(cookie.refreshToken.name);
-    return ServiceResponse.success<null>("", null, StatusCodes.NO_CONTENT);
+    // Verify the token belongs to the user
+    if (existingToken.userId !== userId) {
+      return ServiceResponse.failure("Unauthorized", null, StatusCodes.UNAUTHORIZED);
+    }
+
+    await deleteRefreshToken(existingToken.token);
+
+    return ServiceResponse.success<null>("Signed out", null, StatusCodes.OK);
   } catch (ex) {
     const errorMessage = `Error logging out: $${(ex as Error).message}`;
     logger.error(errorMessage);
@@ -387,7 +379,7 @@ export const authService = {
   forgotPassword,
   resetPassword,
   verifyEmail,
-  logout,
+  signOut,
   sendVerificationEmail,
   refreshToken,
   validateGoogleUser,

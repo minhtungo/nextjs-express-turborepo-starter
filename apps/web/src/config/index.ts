@@ -23,6 +23,7 @@ export const apiRoutes = {
   auth: {
     signIn: '/auth/sign-in',
     signUp: '/auth/sign-up',
+    signOut: '/auth/sign-out',
     forgotPassword: '/auth/forgot-password',
     verifyEmail: '/auth/verify-email',
     resetPassword: '/auth/reset-password',

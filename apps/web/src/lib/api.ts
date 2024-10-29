@@ -72,6 +72,7 @@ export const api = {
           'Content-Type': 'application/json',
           ...(options?.headers ? options.headers : {}),
         },
+        credentials: 'include',
         method: 'POST',
       },
       isPublic

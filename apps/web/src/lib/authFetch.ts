@@ -9,6 +9,8 @@ export const authFetch = async (url: string | URL, options: RequestInit = {}, is
     ...(session?.accessToken ? { Authorization: `Bearer ${session.accessToken}` } : {}),
   };
 
+  options.credentials = 'include';
+
   let response = await fetch(url, options);
 
   if (response.status === 401 && !isPublic) {

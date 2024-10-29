@@ -1,5 +1,4 @@
 import { cookie } from "@/common/config/config";
-import bcrypt from "bcryptjs";
 import { sign } from "jsonwebtoken";
 
 const generateAccessToken = (userId: string) => {
