@@ -53,7 +53,7 @@ export const forgotPasswordService = async (email: string): Promise<ApiResponse<
   return response;
 };
 
-export const verifyEmailService = async ({ token }: verifyEmailProps): Promise<ApiResponse<VerifyEmailDTO>> => {
+export const verifyEmailService = async (token: string): Promise<ApiResponse<VerifyEmailDTO>> => {
   const response = await api.post<VerifyEmailDTO>(
     apiRoutes.verifyEmail,
     {

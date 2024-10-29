@@ -93,7 +93,9 @@ export const forgotPasswordAction = actionClient
   });
 
 export const verifyEmailAction = actionClient.schema(verifyEmailSchema).action(async ({ parsedInput: { token } }) => {
-  return verifyEmailService({ token });
+  const result = await verifyEmailService(token);
+
+  return result;
 });
 
 export const resetPasswordAction = actionClient.schema(resetPasswordSchema).action(async ({ parsedInput }) => {
