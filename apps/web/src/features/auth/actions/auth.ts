@@ -79,6 +79,8 @@ export const forgotPasswordAction = actionClient
   .action(async ({ parsedInput: { email } }) => {
     const result = await forgotPasswordService(email);
 
+    console.log('resulttest', result);
+
     if (!result.success) {
       return {
         error: result.message || 'An error occurred during forgot password',
@@ -95,7 +97,17 @@ export const verifyEmailAction = actionClient.schema(verifyEmailSchema).action(a
 });
 
 export const resetPasswordAction = actionClient.schema(resetPasswordSchema).action(async ({ parsedInput }) => {
-  return resetPasswordService(parsedInput);
+  const result = await resetPasswordService(parsedInput);
+
+  if (!result.success) {
+    return {
+      error: result.message || 'An error occurred during reset password',
+    };
+  }
+
+  return {
+    success: result.message || 'Password reset successfully',
+  };
 });
 
 export const refreshTokenAction = actionClient

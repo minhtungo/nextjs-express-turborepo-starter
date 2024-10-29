@@ -1,8 +1,8 @@
-import { tokenLength, tokenTtl } from "@/common/config/config";
-import { generateRandomToken } from "@/common/utils/token";
-import { db } from "@/db";
-import { resetPasswordTokens } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { tokenLength, tokenTtl } from '@/common/config/config';
+import { generateRandomToken } from '@/common/utils/token';
+import { db } from '@/db';
+import { resetPasswordTokens } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 
 export const createResetPasswordToken = async (userId: string) => {
   const token = await generateRandomToken(tokenLength);
@@ -34,6 +34,10 @@ export const getResetPasswordToken = async (token: string) => {
   return existingToken;
 };
 
-export const deleteResetPasswordToken = async (token: string, trx = db) => {
-  await trx.delete(resetPasswordTokens).where(eq(resetPasswordTokens.token, token));
+// export const deleteResetPasswordToken = async (token: string, trx = db) => {
+//   await trx.delete(resetPasswordTokens).where(eq(resetPasswordTokens.token, token));
+// };
+
+export const deleteResetPasswordToken = async (token: string) => {
+  await db.delete(resetPasswordTokens).where(eq(resetPasswordTokens.token, token));
 };

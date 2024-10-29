@@ -1,6 +1,5 @@
 import { apiRoutes } from '@/config';
 import {
-  forgotPasswordProps,
   refreshTokenProps,
   resetPasswordProps,
   sendVerificationEmailProps,
@@ -51,7 +50,6 @@ export const forgotPasswordService = async (email: string): Promise<ApiResponse<
     },
     true
   );
-
   return response;
 };
 
@@ -67,14 +65,11 @@ export const verifyEmailService = async ({ token }: verifyEmailProps): Promise<A
   return response;
 };
 
-export const resetPasswordService = async ({
-  password,
-  confirm_password,
-}: resetPasswordProps): Promise<ApiResponse<ResetPasswordDTO>> => {
+export const resetPasswordService = async (values: resetPasswordProps): Promise<ApiResponse<ResetPasswordDTO>> => {
   const response = await api.post<ResetPasswordDTO>(
     apiRoutes.resetPassword,
     {
-      body: { password, confirm_password },
+      body: values,
     },
     true
   );

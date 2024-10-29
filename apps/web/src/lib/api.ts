@@ -35,8 +35,13 @@ export const ApiResponseSchema = z.object({
 export type ApiResponseType = z.infer<typeof ApiResponseSchema>;
 
 const handleApiResponse = async <T>(response: Response): Promise<ApiResponse<T>> => {
-  const result = await response.json();
-  return result;
+  try {
+    const result = await response.json();
+    console.log('result', result);
+    return result;
+  } catch (error) {
+    return ApiResponse.failure('An error occurred during the request', null, response.status) as ApiResponse<T>;
+  }
 };
 
 interface FetchOptions extends RequestInit {

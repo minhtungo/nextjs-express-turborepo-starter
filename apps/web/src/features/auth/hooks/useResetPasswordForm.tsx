@@ -1,43 +1,38 @@
-import { signInAction } from '@/features/auth/actions/auth';
-import { signInSchema } from '@/features/auth/lib/schemas';
+import { resetPasswordAction } from '@/features/auth/actions/auth';
+import { resetPasswordSchema } from '@/features/auth/lib/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAction } from 'next-safe-action/hooks';
-import { useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-export const useSignInForm = () => {
-  const searchParams = useSearchParams();
-  const redirectTo = searchParams.get('redirect');
-
-  const urlError = searchParams.get('error') === 'OAuthAccountNotLinked' ? 'OAuthAccountNotLinked' : '';
-
+export const useResetPasswordForm = (token: string) => {
   const {
     isPending,
     execute,
-    result: { serverError },
+    result: { serverError, data },
     hasSucceeded,
-  } = useAction(signInAction);
+  } = useAction(resetPasswordAction);
 
-  const form = useForm<z.infer<typeof signInSchema>>({
-    resolver: zodResolver(signInSchema),
+  const form = useForm<z.infer<typeof resetPasswordSchema>>({
+    resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      email: '',
       password: '',
-      code: '',
+      confirm_password: '',
+      token,
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof signInSchema>) => {
-    execute({ values, redirectTo });
+  const onSubmit = async (values: z.infer<typeof resetPasswordSchema>) => {
+    execute(values);
+    form.reset();
   };
 
   return {
     form,
     onSubmit,
     isPending,
-    error: serverError,
-    urlError,
+    error: data?.error || serverError,
+    success: data?.success,
     hasSucceeded,
   };
 };

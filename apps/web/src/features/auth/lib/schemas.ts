@@ -42,6 +42,7 @@ export const resetPasswordSchema = z
         required_error: 'Confirm password is required',
       })
       .min(1, 'Confirm password is required'),
+    token: z.string().min(1, 'Token is required'),
   })
   .refine((data) => data.password === data.confirm_password, {
     message: 'Passwords do not match',

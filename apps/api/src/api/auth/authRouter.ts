@@ -96,7 +96,7 @@ authRegistry.registerPath({
   responses: createApiResponse(z.string().nullable(), "Success"),
 });
 
-authRouter.post("/reset-password/:token", validateRequest(PostResetPasswordSchema), authController.resetPassword);
+authRouter.post("/reset-password", validateRequest(PostResetPasswordSchema), authController.resetPassword);
 
 authRegistry.registerPath({
   method: "post",
