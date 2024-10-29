@@ -1,4 +1,5 @@
 import { apiRoutes } from '@/config';
+import { env } from '@/config/env';
 import {
   refreshTokenProps,
   resetPasswordProps,
@@ -18,7 +19,7 @@ import {
   VerifyEmailDTO,
 } from '@/types/dto/auth';
 
-export const signUpService = async (values: signUpProps): Promise<ApiResponse<SignUpDTO>> => {
+export const signUpService = async (values: signUpProps): Promise<SignUpDTO> => {
   const response = await api.post<SignUpDTO>(
     apiRoutes.signUp,
     {
@@ -30,7 +31,7 @@ export const signUpService = async (values: signUpProps): Promise<ApiResponse<Si
   return response;
 };
 
-export const signInService = async (values: signInProps): Promise<ApiResponse<SignInDTO>> => {
+export const signInService = async (values: signInProps): Promise<SignInDTO> => {
   const response = await api.post<SignInDTO>(
     apiRoutes.signIn,
     {
@@ -42,7 +43,7 @@ export const signInService = async (values: signInProps): Promise<ApiResponse<Si
   return response;
 };
 
-export const forgotPasswordService = async (email: string): Promise<ApiResponse<ForgotPasswordDTO>> => {
+export const forgotPasswordService = async (email: string): Promise<ForgotPasswordDTO> => {
   const response = await api.post<ForgotPasswordDTO>(
     apiRoutes.forgotPassword,
     {
@@ -53,7 +54,7 @@ export const forgotPasswordService = async (email: string): Promise<ApiResponse<
   return response;
 };
 
-export const verifyEmailService = async (token: string): Promise<ApiResponse<VerifyEmailDTO>> => {
+export const verifyEmailService = async (token: string): Promise<VerifyEmailDTO> => {
   const response = await api.post<VerifyEmailDTO>(
     apiRoutes.verifyEmail,
     {
@@ -65,7 +66,7 @@ export const verifyEmailService = async (token: string): Promise<ApiResponse<Ver
   return response;
 };
 
-export const resetPasswordService = async (values: resetPasswordProps): Promise<ApiResponse<ResetPasswordDTO>> => {
+export const resetPasswordService = async (values: resetPasswordProps): Promise<ResetPasswordDTO> => {
   const response = await api.post<ResetPasswordDTO>(
     apiRoutes.resetPassword,
     {
@@ -77,23 +78,28 @@ export const resetPasswordService = async (values: resetPasswordProps): Promise<
   return response;
 };
 
-export const refreshTokenService = async ({
-  refreshToken,
-}: refreshTokenProps): Promise<ApiResponse<RefreshTokenDTO>> => {
-  const response = await api.post<RefreshTokenDTO>(
-    apiRoutes.signIn,
+export const refreshTokenService = async (refreshToken: string): Promise<string> => {
+  const result = await api.post<RefreshTokenDTO>(
+    apiRoutes.refreshToken,
     {
       body: { refreshToken },
     },
     true
   );
 
-  return response;
+  const updateResponse = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/api/auth/update`, {
+    method: 'POST',
+    body: JSON.stringify({ accessToken: result.data.accessToken, refreshToken: result.data.refreshToken }),
+  });
+
+  if (!updateResponse.ok) throw new Error('Failed to update the tokens');
+
+  return result.data.accessToken;
 };
 
 export const sendVerificationEmailService = async ({
   token,
-}: sendVerificationEmailProps): Promise<ApiResponse<SendVerificationEmailDTO>> => {
+}: sendVerificationEmailProps): Promise<SendVerificationEmailDTO> => {
   const response = await api.post<SendVerificationEmailDTO>(
     apiRoutes.signIn,
     {

@@ -26,4 +26,5 @@ export const apiRoutes = {
   verifyEmail: '/auth/verify-email',
   resetPassword: '/auth/reset-password',
   sendVerificationEmail: '/auth/send-verification-email',
+  refreshToken: '/auth/refresh-token',
 };

@@ -34,13 +34,13 @@ export const ApiResponseSchema = z.object({
 
 export type ApiResponseType = z.infer<typeof ApiResponseSchema>;
 
-const handleApiResponse = async <T>(response: Response): Promise<ApiResponse<T>> => {
+const handleApiResponse = async <T>(response: Response): Promise<T> => {
   try {
     const result = await response.json();
     console.log('result', result);
     return result;
   } catch (error) {
-    return ApiResponse.failure('An error occurred during the request', null, response.status) as ApiResponse<T>;
+    return ApiResponse.failure(error?.message || 'An error occurred during the request', null, response.status) as T;
   }
 };
 
@@ -62,11 +62,7 @@ export const api = {
 
     return handleApiResponse(response);
   },
-  post: async <T>(
-    path: string,
-    options?: Omit<FetchOptions, 'method'>,
-    isPublic?: boolean
-  ): Promise<ApiResponse<T>> => {
+  post: async <T>(path: string, options?: Omit<FetchOptions, 'method'>, isPublic?: boolean): Promise<T> => {
     const response = await authFetch(
       `${env.SERVER_BASE_URL}${path}`,
       {
