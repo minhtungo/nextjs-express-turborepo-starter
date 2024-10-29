@@ -1,9 +1,9 @@
-import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
-import express, { type NextFunction, type Request, type Response, type Router } from 'express';
-import { z } from 'zod';
+import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
+import express, { type NextFunction, type Request, type Response, type Router } from "express";
+import { z } from "zod";
 
-import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
-import { authController } from '@/api/auth/authController';
+import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
+import { authController } from "@/api/auth/authController";
 import {
   AuthResponseSchema,
   ChangePasswordSchema,
@@ -15,42 +15,42 @@ import {
   SignUpInputSchema,
   TokensSchema,
   VerifyEmailSchema,
-} from '@/api/auth/authModel';
-import { ServiceResponse } from '@/common/models/serviceResponse';
-import type { AuthJwtUser } from '@/common/types/auth';
-import { handleServiceResponse, validateRequest } from '@/common/utils/httpHandlers';
-import { StatusCodes } from 'http-status-codes';
-import passport from 'passport';
+} from "@/api/auth/authModel";
+import { ServiceResponse } from "@/common/models/serviceResponse";
+import type { AuthJwtUser } from "@/common/types/auth";
+import { handleServiceResponse, validateRequest } from "@/common/utils/httpHandlers";
+import { StatusCodes } from "http-status-codes";
+import passport from "passport";
 
 export const authRegistry = new OpenAPIRegistry();
 export const authRouter: Router = express.Router();
 
 authRegistry.registerPath({
-  method: 'post',
-  tags: ['Auth'],
-  path: '/auth/sign-in',
+  method: "post",
+  tags: ["Auth"],
+  path: "/auth/sign-in",
   request: {
     body: {
       content: {
-        'application/json': {
+        "application/json": {
           schema: LoginInputSchema,
         },
       },
     },
   },
-  responses: createApiResponse(AuthResponseSchema, 'Success'),
+  responses: createApiResponse(AuthResponseSchema, "Success"),
 });
 
 authRouter.post(
-  '/sign-in',
+  "/sign-in",
   validateRequest(z.object({ body: LoginInputSchema })),
   (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate('local', { session: false }, (error: any, user: AuthJwtUser | false) => {
+    passport.authenticate("local", { session: false }, (error: any, user: AuthJwtUser | false) => {
       if (error || !user) {
         const failureResponse = ServiceResponse.failure(
-          error.message || 'Authentication failed',
+          error.message || "Authentication failed",
           null,
-          StatusCodes.UNAUTHORIZED
+          StatusCodes.UNAUTHORIZED,
         );
         return handleServiceResponse(failureResponse, res);
       }
@@ -59,139 +59,144 @@ authRouter.post(
       next();
     })(req, res, next);
   },
-  authController.signIn
+  authController.signIn,
 );
 
 authRegistry.registerPath({
-  method: 'post',
-  tags: ['Auth'],
-  path: '/auth/sign-up',
+  method: "post",
+  tags: ["Auth"],
+  path: "/auth/sign-up",
   request: {
     body: {
       content: {
-        'application/json': {
+        "application/json": {
           schema: SignUpInputSchema,
         },
       },
     },
   },
-  responses: createApiResponse(AuthResponseSchema, 'Success'),
+  responses: createApiResponse(AuthResponseSchema, "Success"),
 });
 
-authRouter.post('/sign-up', validateRequest(z.object({ body: SignUpInputSchema })), authController.signUp);
+authRouter.post("/sign-up", validateRequest(z.object({ body: SignUpInputSchema })), authController.signUp);
 
 authRegistry.registerPath({
-  method: 'post',
-  tags: ['Auth'],
-  path: '/auth/reset-password',
+  method: "post",
+  tags: ["Auth"],
+  path: "/auth/reset-password",
   request: {
     body: {
       content: {
-        'application/json': {
+        "application/json": {
           schema: ResetPasswordSchema,
         },
       },
     },
   },
-  responses: createApiResponse(z.string().nullable(), 'Success'),
+  responses: createApiResponse(z.string().nullable(), "Success"),
 });
 
-authRouter.post('/reset-password', validateRequest(PostResetPasswordSchema), authController.resetPassword);
+authRouter.post("/reset-password", validateRequest(PostResetPasswordSchema), authController.resetPassword);
 
 authRegistry.registerPath({
-  method: 'post',
-  tags: ['Auth'],
-  path: '/auth/forgot-password',
+  method: "post",
+  tags: ["Auth"],
+  path: "/auth/forgot-password",
   request: {
     body: {
       content: {
-        'application/json': {
+        "application/json": {
           schema: ChangePasswordSchema,
         },
       },
     },
   },
-  responses: createApiResponse(z.string().nullable(), 'Success'),
+  responses: createApiResponse(z.string().nullable(), "Success"),
 });
 
-authRouter.post('/forgot-password', validateRequest(PostForgotPasswordSchema), authController.forgotPassword);
+authRouter.post("/forgot-password", validateRequest(PostForgotPasswordSchema), authController.forgotPassword);
 
 authRegistry.registerPath({
-  method: 'post',
-  tags: ['Auth'],
-  path: '/auth/logout',
+  method: "post",
+  tags: ["Auth"],
+  path: "/auth/logout",
   request: {},
-  responses: createApiResponse(z.string().nullable(), 'Success'),
+  responses: createApiResponse(z.string().nullable(), "Success"),
 });
-authRouter.post('/logout', authController.logout);
+authRouter.post("/logout", authController.logout);
 
 authRegistry.registerPath({
-  method: 'post',
-  tags: ['Auth'],
-  path: '/auth/verify-email',
+  method: "post",
+  tags: ["Auth"],
+  path: "/auth/verify-email",
   request: {
     body: {
       content: {
-        'application/json': {
+        "application/json": {
           schema: VerifyEmailSchema,
         },
       },
     },
   },
-  responses: createApiResponse(z.string().nullable(), 'Success'),
+  responses: createApiResponse(z.string().nullable(), "Success"),
 });
 
-authRouter.post('/verify-email', validateRequest(PostVerifyEmailSchema), authController.verifyEmail);
+authRouter.post("/verify-email", validateRequest(PostVerifyEmailSchema), authController.verifyEmail);
 
 authRegistry.registerPath({
-  method: 'post',
-  tags: ['Auth'],
-  path: '/auth/send-verification-email',
+  method: "post",
+  tags: ["Auth"],
+  path: "/auth/send-verification-email",
   request: {
     body: {
       content: {
-        'application/json': {
+        "application/json": {
           schema: VerifyEmailSchema,
         },
       },
     },
   },
-  responses: createApiResponse(z.string().nullable(), 'Success'),
+  responses: createApiResponse(z.string().nullable(), "Success"),
 });
 
 authRouter.post(
-  '/send-verification-email',
+  "/send-verification-email",
   validateRequest(PostVerifyEmailSchema),
-  authController.sendVerificationEmail
+  authController.sendVerificationEmail,
 );
 
 authRegistry.registerPath({
-  method: 'post',
-  tags: ['Auth'],
-  path: '/auth/refresh-token',
+  method: "post",
+  tags: ["Auth"],
+  path: "/auth/refresh-token",
   request: {},
-  responses: createApiResponse(TokensSchema, 'Success'),
+  responses: createApiResponse(TokensSchema, "Success"),
 });
 
-authRouter.get('/refresh-token', authController.handleRefreshToken);
+authRouter.post(
+  "/refresh-token",
+  validateRequest(z.object({ body: z.object({ refreshToken: z.string() }) })),
+  passport.authenticate("refresh-token", { session: false }),
+  authController.handleRefreshToken,
+);
 
 authRegistry.registerPath({
-  method: 'get',
-  tags: ['Auth'],
-  path: '/auth/google',
+  method: "get",
+  tags: ["Auth"],
+  path: "/auth/google",
   request: {},
-  responses: createApiResponse(TokensSchema, 'Success'),
+  responses: createApiResponse(TokensSchema, "Success"),
 });
 
 authRouter.get(
-  '/google',
-  passport.authenticate('google', {
+  "/google",
+  passport.authenticate("google", {
     session: false,
-  })
+  }),
 );
 
 authRouter.get(
-  '/google/callback',
-  passport.authenticate('google', { failureRedirect: '/auth/login', session: false }),
-  authController.handleGoogleCallback
+  "/google/callback",
+  passport.authenticate("google", { failureRedirect: "/auth/login", session: false }),
+  authController.handleGoogleCallback,
 );

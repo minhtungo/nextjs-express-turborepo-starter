@@ -28,6 +28,10 @@ export const getRefreshToken = async (token: string) => {
   return await db.query.refreshTokens.findFirst({ where: eq(refreshTokens.token, token) });
 };
 
+export const getRefreshTokenByUserId = async (userId: string) => {
+  return await db.query.refreshTokens.findFirst({ where: eq(refreshTokens.userId, userId) });
+};
+
 export const deleteRefreshToken = async (token: string) => {
   await db.delete(refreshTokens).where(eq(refreshTokens.token, token));
 };

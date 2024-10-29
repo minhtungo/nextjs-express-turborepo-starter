@@ -72,7 +72,9 @@ const sendVerificationEmail: RequestHandler = async (req, res) => {
 };
 
 const handleRefreshToken: RequestHandler = async (req, res) => {
-  const serviceResponse = await authService.handleRefreshToken(req, res);
+  const user = req.user;
+  console.log('handleRefreshToken', user);
+  const serviceResponse = await authService.refreshToken(user?.id!, user?.email!);
 
   return handleServiceResponse(serviceResponse, res);
 };
@@ -86,17 +88,6 @@ const handleGoogleCallback: RequestHandler = async (req, res) => {
   }
 
   const { accessToken, refreshToken } = userService.generateTokens(user.id);
-
-  const serviceResponse = ServiceResponse.success(
-    'Success',
-    {
-      accessToken,
-      refreshToken,
-      id: user.id,
-      email: user.email,
-    },
-    StatusCodes.OK
-  );
 
   res.redirect(
     `${env.SITE_BASE_URL}/api/auth/google/callback?userId=${user.id}&email=${user.email}&accessToken=${accessToken}&refreshToken=${refreshToken}`

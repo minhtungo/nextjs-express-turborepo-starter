@@ -1,14 +1,7 @@
 import { apiRoutes } from '@/config';
 import { env } from '@/config/env';
-import {
-  refreshTokenProps,
-  resetPasswordProps,
-  sendVerificationEmailProps,
-  signInProps,
-  signUpProps,
-  verifyEmailProps,
-} from '@/features/auth/lib/schemas';
-import { api, type ApiResponse } from '@/lib/api';
+import { resetPasswordProps, sendVerificationEmailProps, signInProps, signUpProps } from '@/features/auth/lib/schemas';
+import { api } from '@/lib/api';
 import {
   ForgotPasswordDTO,
   RefreshTokenDTO,
@@ -21,7 +14,7 @@ import {
 
 export const signUpService = async (values: signUpProps): Promise<SignUpDTO> => {
   const response = await api.post<SignUpDTO>(
-    apiRoutes.signUp,
+    apiRoutes.auth.signUp,
     {
       body: values,
     },
@@ -33,7 +26,7 @@ export const signUpService = async (values: signUpProps): Promise<SignUpDTO> => 
 
 export const signInService = async (values: signInProps): Promise<SignInDTO> => {
   const response = await api.post<SignInDTO>(
-    apiRoutes.signIn,
+    apiRoutes.auth.signIn,
     {
       body: values,
     },
@@ -45,7 +38,7 @@ export const signInService = async (values: signInProps): Promise<SignInDTO> => 
 
 export const forgotPasswordService = async (email: string): Promise<ForgotPasswordDTO> => {
   const response = await api.post<ForgotPasswordDTO>(
-    apiRoutes.forgotPassword,
+    apiRoutes.auth.forgotPassword,
     {
       body: { email },
     },
@@ -56,7 +49,7 @@ export const forgotPasswordService = async (email: string): Promise<ForgotPasswo
 
 export const verifyEmailService = async (token: string): Promise<VerifyEmailDTO> => {
   const response = await api.post<VerifyEmailDTO>(
-    apiRoutes.verifyEmail,
+    apiRoutes.auth.verifyEmail,
     {
       body: { token },
     },
@@ -68,7 +61,7 @@ export const verifyEmailService = async (token: string): Promise<VerifyEmailDTO>
 
 export const resetPasswordService = async (values: resetPasswordProps): Promise<ResetPasswordDTO> => {
   const response = await api.post<ResetPasswordDTO>(
-    apiRoutes.resetPassword,
+    apiRoutes.auth.resetPassword,
     {
       body: values,
     },
@@ -80,7 +73,7 @@ export const resetPasswordService = async (values: resetPasswordProps): Promise<
 
 export const refreshTokenService = async (refreshToken: string): Promise<string> => {
   const result = await api.post<RefreshTokenDTO>(
-    apiRoutes.refreshToken,
+    apiRoutes.auth.refreshToken,
     {
       body: { refreshToken },
     },
@@ -101,7 +94,7 @@ export const sendVerificationEmailService = async ({
   token,
 }: sendVerificationEmailProps): Promise<SendVerificationEmailDTO> => {
   const response = await api.post<SendVerificationEmailDTO>(
-    apiRoutes.signIn,
+    apiRoutes.auth.signIn,
     {
       body: { token },
     },

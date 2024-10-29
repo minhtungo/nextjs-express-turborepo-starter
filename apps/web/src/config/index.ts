@@ -20,11 +20,16 @@ export const authRoutes = {
 };
 
 export const apiRoutes = {
-  signIn: '/auth/sign-in',
-  signUp: '/auth/sign-up',
-  forgotPassword: '/auth/forgot-password',
-  verifyEmail: '/auth/verify-email',
-  resetPassword: '/auth/reset-password',
-  sendVerificationEmail: '/auth/send-verification-email',
-  refreshToken: '/auth/refresh-token',
+  auth: {
+    signIn: '/auth/sign-in',
+    signUp: '/auth/sign-up',
+    forgotPassword: '/auth/forgot-password',
+    verifyEmail: '/auth/verify-email',
+    resetPassword: '/auth/reset-password',
+    sendVerificationEmail: '/auth/send-verification-email',
+    refreshToken: '/auth/refresh-token',
+  },
+  user: {
+    getUserInfo: '/users',
+  },
 };

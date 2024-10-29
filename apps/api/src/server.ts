@@ -16,6 +16,7 @@ import passport from "passport";
 import "@/api/auth/strategies/jwt";
 import "@/api/auth/strategies/google";
 import "@/api/auth/strategies/local";
+import "@/api/auth/strategies/refresh-token";
 
 const logger = pino({ name: "server start" });
 const app: Express = express();

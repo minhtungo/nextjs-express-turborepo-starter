@@ -49,7 +49,7 @@ interface FetchOptions extends RequestInit {
 }
 
 export const api = {
-  get: async <T>(path: string, options?: Omit<FetchOptions, 'method'>, isPublic?: boolean): Promise<ApiResponse<T>> => {
+  get: async <T>(path: string, options?: Omit<FetchOptions, 'method'>, isPublic?: boolean): Promise<T> => {
     const response = await authFetch(
       `${env.SERVER_BASE_URL}${path}`,
       {

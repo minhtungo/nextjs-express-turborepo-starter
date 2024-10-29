@@ -1,4 +1,5 @@
 import { authRoutes } from '@/config';
+import { getUserInfoService } from '@/features/user/lib/services';
 import { getCurrentUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
@@ -9,7 +10,14 @@ const DashBoard = async () => {
     redirect(authRoutes.signIn);
   }
 
-  return <div>{user.email}</div>;
+  const data = await getUserInfoService();
+
+  return (
+    <div>
+      {user.email}
+      <h3>Response: {JSON.stringify(data)}</h3>
+    </div>
+  );
 };
 
 export default DashBoard;
