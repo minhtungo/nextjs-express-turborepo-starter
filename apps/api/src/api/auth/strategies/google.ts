@@ -1,8 +1,6 @@
 import { env } from "@/common/config/env";
-import { ServiceResponse } from "@/common/models/serviceResponse";
 import { createAccount, getAccountByUserId } from "@/data-access/accounts";
 import { createUser, getUserByEmail } from "@/data-access/users";
-import { StatusCodes } from "http-status-codes";
 import passport from "passport";
 import { Strategy, type StrategyOptions } from "passport-google-oauth20";
 
@@ -29,17 +27,17 @@ export default passport.use(
     let existingUser = undefined;
 
     try {
-      existingUser = await getUserByEmail<Express.User>(email, {
+      existingUser = await getUserByEmail(email, {
         id: true,
         email: true,
       });
 
       if (existingUser) {
-        const existingAccount = await getAccountByUserId(existingUser.id);
+        const existingAccount = await getAccountByUserId(existingUser.id!);
 
         if (existingAccount?.provider === "google") {
           // User already has Google auth set up, proceed with login
-          return done(null, existingUser);
+          return done(null, existingUser as Express.User);
         } else {
           return done(
             {

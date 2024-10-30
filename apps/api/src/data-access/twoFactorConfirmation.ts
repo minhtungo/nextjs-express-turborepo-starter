@@ -10,8 +10,8 @@ export const getTwoFactorConfirmation = async (userId: string) => {
   return existingToken;
 };
 
-export const createTwoFactorConfirmation = async (userId: string) => {
-  await db.insert(twoFactorConfirmations).values({
+export const createTwoFactorConfirmation = async (userId: string, trx = db) => {
+  await trx.insert(twoFactorConfirmations).values({
     userId,
   });
 };

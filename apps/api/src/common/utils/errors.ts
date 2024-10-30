@@ -7,6 +7,6 @@ export class PublicError extends Error {
 export class UnauthorizedError extends PublicError {
   constructor(message: string) {
     super(message);
-    this.name = 'UnauthorizedError';
+    this.name = "UnauthorizedError";
   }
 }

@@ -26,7 +26,7 @@ export const createResetPasswordToken = async (userId: string) => {
   return token;
 };
 
-export const getResetPasswordToken = async (token: string) => {
+export const getResetPasswordTokenByToken = async (token: string) => {
   const existingToken = await db.query.resetPasswordTokens.findFirst({
     where: eq(resetPasswordTokens.token, token),
   });
@@ -34,10 +34,6 @@ export const getResetPasswordToken = async (token: string) => {
   return existingToken;
 };
 
-// export const deleteResetPasswordToken = async (token: string, trx = db) => {
-//   await trx.delete(resetPasswordTokens).where(eq(resetPasswordTokens.token, token));
-// };
-
-export const deleteResetPasswordToken = async (token: string) => {
-  await db.delete(resetPasswordTokens).where(eq(resetPasswordTokens.token, token));
+export const deleteResetPasswordToken = async (token: string, trx = db) => {
+  await trx.delete(resetPasswordTokens).where(eq(resetPasswordTokens.token, token));
 };

@@ -24,10 +24,14 @@ export const createVerificationToken = async (userId: string) => {
   return token;
 };
 
-export const getVerificationToken = async (token: string) => {
+export const getVerificationTokenByToken = async (token: string) => {
   return await db.query.verificationTokens.findFirst({ where: eq(verificationTokens.token, token) });
 };
 
-export const deleteVerificationToken = async (token: string) => {
-  await db.delete(verificationTokens).where(eq(verificationTokens.token, token));
+export const getVerificationTokenByUserId = async (userId: string) => {
+  return await db.query.verificationTokens.findFirst({ where: eq(verificationTokens.userId, userId) });
+};
+
+export const deleteVerificationToken = async (token: string, trx = db) => {
+  await trx.delete(verificationTokens).where(eq(verificationTokens.token, token));
 };

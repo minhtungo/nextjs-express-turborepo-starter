@@ -1,7 +1,8 @@
 import { authService } from "@/api/auth/authService";
 import { db } from "@/db";
 import { userSettings, users } from "@/db/schema";
-import type { InsertUser } from "@/db/schema/users";
+import type { InsertUserSettings } from "@/db/schema/userSettings";
+import type { InsertUser, SelectUser } from "@/db/schema/users";
 import { eq } from "drizzle-orm";
 
 export const createUser = async (data: InsertUser) => {
@@ -9,33 +10,50 @@ export const createUser = async (data: InsertUser) => {
 
   const password = plainPassword ? await authService.hashPassword(plainPassword) : undefined;
 
-  // Using a transaction to ensure both operations succeed or fail together
-  return await db.transaction(async (tx) => {
-    const [user] = await tx
-      .insert(users)
-      .values({ ...rest, password })
-      .returning({
-        id: users.id,
-        email: users.email,
-      });
-
-    // Create default user settings
-    await tx.insert(userSettings).values({
-      userId: user.id,
-      // Add any default settings here
+  const user = await db
+    .insert(users)
+    .values({ ...rest, password })
+    .returning({
+      id: users.id,
+      email: users.email,
     });
 
-    return user;
-  });
+  return user[0];
+
+  // Using a transaction to ensure both operations succeed or fail together
+  // return await db.transaction(async (tx) => {
+  //   const [user] = await tx
+  //     .insert(users)
+  //     .values({ ...rest, password })
+  //     .returning({
+  //       id: users.id,
+  //       email: users.email,
+  //     });
+
+  //   // Create default user settings
+  //   await tx.insert(userSettings).values({
+  //     userId: user.id,
+  //     // Add any default settings here
+  //   });
+
+  //   return user;
+  // });
 };
 
-export const getUserByEmail = async <T>(email: string, columns?: UserColumns) => {
+export const createUserSettings = async (data: InsertUserSettings) => {
+  await db.insert(userSettings).values(data);
+};
+
+export const getUserByEmail = async <TColumns extends Partial<Record<keyof SelectUser, true>>>(
+  email: string,
+  columns?: TColumns,
+) => {
   const user = await db.query.users.findFirst({
     where: eq(users.email, email),
     columns,
   });
 
-  return user as T;
+  return user as Partial<SelectUser>;
 };
 
 type UserColumns = {
@@ -57,8 +75,8 @@ export const getUserSettingsByUserId = async (userId: string) => {
   });
 };
 
-export const updateUserEmailVerification = async (userId: string) => {
-  await db.update(users).set({ emailVerified: new Date() }).where(eq(users.id, userId));
+export const updateUserEmailVerification = async (userId: string, trx = db) => {
+  await trx.update(users).set({ emailVerified: new Date() }).where(eq(users.id, userId));
 };
 
 export const updateProfile = async ({ userId, data }: { userId: string; data: Partial<InsertUser> }) => {
@@ -70,8 +88,12 @@ export const updateSettings = async ({ userId, data }: { userId: string; data: P
   await db.update(userSettings).set(data).where(eq(userSettings.userId, userId));
 };
 
-export const updatePassword = async ({ userId, newPassword }: { userId: string; newPassword: string }) => {
+export const updatePassword = async ({
+  userId,
+  newPassword,
+  trx = db,
+}: { userId: string; newPassword: string; trx?: typeof db }) => {
   const hashedPassword = await authService.hashPassword(newPassword);
 
-  await db.update(users).set({ password: hashedPassword }).where(eq(users.id, userId));
+  await trx.update(users).set({ password: hashedPassword }).where(eq(users.id, userId));
 };
