@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { refreshTokens } from "@/db/schema";
+import refreshTokens from "@/db/schema/refreshTokens";
 import { eq } from "drizzle-orm";
 
 export const saveRefreshToken = async (userId: string, token: string) => {

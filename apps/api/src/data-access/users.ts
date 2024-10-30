@@ -1,6 +1,7 @@
 import { authService } from "@/api/auth/authService";
 import { db } from "@/db";
-import { type InsertUser, type InsertUserSettings, type SelectUser, userSettings, users } from "@/db/schema";
+import { userSettings, users } from "@/db/schema";
+import type { InsertUser } from "@/db/schema/users";
 import { eq } from "drizzle-orm";
 
 export const createUser = async (data: InsertUser) => {

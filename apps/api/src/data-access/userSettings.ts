@@ -1,5 +1,6 @@
 import { db } from "@/db";
-import { type InsertUserSettings, userSettings } from "@/db/schema";
+import { userSettings } from "@/db/schema";
+import type { InsertUserSettings } from "@/db/schema/userSettings";
 
 export const createUserSettings = async ({ userId, ...data }: { userId: string } & Partial<InsertUserSettings>) => {
   await db.insert(userSettings).values({

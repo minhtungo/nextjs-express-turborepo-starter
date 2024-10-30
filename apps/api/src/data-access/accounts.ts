@@ -1,6 +1,7 @@
 import { saltRounds } from "@/common/config/config";
 import { db } from "@/db";
-import { type InsertAccount, accounts, users } from "@/db/schema";
+import { accounts, users } from "@/db/schema";
+import type { InsertAccount } from "@/db/schema/accounts";
 import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 
