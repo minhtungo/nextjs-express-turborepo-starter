@@ -1,7 +1,7 @@
 'use client';
 
-import PasswordInput from '@/components/PasswordInput';
 import LoaderButton from '@/components/LoaderButton';
+import PasswordInput from '@/components/PasswordInput';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { authRoutes } from '@/config';
@@ -67,7 +67,7 @@ const SignInForm = () => {
             </>
           )}
 
-          {(error || urlError) && <FormResponse variant='error' message={error || urlError} />}
+          {(error || urlError) && <FormResponse variant='error' message={error || urlError || ''} />}
 
           <div className='pt-2'>
             <LoaderButton className='w-full' isPending={isPending}>

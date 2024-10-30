@@ -40,7 +40,11 @@ const handleApiResponse = async <T>(response: Response): Promise<T> => {
     console.log('result', result);
     return result;
   } catch (error) {
-    return ApiResponse.failure(error?.message || 'An error occurred during the request', null, response.status) as T;
+    return ApiResponse.failure(
+      error?.message || error || 'An error occurred during the request',
+      null,
+      response.status
+    ) as T;
   }
 };
 

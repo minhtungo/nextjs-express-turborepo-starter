@@ -1,6 +1,8 @@
 import { env } from "@/common/config/env";
-import { createAccount } from "@/data-access/accounts";
+import { ServiceResponse } from "@/common/models/serviceResponse";
+import { createAccount, getAccountByUserId } from "@/data-access/accounts";
 import { createUser, getUserByEmail } from "@/data-access/users";
+import { StatusCodes } from "http-status-codes";
 import passport from "passport";
 import { Strategy, type StrategyOptions } from "passport-google-oauth20";
 
@@ -15,25 +17,39 @@ export default passport.use(
   new Strategy(opts, async (accessToken, refreshToken, profile, done) => {
     const email = profile?.emails?.[0].value;
 
-    if (!email) return done(null, undefined);
+    if (!email)
+      return done(
+        {
+          code: "EMAIL_REQUIRED",
+          message: "Email is required from Google account",
+        },
+        undefined,
+      );
 
     let existingUser = undefined;
 
     try {
-      existingUser = await getUserByEmail(email, {
+      existingUser = await getUserByEmail<Express.User>(email, {
         id: true,
         email: true,
       });
 
       if (existingUser) {
-        return done(null, existingUser);
-      }
-    } catch (error) {
-      return done(error, undefined);
-    }
+        const existingAccount = await getAccountByUserId(existingUser.id);
 
-    try {
-      if (existingUser) return;
+        if (existingAccount?.provider === "google") {
+          // User already has Google auth set up, proceed with login
+          return done(null, existingUser);
+        } else {
+          return done(
+            {
+              code: "PROVIDER_CONFLICT",
+              message: "Email already registered with different provider",
+            },
+            undefined,
+          );
+        }
+      }
 
       const newUser = await createUser({
         email,
@@ -51,9 +67,15 @@ export default passport.use(
         refresh_token: refreshToken,
       });
 
-      done(null, newUser);
+      return done(null, newUser as Express.User);
     } catch (error) {
-      return done(error, undefined);
+      return done(
+        {
+          code: "AUTH_ERROR",
+          message: "Authentication failed",
+        },
+        undefined,
+      );
     }
   }),
 );

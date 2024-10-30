@@ -1,5 +1,4 @@
 import { authService } from "@/api/auth/authService";
-import type { AuthJwtUser } from "@/common/types/auth";
 import { logger } from "@/server";
 import passport from "passport";
 import { type IStrategyOptionsWithRequest, Strategy } from "passport-local";
@@ -27,7 +26,7 @@ export default passport.use(
         );
       }
 
-      const user: AuthJwtUser = {
+      const user: Express.User = {
         id: result.data?.id!,
         email: result.data?.email!,
         isTwoFactorEnabled: result.data?.isTwoFactorEnabled!,

@@ -28,8 +28,6 @@ import { z } from 'zod';
 export const signUpAction = actionClient.schema(signUpSchema).action(async ({ parsedInput }) => {
   const result = await signUpService(parsedInput);
 
-  console.log('resulttest', result);
-
   if (!result.success) {
     return {
       error: result.message || 'An error occurred during sign in',

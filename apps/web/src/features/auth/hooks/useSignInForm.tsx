@@ -10,8 +10,7 @@ import { z } from 'zod';
 export const useSignInForm = () => {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect');
-
-  const urlError = searchParams.get('error') === 'OAuthAccountNotLinked' ? 'OAuthAccountNotLinked' : '';
+  const urlError = searchParams.get('errorMessage');
 
   const {
     isPending,

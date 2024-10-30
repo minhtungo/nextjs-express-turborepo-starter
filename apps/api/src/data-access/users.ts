@@ -28,13 +28,13 @@ export const createUser = async (data: InsertUser) => {
   });
 };
 
-export const getUserByEmail = async (email: string, columns?: UserColumns) => {
+export const getUserByEmail = async <T>(email: string, columns?: UserColumns) => {
   const user = await db.query.users.findFirst({
     where: eq(users.email, email),
     columns,
   });
 
-  return user;
+  return user as T;
 };
 
 type UserColumns = {
