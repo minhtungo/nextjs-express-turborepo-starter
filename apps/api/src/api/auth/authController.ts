@@ -81,7 +81,7 @@ const handleGoogleCallback: RequestHandler = async (req, res) => {
     return handleServiceResponse(serviceResponse, res);
   }
 
-  const { accessToken, refreshToken } = userService.generateTokens(user.id);
+  const { accessToken, refreshToken } = authService.generateTokens(user.id);
 
   res.redirect(
     `${env.SITE_BASE_URL}/api/auth/google/callback?userId=${user.id}&email=${user.email}&accessToken=${accessToken}&refreshToken=${refreshToken}`,

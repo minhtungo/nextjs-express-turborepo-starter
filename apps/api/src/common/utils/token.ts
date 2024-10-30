@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 
-export const generateRandomToken = async (length = 32): Promise<string> => {
+export const generateToken = async (length = 32): Promise<string> => {
   // Use crypto.randomBytes for cryptographically strong random values
   const buffer = await crypto.randomBytes(Math.ceil(length * 0.75)); // Adjust for base64 encoding
 

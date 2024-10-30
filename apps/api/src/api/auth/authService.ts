@@ -393,4 +393,5 @@ export const authService = {
   comparePassword,
   signIn,
   validateRefreshToken,
+  generateTokens,
 };
