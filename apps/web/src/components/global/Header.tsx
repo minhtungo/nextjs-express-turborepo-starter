@@ -1,19 +1,19 @@
 import SignOutButton from '@/components/SignOutButton';
+import ThemeToggle from '@/components/ThemeToggle';
 import { authRoutes } from '@/config';
 import { getCurrentUser } from '@/lib/auth';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
-interface HeaderProps {}
-
-const Header = ({}: HeaderProps) => {
+const Header = () => {
   return (
-    <header className='h-14 p-4 border-b'>
-      <div className='flex items-center justify-between'>
+    <header className='h-14  border-b'>
+      <div className='flex p-4 h-full w-full items-center justify-between'>
         <Link href='/'>Home</Link>
         <Suspense fallback={'Loading...'}>
           <AuthButtons />
         </Suspense>
+        <ThemeToggle />
       </div>
     </header>
   );

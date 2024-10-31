@@ -1,7 +1,7 @@
 import { apiRoutes } from '@/config';
 import { env } from '@/config/env';
 import { resetPasswordProps, sendVerificationEmailProps, signInProps, signUpProps } from '@/features/auth/lib/schemas';
-import { api } from '@/lib/api';
+import { api } from '@/lib/auth/api';
 import {
   ForgotPasswordDTO,
   RefreshTokenDTO,

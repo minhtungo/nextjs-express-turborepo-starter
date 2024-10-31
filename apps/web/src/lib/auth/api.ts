@@ -1,5 +1,5 @@
 import { env } from '@/config/env';
-import { authFetch } from '@/lib/authFetch';
+import { authFetch } from '@/lib/auth/authFetch';
 import { StatusCodes } from 'http-status-codes';
 import { z } from 'zod';
 
