@@ -6,7 +6,7 @@ const AuthError = () => {
   const message = searchParams.get('errorMessage');
   if (!message) return null;
 
-  return <FormResponse variant='error' message={message} />;
+  return <FormResponse variant='destructive' description={message} title='Authentication Error' />;
 };
 
 export default AuthError;

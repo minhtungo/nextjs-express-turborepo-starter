@@ -22,8 +22,8 @@ const ResendVerificationEmail = ({ className, token }: ResendVerificationEmailPr
 
   return (
     <>
-      {error && <FormResponse variant='error' className='mt-4' message={error} />}
-      {hasSucceeded && <FormResponse variant='success' message='Verification email sent' />}
+      {error && <FormResponse variant='destructive' className='mt-4' description={error} title='Error' />}
+      {hasSucceeded && <FormResponse variant='success' title='Success' description='Verification email sent' />}
       <LoaderButton
         type='button'
         className={cn('w-full', className)}

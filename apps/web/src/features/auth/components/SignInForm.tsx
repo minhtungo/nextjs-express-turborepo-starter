@@ -63,11 +63,17 @@ const SignInForm = () => {
                   </FormItem>
                 )}
               />
-              <FormResponse variant='success' message='Please enter the code sent to your email' />
+              <FormResponse
+                variant='success'
+                description='Please enter the code sent to your email'
+                title='Code sent'
+              />
             </>
           )}
 
-          {(error || urlError) && <FormResponse variant='error' message={error || urlError || ''} />}
+          {(error || urlError) && (
+            <FormResponse variant='destructive' description={error || urlError || ''} title='Error' />
+          )}
 
           <div className='pt-2'>
             <LoaderButton className='w-full' isPending={isPending}>

@@ -35,8 +35,8 @@ const ForgotPasswordForm = () => {
             )}
           />
 
-          {error && <FormResponse variant='error' message={error} />}
-          {success && <FormResponse message={success} />}
+          {error && <FormResponse variant='destructive' description={error} title='Error' />}
+          {success && <FormResponse variant='success' description={success} title='Success' />}
           <LoaderButton className='w-full' isPending={isPending}>
             Reset Password
           </LoaderButton>

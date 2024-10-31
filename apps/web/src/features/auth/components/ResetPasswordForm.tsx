@@ -50,8 +50,8 @@ const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
               </FormItem>
             )}
           />
-          {error && <FormResponse variant='error' message={error} />}
-          {success && <FormResponse message={success} />}
+          {error && <FormResponse variant='destructive' description={error} title='Error' />}
+          {success && <FormResponse description={success} title='Success' variant='success' />}
           <LoaderButton className='w-full' isPending={isPending}>
             Reset Password
           </LoaderButton>

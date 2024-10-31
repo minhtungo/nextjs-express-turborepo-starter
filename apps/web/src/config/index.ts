@@ -7,6 +7,10 @@ export const cookie = {
     name: 'x-refresh-token',
     maxAge: 60 * 60 * 24 * 7,
   },
+  session: {
+    name: 'user',
+    maxAge: 60 * 60 * 24,
+  },
 };
 
 export const afterLoginUrl = '/dashboard';

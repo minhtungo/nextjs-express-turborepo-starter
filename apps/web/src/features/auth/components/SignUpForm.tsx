@@ -66,8 +66,8 @@ const SignUpForm = () => {
               </FormItem>
             )}
           />
-          {error && <FormResponse variant='error' message={error} />}
-          {success && <FormResponse variant='success' message={success} />}
+          {error && <FormResponse variant='destructive' description={error} title='Error' />}
+          {success && <FormResponse variant='success' description={success} title='Success' />}
           <div className='grid gap-3 pt-2'>
             <LoaderButton className='w-full' isPending={isPending}>
               Sign Up

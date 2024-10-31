@@ -1,27 +1,33 @@
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { cva, VariantProps } from 'class-variance-authority';
-import { CheckCircle, MessageCircleWarning } from 'lucide-react';
+import { Info, Terminal } from 'lucide-react';
 
-const formResponseVariants = cva('flex items-center justify-center text-sm', {
+const formResponseVariants = cva('', {
   variants: {
     variant: {
-      success: 'bg-success text-success-foreground',
-      error: 'text-red-500 dark:text-red-400',
+      success: '',
+      destructive: '',
     },
+  },
+  defaultVariants: {
+    variant: 'success',
   },
 });
 
 export interface FormResponseProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof formResponseVariants> {
-  message: string;
+  title: string;
+  description: string;
 }
 
-const FormResponse = ({ message, className, variant, ...props }: FormResponseProps) => {
+const FormResponse = ({ title, description, className, variant, ...props }: FormResponseProps) => {
   return (
-    <div className={formResponseVariants({ variant, className })} {...props}>
-      {variant === 'success' ? <CheckCircle className='size-5' /> : <MessageCircleWarning className='size-5' />}
-      {message}
-    </div>
+    <Alert variant={variant} className={className} {...props}>
+      <Info className='size-4' />
+      <AlertTitle>{title}</AlertTitle>
+      <AlertDescription>{description}</AlertDescription>
+    </Alert>
   );
 };
 
