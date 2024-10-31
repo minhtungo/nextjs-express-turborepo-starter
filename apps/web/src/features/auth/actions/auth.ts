@@ -49,6 +49,8 @@ export const signInAction = actionClient
   .action(async ({ parsedInput }) => {
     const result = await signInService(parsedInput.values);
 
+    console.log('resulttest', result);
+
     if (!result.success) {
       return {
         error: result.message || 'An error occurred during sign in',
@@ -70,7 +72,7 @@ export const signInAction = actionClient
       refreshToken: result.data.refreshToken,
     });
 
-    redirect(afterLoginUrl);
+    redirect(parsedInput.redirectTo || afterLoginUrl);
   });
 
 export const forgotPasswordAction = actionClient

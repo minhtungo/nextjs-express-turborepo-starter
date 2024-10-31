@@ -18,11 +18,12 @@ const SignInForm = () => {
 
   return (
     <AuthFormWrapper title='Sign in' description='Sign in to your account' noBorderMobile>
+      <GoogleSignInButton />
+
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4 mt-4'>
           {!isTwoFactorEnabled ? (
             <>
-              <GoogleSignInButton />
               <FormField
                 control={form.control}
                 name='email'
@@ -89,8 +90,8 @@ const SignInForm = () => {
           Sign Up
         </Link>
       </div>
-      <div className='mt-2 text-center'>
-        <Link href={authRoutes.forgotPassword} className='inline-block text-xs text-muted-foreground hover:underline'>
+      <div className='text-center'>
+        <Link href={authRoutes.forgotPassword} className='inline-block text-sm text-muted-foreground hover:underline'>
           Forgot password?
         </Link>
       </div>

@@ -1,5 +1,5 @@
 import { updateTokens } from '@/features/auth/actions/session';
-import { ApiResponse } from '@/lib/api';
+import { ApiResponse } from '@/lib/auth/api';
 import { StatusCodes } from 'http-status-codes';
 import { NextRequest } from 'next/server';
 

@@ -1,10 +1,9 @@
-import { passwordRegex } from '@/lib/regex';
 import { commonValidations } from '@/lib/validation';
 import { z } from 'zod';
 
 export const signInSchema = z.object({
   email: commonValidations.email,
-  password: commonValidations.password,
+  password: z.string().min(1, 'Password is required'),
   code: z.optional(z.string()),
 });
 

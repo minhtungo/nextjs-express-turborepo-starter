@@ -8,7 +8,7 @@ const SignOutButton = () => {
   const { execute: signOut, isPending } = useAction(signOutAction);
 
   return (
-    <LoaderButton type='button' isPending={isPending} onClick={() => signOut()}>
+    <LoaderButton type='button' isPending={isPending} onClick={() => signOut()} size='sm'>
       Sign out
     </LoaderButton>
   );

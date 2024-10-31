@@ -1,6 +1,6 @@
 import { authRoutes } from '@/config';
 import { getUserInfoService } from '@/features/user/lib/services';
-import { getCurrentUser } from '@/lib/auth/auth';
+import { getCurrentUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
 const DashBoard = async () => {

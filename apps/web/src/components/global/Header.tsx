@@ -10,10 +10,12 @@ const Header = () => {
     <header className='h-14  border-b'>
       <div className='flex p-4 h-full w-full items-center justify-between'>
         <Link href='/'>Home</Link>
-        <Suspense fallback={'Loading...'}>
-          <AuthButtons />
-        </Suspense>
-        <ThemeToggle />
+        <div className='flex gap-x-2 items-center'>
+          <ThemeToggle />
+          <Suspense fallback={'Loading...'}>
+            <AuthButtons />
+          </Suspense>
+        </div>
       </div>
     </header>
   );
