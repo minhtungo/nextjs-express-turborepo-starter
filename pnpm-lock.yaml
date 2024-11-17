@@ -23,12 +23,6 @@ importers:
       '@asteasolutions/zod-to-openapi':
         specifier: ^7.0.0
         version: 7.2.0(zod@3.23.8)
-      '@repo/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/config-eslint
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/config-typescript
       bcryptjs:
         specifier: ^2.4.3
         version: 2.4.3
@@ -90,6 +84,12 @@ importers:
       '@biomejs/biome':
         specifier: 1.9.4
         version: 1.9.4
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/config-eslint
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/config-typescript
       '@types/bcryptjs':
         specifier: ^2.4.6
         version: 2.4.6
@@ -214,6 +214,12 @@ importers:
         specifier: ^3.23.8
         version: 3.23.8
     devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/config-eslint
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/config-typescript
       '@types/node':
         specifier: ^22
         version: 22.7.7
@@ -258,6 +264,8 @@ importers:
         version: 3.4.1
 
   packages/config-typescript: {}
+
+  packages/types: {}
 
 packages:
 

@@ -1,9 +1,8 @@
 'use client';
 
-import { cn } from '@/lib/utils';
-import React, { FC } from 'react';
-import { Button, ButtonProps } from '@/components/ui/button';
 import Spinner from '@/components/Spinner';
+import { Button, ButtonProps } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface LoaderButtonProps extends ButtonProps {
   isPending: boolean;

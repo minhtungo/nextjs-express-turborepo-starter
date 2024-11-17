@@ -22,8 +22,6 @@
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.0.0",
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -45,6 +43,8 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@biomejs/biome": "1.9.4",
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.17",
