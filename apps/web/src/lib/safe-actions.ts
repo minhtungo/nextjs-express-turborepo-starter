@@ -1,4 +1,4 @@
-import { getSession } from '@/features/auth/actions/session';
+import { getSession } from '@/lib/auth/auth';
 import { createMiddleware, createSafeActionClient } from 'next-safe-action';
 
 export const actionClient = createSafeActionClient();

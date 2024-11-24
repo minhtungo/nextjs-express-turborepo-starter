@@ -1,5 +1,5 @@
 import { authRoutes } from '@/config';
-import { getAccessToken, getSession } from '@/features/auth/actions/session';
+import { getAccessToken, getSession } from '@/lib/auth/auth';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 

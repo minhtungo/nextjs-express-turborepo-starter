@@ -1,7 +1,7 @@
 import { afterLoginUrl } from '@/config';
 import { env } from '@/config/env';
-import { createSession } from '@/features/auth/actions/session';
-import { ApiResponse } from '@/lib/auth/api';
+import { createSession } from '@/lib/auth/auth';
+import { ApiResponse } from '@/lib/api/baseFetch';
 import { StatusCodes } from 'http-status-codes';
 import { redirect } from 'next/navigation';
 import { type NextRequest } from 'next/server';

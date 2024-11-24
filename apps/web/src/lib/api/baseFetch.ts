@@ -1,7 +1,7 @@
 import { env } from '@/config/env';
-import { authFetch } from '@/lib/auth/authFetch';
+import { authFetch } from '@/lib/api';
+import { handleApiResponse } from '@/lib/api/utils';
 import { StatusCodes } from 'http-status-codes';
-import { z } from 'zod';
 
 export class ApiResponse<T = null> {
   readonly success: boolean;
@@ -24,25 +24,6 @@ export class ApiResponse<T = null> {
     return new ApiResponse(false, message, data, statusCode);
   }
 }
-
-export const ApiResponseSchema = z.object({
-  success: z.boolean(),
-  message: z.string().optional(),
-  data: z.any().optional(),
-  statusCode: z.number(),
-});
-
-export type ApiResponseType = z.infer<typeof ApiResponseSchema>;
-
-const handleApiResponse = async <T>(response: Response): Promise<T> => {
-  try {
-    const result = await response.json();
-    console.log('result', result);
-    return result;
-  } catch (error) {
-    return ApiResponse.failure('Server error', null, response.status) as T;
-  }
-};
 
 interface FetchOptions extends RequestInit {
   body: any;

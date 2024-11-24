@@ -1,4 +1,4 @@
-import { ApiResponseType } from '@/lib/api';
+import { ApiResponseType } from '@/lib/auth';
 
 export interface SignUpDTO extends ApiResponseType {
   data: {

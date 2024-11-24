@@ -1,25 +1,25 @@
-import bcrypt from "bcryptjs";
-import { StatusCodes } from "http-status-codes";
-import { hashToken, verifyToken } from "./../../common/utils/token";
-import type { LoginInput, LoginResponse, SignUpInput } from "./authModel";
+import { hashToken, verifyToken } from '@/common/utils/token';
+import bcrypt from 'bcryptjs';
+import { StatusCodes } from 'http-status-codes';
+import type { LoginInput, LoginResponse, SignUpInput } from './authModel';
 
-import { ServiceResponse } from "@/common/models/serviceResponse";
+import { ServiceResponse } from '@/common/models/serviceResponse';
 
 import {
   createResetPasswordToken,
   deleteResetPasswordToken,
   getResetPasswordTokenByToken,
-} from "@/data-access/resetPasswordTokens";
+} from '@/data-access/resetPasswordTokens';
 
-import { deleteRefreshToken, getRefreshTokenByUserId, updateRefreshToken } from "@/data-access/refreshTokens";
+import { deleteRefreshToken, getRefreshTokenByUserId, updateRefreshToken } from '@/data-access/refreshTokens';
 
 import {
   createTwoFactorConfirmation,
   deleteTwoFactorConfirmation,
   getTwoFactorConfirmation,
-} from "@/data-access/twoFactorConfirmation";
+} from '@/data-access/twoFactorConfirmation';
 
-import { deleteTwoFactorToken, getTwoFactorTokenByEmail } from "@/data-access/twoFactorToken";
+import { deleteTwoFactorToken, getTwoFactorTokenByEmail } from '@/data-access/twoFactorToken';
 import {
   createUser,
   getUserByEmail,
@@ -27,33 +27,33 @@ import {
   getUserSettingsByUserId,
   updatePassword,
   updateUserEmailVerification,
-} from "@/data-access/users";
+} from '@/data-access/users';
 import {
   createVerificationToken,
   deleteVerificationToken,
   getVerificationTokenByToken,
   getVerificationTokenByUserId,
-} from "@/data-access/verificationToken";
+} from '@/data-access/verificationToken';
 
-import { applicationName, cookie, saltRounds } from "@/common/config/config";
-import { env } from "@/common/config/env";
-import { createTransaction } from "@/common/utils/db";
-import { UnauthorizedError } from "@/common/utils/errors";
-import { sendEmail } from "@/common/utils/mail";
-import { logger } from "@/server";
-import { sign } from "jsonwebtoken";
+import { applicationName, cookie, saltRounds } from '@/common/config/config';
+import { env } from '@/common/config/env';
+import { createTransaction } from '@/common/utils/db';
+import { UnauthorizedError } from '@/common/utils/errors';
+import { sendEmail } from '@/common/utils/mail';
+import { logger } from '@/server';
+import { sign } from 'jsonwebtoken';
 
 const signIn = async (userId: string, email: string, isTwoFactorEnabled: boolean) => {
   const { accessToken, refreshToken } = generateTokens(userId);
 
-  const hashedRefreshToken = hashToken(refreshToken, env.REFRESH_TOKEN_SECRET);
+  // const hashedRefreshToken = hashToken(refreshToken, env.REFRESH_TOKEN_SECRET);
 
-  await updateRefreshToken(userId, hashedRefreshToken);
+  await updateRefreshToken(userId, accessToken);
 
   const serviceResponse = ServiceResponse.success(
-    "Sign in successful",
+    'Sign in successful',
     { accessToken, refreshToken, user: { id: userId, email }, isTwoFactorEnabled },
-    StatusCodes.OK,
+    StatusCodes.OK
   );
 
   return serviceResponse;
@@ -68,9 +68,9 @@ const signUp = async ({ email, name, password }: SignUpInput): Promise<ServiceRe
 
     if (isExistingUser) {
       if (!isExistingUser.emailVerified) {
-        return ServiceResponse.failure("Please verify your email", null, StatusCodes.CONFLICT);
+        return ServiceResponse.failure('Please verify your email', null, StatusCodes.CONFLICT);
       }
-      return ServiceResponse.failure("User already exists", null, StatusCodes.CONFLICT);
+      return ServiceResponse.failure('User already exists', null, StatusCodes.CONFLICT);
     }
 
     const user = await createUser({
@@ -83,11 +83,11 @@ const signUp = async ({ email, name, password }: SignUpInput): Promise<ServiceRe
 
     await sendEmail(email, `Verify your email for ${applicationName}`, token);
 
-    return ServiceResponse.success<{ id: string }>("User created", { id: user.id }, StatusCodes.CREATED);
+    return ServiceResponse.success<{ id: string }>('User created', { id: user.id }, StatusCodes.CREATED);
   } catch (ex) {
     const errorMessage = `Error signing up: $${(ex as Error).message}`;
     logger.error(errorMessage);
-    return ServiceResponse.failure("An error occurred while signing up.", null, StatusCodes.INTERNAL_SERVER_ERROR);
+    return ServiceResponse.failure('An error occurred while signing up.', null, StatusCodes.INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -105,17 +105,17 @@ const validateLocalUser = async ({
     });
 
     if (!user || !user.id || !user.password) {
-      return ServiceResponse.failure("Invalid credentials", null, StatusCodes.UNAUTHORIZED);
+      return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
     }
 
     if (!user.emailVerified) {
-      return ServiceResponse.failure("Email not verified", null, StatusCodes.UNAUTHORIZED);
+      return ServiceResponse.failure('Email not verified', null, StatusCodes.UNAUTHORIZED);
     }
 
     const isValidPassword = await comparePassword(password, user.password);
 
     if (!isValidPassword) {
-      return ServiceResponse.failure("Invalid credentials", null, StatusCodes.UNAUTHORIZED);
+      return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
     }
 
     const userSettings = await getUserSettingsByUserId(user.id);
@@ -125,11 +125,11 @@ const validateLocalUser = async ({
         const twoFactorToken = await getTwoFactorTokenByEmail(email);
 
         if (!twoFactorToken || twoFactorToken.token !== code) {
-          return ServiceResponse.failure("Invalid two-factor code", null, StatusCodes.UNAUTHORIZED);
+          return ServiceResponse.failure('Invalid two-factor code', null, StatusCodes.UNAUTHORIZED);
         }
 
         if (new Date(twoFactorToken.expires) < new Date()) {
-          return ServiceResponse.failure("Two-factor code expired", null, StatusCodes.UNAUTHORIZED);
+          return ServiceResponse.failure('Two-factor code expired', null, StatusCodes.UNAUTHORIZED);
         }
 
         await createTransaction(async (trx) => {
@@ -140,7 +140,7 @@ const validateLocalUser = async ({
         const twoFactorConfirmation = await getTwoFactorConfirmation(user.id);
 
         if (!twoFactorConfirmation) {
-          return ServiceResponse.failure("Two-factor authentication required", null, StatusCodes.UNAUTHORIZED);
+          return ServiceResponse.failure('Two-factor authentication required', null, StatusCodes.UNAUTHORIZED);
         }
 
         await deleteTwoFactorConfirmation(twoFactorConfirmation.id);
@@ -148,18 +148,18 @@ const validateLocalUser = async ({
     }
 
     return ServiceResponse.success<LoginResponse>(
-      "Sign in successful",
+      'Sign in successful',
       {
         id: user.id,
         email: user.email!,
         isTwoFactorEnabled: userSettings?.isTwoFactorEnabled!,
       },
-      StatusCodes.OK,
+      StatusCodes.OK
     );
   } catch (error) {
     const errorMessage = `Error signing in: $${(error as Error).message}`;
     logger.error(errorMessage);
-    return ServiceResponse.failure("An error occurred while signing in.", null, StatusCodes.INTERNAL_SERVER_ERROR);
+    return ServiceResponse.failure('An error occurred while signing in.', null, StatusCodes.INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -170,19 +170,13 @@ const validateRefreshToken = async (userId: string, refreshToken: string) => {
   }>(userId, { id: true, email: true });
 
   if (!user) {
-    throw new UnauthorizedError("User not found");
+    throw new UnauthorizedError('User not found');
   }
 
   const existingToken = await getRefreshTokenByUserId(userId);
 
   if (!existingToken) {
-    throw new UnauthorizedError("Refresh token not found");
-  }
-
-  const isTokenValid = verifyToken(refreshToken, existingToken.token, env.REFRESH_TOKEN_SECRET);
-
-  if (!isTokenValid) {
-    throw new UnauthorizedError("Invalid refresh token");
+    throw new UnauthorizedError('Refresh token not found');
   }
 
   return {
@@ -200,9 +194,9 @@ const forgotPassword = async (email: string): Promise<ServiceResponse<null>> => 
 
     if (!user || !user.emailVerified || !user.id) {
       return ServiceResponse.success(
-        "If a matching account is found, a password reset email will be sent",
+        'If a matching account is found, a password reset email will be sent',
         null,
-        StatusCodes.OK,
+        StatusCodes.OK
       );
     }
 
@@ -211,18 +205,18 @@ const forgotPassword = async (email: string): Promise<ServiceResponse<null>> => 
     await sendEmail(email, `Reset your password for ${applicationName}`, token);
 
     return ServiceResponse.success<null>(
-      "If a matching account is found, a password reset email will be sent",
+      'If a matching account is found, a password reset email will be sent',
       null,
-      StatusCodes.OK,
+      StatusCodes.OK
     );
   } catch (ex) {
     const errorMessage = `Error resetting password: $${(ex as Error).message}`;
     logger.error(errorMessage);
 
     return ServiceResponse.failure(
-      "An error occurred while resetting password.",
+      'An error occurred while resetting password.',
       null,
-      StatusCodes.INTERNAL_SERVER_ERROR,
+      StatusCodes.INTERNAL_SERVER_ERROR
     );
   }
 };
@@ -232,7 +226,7 @@ const resetPassword = async (token: string, newPassword: string): Promise<Servic
     const existingToken = await getResetPasswordTokenByToken(token);
 
     if (!existingToken || existingToken.expires < new Date()) {
-      return ServiceResponse.failure("Invalid or expired token ", null, StatusCodes.UNAUTHORIZED);
+      return ServiceResponse.failure('Invalid or expired token ', null, StatusCodes.UNAUTHORIZED);
     }
 
     const userId = existingToken.userId;
@@ -242,16 +236,16 @@ const resetPassword = async (token: string, newPassword: string): Promise<Servic
       await deleteResetPasswordToken(token, trx);
     });
 
-    return ServiceResponse.success<null>("Password changed successfully", null, StatusCodes.OK);
+    return ServiceResponse.success<null>('Password changed successfully', null, StatusCodes.OK);
   } catch (ex) {
     const errorMessage = `Error changing password: $${(ex as Error).message}`;
 
     logger.error(errorMessage);
 
     return ServiceResponse.failure(
-      "An error occurred while changing password.",
+      'An error occurred while changing password.',
       null,
-      StatusCodes.INTERNAL_SERVER_ERROR,
+      StatusCodes.INTERNAL_SERVER_ERROR
     );
   }
 };
@@ -263,9 +257,9 @@ const refreshToken = async (userId: string, email: string) => {
   await updateRefreshToken(userId, hashedRefreshToken);
 
   const serviceResponse = ServiceResponse.success(
-    "Updated refresh token",
-    { accessToken, refreshToken, user: { id: userId, email } },
-    StatusCodes.OK,
+    'Updated refresh token',
+    { accessToken, refreshToken: hashedRefreshToken },
+    StatusCodes.OK
   );
 
   return serviceResponse;
@@ -276,7 +270,7 @@ const verifyEmail = async (token: string): Promise<ServiceResponse<null>> => {
     const existingToken = await getVerificationTokenByToken(token);
 
     if (!existingToken || existingToken.expires < new Date()) {
-      return ServiceResponse.failure("Invalid or expired token", null, StatusCodes.UNAUTHORIZED);
+      return ServiceResponse.failure('Invalid or expired token', null, StatusCodes.UNAUTHORIZED);
     }
 
     await createTransaction(async (trx) => {
@@ -284,11 +278,11 @@ const verifyEmail = async (token: string): Promise<ServiceResponse<null>> => {
       await deleteVerificationToken(token, trx);
     });
 
-    return ServiceResponse.success<null>("Email verified", null, StatusCodes.OK);
+    return ServiceResponse.success<null>('Email verified', null, StatusCodes.OK);
   } catch (ex) {
     const errorMessage = `Error verifying email: $${(ex as Error).message}`;
     logger.error(errorMessage);
-    return ServiceResponse.failure("An error occurred while verifying email.", null, StatusCodes.INTERNAL_SERVER_ERROR);
+    return ServiceResponse.failure('An error occurred while verifying email.', null, StatusCodes.INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -297,21 +291,21 @@ const signOut = async (userId: string): Promise<ServiceResponse<null>> => {
     const existingToken = await getRefreshTokenByUserId(userId);
 
     if (!existingToken) {
-      return ServiceResponse.failure("Invalid refresh token", null, StatusCodes.UNAUTHORIZED);
+      return ServiceResponse.failure('Invalid refresh token', null, StatusCodes.UNAUTHORIZED);
     }
 
     // Verify the token belongs to the user
     if (existingToken.userId !== userId) {
-      return ServiceResponse.failure("Unauthorized", null, StatusCodes.UNAUTHORIZED);
+      return ServiceResponse.failure('Unauthorized', null, StatusCodes.UNAUTHORIZED);
     }
 
     await deleteRefreshToken(existingToken.token);
 
-    return ServiceResponse.success<null>("Signed out", null, StatusCodes.OK);
+    return ServiceResponse.success<null>('Signed out', null, StatusCodes.OK);
   } catch (ex) {
     const errorMessage = `Error logging out: $${(ex as Error).message}`;
     logger.error(errorMessage);
-    return ServiceResponse.failure("An error occurred while logging out.", null, StatusCodes.INTERNAL_SERVER_ERROR);
+    return ServiceResponse.failure('An error occurred while logging out.', null, StatusCodes.INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -322,17 +316,17 @@ const sendVerificationEmail = async (email: string) => {
     });
 
     if (!user || !user.id) {
-      return ServiceResponse.failure("User not found", null, StatusCodes.NOT_FOUND);
+      return ServiceResponse.failure('User not found', null, StatusCodes.NOT_FOUND);
     }
 
     if (user.emailVerified) {
-      return ServiceResponse.failure("User already verified", null, StatusCodes.CONFLICT);
+      return ServiceResponse.failure('User already verified', null, StatusCodes.CONFLICT);
     }
 
     const existingToken = await getVerificationTokenByUserId(user.id);
 
     if (existingToken && existingToken.expires > new Date()) {
-      return ServiceResponse.failure("Verification token already exists", null, StatusCodes.CONFLICT);
+      return ServiceResponse.failure('Verification token already exists', null, StatusCodes.CONFLICT);
     }
 
     const token = await createVerificationToken(user.id);
@@ -343,11 +337,11 @@ const sendVerificationEmail = async (email: string) => {
       await deleteVerificationToken(existingToken.token);
     }
 
-    return ServiceResponse.success<null>("Email sent", null, StatusCodes.OK);
+    return ServiceResponse.success<null>('Email sent', null, StatusCodes.OK);
   } catch (ex) {
     const errorMessage = `Error logging out: $${(ex as Error).message}`;
     logger.error(errorMessage);
-    return ServiceResponse.failure("An error occurred while logging out.", null, StatusCodes.INTERNAL_SERVER_ERROR);
+    return ServiceResponse.failure('An error occurred while logging out.', null, StatusCodes.INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -394,4 +388,5 @@ export const authService = {
   signIn,
   validateRefreshToken,
   generateTokens,
+  verifyToken,
 };

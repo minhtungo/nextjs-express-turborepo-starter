@@ -1,12 +1,11 @@
-import type { RequestHandler } from "express";
+import type { RequestHandler } from 'express';
 
-import { authService } from "@/api/auth/authService";
-import { handleServiceResponse } from "@/common/utils/httpHandlers";
+import { authService } from '@/api/auth/authService';
+import { handleServiceResponse } from '@/common/utils/httpHandlers';
 
-import { userService } from "@/api/user/userService";
-import { env } from "@/common/config/env";
-import { ServiceResponse } from "@/common/models/serviceResponse";
-import { StatusCodes } from "http-status-codes";
+import { env } from '@/common/config/env';
+import { ServiceResponse } from '@/common/models/serviceResponse';
+import { StatusCodes } from 'http-status-codes';
 
 const signUp: RequestHandler = async (req, res) => {
   const { name, email, password } = req.body;
@@ -24,7 +23,7 @@ const signIn: RequestHandler = async (req, res) => {
   const user = req.user;
 
   if (!user) {
-    const serviceResponse = ServiceResponse.failure("User not found", StatusCodes.UNAUTHORIZED);
+    const serviceResponse = ServiceResponse.failure('User not found', StatusCodes.UNAUTHORIZED);
     return handleServiceResponse(serviceResponse, res);
   }
 
@@ -67,7 +66,6 @@ const sendVerificationEmail: RequestHandler = async (req, res) => {
 
 const handleRefreshToken: RequestHandler = async (req, res) => {
   const user = req.user;
-  console.log("handleRefreshToken", user);
   const serviceResponse = await authService.refreshToken(user?.id!, user?.email!);
 
   return handleServiceResponse(serviceResponse, res);
@@ -77,14 +75,14 @@ const handleGoogleCallback: RequestHandler = async (req, res) => {
   const user = req.user;
 
   if (!user) {
-    const serviceResponse = ServiceResponse.failure("User not found", StatusCodes.UNAUTHORIZED);
+    const serviceResponse = ServiceResponse.failure('User not found', StatusCodes.UNAUTHORIZED);
     return handleServiceResponse(serviceResponse, res);
   }
 
   const { accessToken, refreshToken } = authService.generateTokens(user.id);
 
   res.redirect(
-    `${env.SITE_BASE_URL}/api/auth/google/callback?userId=${user.id}&email=${user.email}&accessToken=${accessToken}&refreshToken=${refreshToken}`,
+    `${env.SITE_BASE_URL}/api/auth/google/callback?userId=${user.id}&email=${user.email}&accessToken=${accessToken}&refreshToken=${refreshToken}`
   );
 };
 

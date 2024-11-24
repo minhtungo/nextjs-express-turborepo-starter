@@ -19,7 +19,7 @@ export const cookie = {
   accessToken: {
     secret: env.ACCESS_TOKEN_SECRET,
     expires: 1000 * 60 * 60 * 24 * 30 * 3,
-    expiresIn: '3d',
+    expiresIn: '5s',
     name: 'access_token',
     algorithm: env.JWT_ALGORITHM,
   },

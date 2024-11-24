@@ -1,7 +1,7 @@
 import { apiRoutes } from '@/config';
 import { env } from '@/config/env';
 import { resetPasswordProps, sendVerificationEmailProps, signInProps, signUpProps } from '@/features/auth/lib/schemas';
-import { api } from '@/lib/auth/api';
+import { api } from '@/lib/api/baseFetch';
 import {
   ForgotPasswordDTO,
   RefreshTokenDTO,
@@ -79,6 +79,8 @@ export const refreshTokenService = async (refreshToken: string): Promise<string>
     },
     true
   );
+
+  console.log('refreshTokenService', result);
 
   const updateResponse = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/api/auth/update`, {
     method: 'POST',

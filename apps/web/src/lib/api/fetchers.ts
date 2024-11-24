@@ -1,4 +1,4 @@
-import { deleteSession, getAccessToken, getRefreshToken, getSession } from '@/features/auth/actions/session';
+import { deleteSession, getAccessToken, getRefreshToken } from '@/lib/auth/auth';
 import { refreshTokenService } from '@/features/auth/lib/services';
 
 export const authFetch = async (url: string | URL, options: RequestInit = {}, isPublic = false) => {
@@ -19,8 +19,10 @@ export const authFetch = async (url: string | URL, options: RequestInit = {}, is
       await deleteSession();
       throw new Error('No refresh token found');
     }
+    console.log('currentRefreshToken', refreshToken);
 
     const newAccessToken = await refreshTokenService(refreshToken);
+    console.log('newAccessToken', newAccessToken);
 
     if (newAccessToken) {
       options.headers = {

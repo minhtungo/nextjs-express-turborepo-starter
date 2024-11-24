@@ -1,7 +1,7 @@
 'use server';
 
 import { afterLoginUrl } from '@/config';
-import { createSession, deleteSession } from '@/features/auth/actions/session';
+import { createSession, deleteSession } from '@/lib/auth/auth';
 import {
   forgotPasswordSchema,
   refreshTokenSchema,
@@ -48,8 +48,6 @@ export const signInAction = actionClient
   )
   .action(async ({ parsedInput }) => {
     const result = await signInService(parsedInput.values);
-
-    console.log('resulttest', result);
 
     if (!result.success) {
       return {

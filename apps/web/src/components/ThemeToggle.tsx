@@ -4,7 +4,7 @@ import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 import { Button } from '@/components/ui/button';
-import { useIsMounted } from '@/hooks/use-is-mouted';
+import { useIsMounted } from '@/lib/hooks/use-is-mouted';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const ThemeToggle = () => {

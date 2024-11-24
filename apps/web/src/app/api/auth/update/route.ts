@@ -1,5 +1,5 @@
-import { updateTokens } from '@/features/auth/actions/session';
-import { ApiResponse } from '@/lib/auth/api';
+import { updateTokens } from '@/lib/auth/auth';
+import { ApiResponse } from '@/lib/api/baseFetch';
 import { StatusCodes } from 'http-status-codes';
 import { NextRequest } from 'next/server';
 
@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
 
   if (!accessToken || !refreshToken)
     return Response.json(ApiResponse.failure('Provide Tokens', null, 401), { status: 401 });
-
+  console.log('hereee', body);
   await updateTokens({ accessToken, refreshToken });
 
   return Response.json(ApiResponse.success('Updated tokens successfully', null, StatusCodes.OK), {

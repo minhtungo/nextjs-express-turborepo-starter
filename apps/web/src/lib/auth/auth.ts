@@ -2,6 +2,7 @@
 
 import { cookie } from '@/config';
 import { env } from '@/config/env';
+import { deleteTokenCookie, getTokenCookie, setTokenCookie } from '@/lib/auth';
 import { jwtVerify, SignJWT } from 'jose';
 import { cookies } from 'next/headers';
 
@@ -24,31 +25,11 @@ export const createSession = async (payload: Session) => {
     .setExpirationTime(Math.floor(Date.now() / 1000) + cookie.session.maxAge)
     .sign(encodedKey);
 
-  const cookieStore = await cookies();
+  setTokenCookie(cookie.session.name, userSession, cookie.session.maxAge);
 
-  cookieStore.set(cookie.session.name, userSession, {
-    httpOnly: true,
-    secure: env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: cookie.session.maxAge,
-  });
+  setTokenCookie(cookie.accessToken.name, payload.accessToken, cookie.accessToken.maxAge);
 
-  cookieStore.set(cookie.accessToken.name, payload.accessToken, {
-    httpOnly: true,
-    secure: env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: cookie.accessToken.maxAge,
-  });
-
-  cookieStore.set(cookie.refreshToken.name, payload.refreshToken, {
-    httpOnly: true,
-    secure: env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: cookie.refreshToken.maxAge,
-  });
+  setTokenCookie(cookie.refreshToken.name, payload.refreshToken, cookie.refreshToken.maxAge);
 };
 
 export const getSession = async () => {
@@ -72,22 +53,21 @@ export const getSession = async () => {
 };
 
 export const getAccessToken = async () => {
-  return (await cookies()).get(cookie.accessToken.name)?.value;
+  return await getTokenCookie(cookie.accessToken.name);
 };
 
 export const getRefreshToken = async () => {
-  return (await cookies()).get(cookie.refreshToken.name)?.value;
+  return await getTokenCookie(cookie.refreshToken.name);
 };
 
 export const deleteSession = async () => {
-  (await cookies()).delete(cookie.session.name);
-  (await cookies()).delete(cookie.accessToken.name);
-  (await cookies()).delete(cookie.refreshToken.name);
+  await deleteTokenCookie(cookie.session.name);
+  await deleteTokenCookie(cookie.accessToken.name);
+  await deleteTokenCookie(cookie.refreshToken.name);
 };
 
 export const updateTokens = async ({ accessToken, refreshToken }: { accessToken: string; refreshToken: string }) => {
-  const cookieStore = await cookies();
-  const session = cookieStore.get(cookie.session.name)?.value;
+  const session = await getTokenCookie(cookie.session.name);
 
   if (!session) return null;
 
@@ -105,5 +85,16 @@ export const updateTokens = async ({ accessToken, refreshToken }: { accessToken:
     refreshToken,
   };
 
-  await createSession(newPayload);
+  console.log('newPayload', newPayload);
+  const userSession = await new SignJWT(newPayload.user)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime(Math.floor(Date.now() / 1000) + cookie.session.maxAge)
+    .sign(encodedKey);
+
+  setTokenCookie(cookie.session.name, userSession, cookie.session.maxAge);
+
+  setTokenCookie(cookie.accessToken.name, newPayload.accessToken, cookie.accessToken.maxAge);
+
+  setTokenCookie(cookie.refreshToken.name, newPayload.refreshToken, cookie.refreshToken.maxAge);
 };
