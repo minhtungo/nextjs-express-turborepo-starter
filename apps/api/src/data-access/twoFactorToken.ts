@@ -1,6 +1,6 @@
-import { db } from "@/db";
-import { twoFactorTokens } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { db } from '@repo/database';
+import { twoFactorTokens } from '@repo/database';
+import { eq } from 'drizzle-orm';
 
 export const getTwoFactorTokenByEmail = async (email: string) => {
   return await db.query.twoFactorTokens.findFirst({

@@ -17,10 +17,10 @@
     "http-status-codes": "^2.3.0"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
-    "@types/node": "^22",
+    "@repo/eslint-config": "0.0.0",
+    "@repo/typescript-config": "0.0.0",
+    "@types/node": "22.9.4",
     "eslint": "^9",
-    "typescript": "^5"
+    "typescript": "^5.7.2"
   }
 }

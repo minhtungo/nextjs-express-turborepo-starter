@@ -1,9 +1,7 @@
-import { authService } from "@/api/auth/authService";
-import { db } from "@/db";
-import { userSettings, users } from "@/db/schema";
-import type { InsertUserSettings } from "@/db/schema/userSettings";
-import type { InsertUser, SelectUser } from "@/db/schema/users";
-import { eq } from "drizzle-orm";
+import { authService } from '@/api/auth/authService';
+import { db } from '@repo/database';
+import { userSettings, users, type InsertUserSettings, InsertUser, SelectUser } from '@repo/database';
+import { eq } from 'drizzle-orm';
 
 export const createUser = async (data: InsertUser) => {
   const { password: plainPassword, ...rest } = data;
@@ -46,7 +44,7 @@ export const createUserSettings = async (data: InsertUserSettings) => {
 
 export const getUserByEmail = async <TColumns extends Partial<Record<keyof SelectUser, true>>>(
   email: string,
-  columns?: TColumns,
+  columns?: TColumns
 ) => {
   const user = await db.query.users.findFirst({
     where: eq(users.email, email),
@@ -80,7 +78,7 @@ export const updateUserEmailVerification = async (userId: string, trx = db) => {
 };
 
 export const updateProfile = async ({ userId, data }: { userId: string; data: Partial<InsertUser> }) => {
-  console.log("data", data);
+  console.log('data', data);
   await db.update(users).set(data).where(eq(users.id, userId));
 };
 
@@ -92,7 +90,11 @@ export const updatePassword = async ({
   userId,
   newPassword,
   trx = db,
-}: { userId: string; newPassword: string; trx?: typeof db }) => {
+}: {
+  userId: string;
+  newPassword: string;
+  trx?: typeof db;
+}) => {
   const hashedPassword = await authService.hashPassword(newPassword);
 
   await trx.update(users).set({ password: hashedPassword }).where(eq(users.id, userId));

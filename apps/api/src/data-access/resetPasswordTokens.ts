@@ -1,8 +1,8 @@
-import { tokenLength, tokenTtl } from "@/common/config/config";
-import { generateToken } from "@/common/utils/token";
-import { db } from "@/db";
-import { resetPasswordTokens } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { tokenLength, tokenTtl } from '@/common/config/config';
+import { generateToken } from '@/common/utils/token';
+import { db } from '@repo/database';
+import { resetPasswordTokens } from '@repo/database';
+import { eq } from 'drizzle-orm';
 
 export const createResetPasswordToken = async (userId: string) => {
   const token = await generateToken(tokenLength);

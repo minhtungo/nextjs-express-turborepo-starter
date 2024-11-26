@@ -1,6 +1,6 @@
-import { db } from "@/db";
-import { twoFactorConfirmations } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { db } from '@repo/database';
+import { twoFactorConfirmations } from '@repo/database';
+import { eq } from 'drizzle-orm';
 
 export const getTwoFactorConfirmation = async (userId: string) => {
   const existingToken = await db.query.twoFactorConfirmations.findFirst({

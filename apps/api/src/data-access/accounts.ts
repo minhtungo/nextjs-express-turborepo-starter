@@ -1,9 +1,8 @@
-import { saltRounds } from "@/common/config/config";
-import { db } from "@/db";
-import { accounts, users } from "@/db/schema";
-import type { InsertAccount } from "@/db/schema/accounts";
-import bcrypt from "bcryptjs";
-import { eq } from "drizzle-orm";
+import { saltRounds } from '@/common/config/config';
+import { db, accounts, users } from '@repo/database';
+import type { InsertAccount } from '@repo/database/schema/accounts';
+import bcrypt from 'bcryptjs';
+import { eq } from 'drizzle-orm';
 
 export const getAccountByUserId = async (userId: string) => {
   const account = await db.query.accounts.findFirst({

@@ -1,8 +1,8 @@
-import { tokenLength, tokenTtl } from "@/common/config/config";
-import { generateToken } from "@/common/utils/token";
-import { db } from "@/db";
-import { verificationTokens } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { tokenLength, tokenTtl } from '@/common/config/config';
+import { generateToken } from '@/common/utils/token';
+import { db } from '@repo/database';
+import { verificationTokens } from '@repo/database';
+import { eq } from 'drizzle-orm';
 
 export const createVerificationToken = async (userId: string) => {
   const token = await generateToken(tokenLength);
