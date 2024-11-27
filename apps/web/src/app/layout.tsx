@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import '@repo/ui/styles.css';
 import '@/assets/styles/globals.css';
 import Header from '@/components/global/Header';
 import Providers from '@/components/providers';

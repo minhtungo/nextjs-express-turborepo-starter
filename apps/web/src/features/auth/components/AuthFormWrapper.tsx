@@ -1,8 +1,8 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/ui/card';
 import { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@repo/ui/button';
 import { VariantProps } from 'class-variance-authority';
 
 interface AuthFormWrapperProps {

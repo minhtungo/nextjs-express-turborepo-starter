@@ -1,10 +1,11 @@
 import type { Config } from 'tailwindcss';
 import sharedConfig from '@repo/tailwind-config';
+import animate from 'tailwindcss-animate';
 
 const config: Config = {
-  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   presets: [sharedConfig],
   darkMode: ['class'],
+  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
       colors: {
@@ -60,6 +61,6 @@ const config: Config = {
       },
     },
   },
+  plugins: [animate],
 };
-
 export default config;

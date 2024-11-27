@@ -70,15 +70,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-html,
-body,
-:root {
-  height: 100%;
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}

@@ -1,6 +1,6 @@
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '@repo/ui/alert';
 import { cva, VariantProps } from 'class-variance-authority';
-import { Info, Terminal } from 'lucide-react';
+import { Info } from 'lucide-react';
 
 const formResponseVariants = cva('', {
   variants: {

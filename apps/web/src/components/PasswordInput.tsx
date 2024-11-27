@@ -1,4 +1,4 @@
-import { Input, InputProps } from '@/components/ui/input';
+import { Input, InputProps } from '@repo/ui/input';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 

@@ -2,8 +2,8 @@
 
 import LoaderButton from '@/components/LoaderButton';
 import PasswordInput from '@/components/PasswordInput';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@repo/ui/form';
+import { Input } from '@repo/ui/input';
 import { authRoutes } from '@/config';
 import AuthFormWrapper from '@/features/auth/components/AuthFormWrapper';
 import FormResponse from '@/features/auth/components/FormResponse';
