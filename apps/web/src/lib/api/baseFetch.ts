@@ -1,4 +1,4 @@
-import { env } from '@/config/env';
+import { env } from '@repo/env/server';
 import { authFetch } from '@/lib/api';
 import { handleApiResponse } from '@/lib/api/utils';
 import { StatusCodes } from 'http-status-codes';

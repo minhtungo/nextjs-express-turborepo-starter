@@ -1,7 +1,7 @@
 'use server';
 
 import { cookie } from '@/config';
-import { env } from '@/config/env';
+import { env } from '@repo/env/server';
 import { deleteTokenCookie, getTokenCookie, setTokenCookie } from '@/lib/auth';
 import { jwtVerify, SignJWT } from 'jose';
 import { cookies } from 'next/headers';

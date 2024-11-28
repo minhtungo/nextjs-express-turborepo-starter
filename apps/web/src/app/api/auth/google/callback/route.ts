@@ -1,5 +1,5 @@
 import { afterLoginUrl } from '@/config';
-import { env } from '@/config/env';
+import { env } from '@repo/env/client';
 import { createSession } from '@/lib/auth/auth';
 import { ApiResponse } from '@/lib/api/baseFetch';
 import { StatusCodes } from 'http-status-codes';

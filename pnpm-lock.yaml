@@ -156,6 +156,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.9.1
         version: 3.9.1(react-hook-form@7.53.2(react@19.0.0-rc.1))
+      '@repo/env':
+        specifier: workspace:*
+        version: link:../../packages/env
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -273,6 +276,9 @@ importers:
       pg:
         specifier: ^8.13.0
         version: 8.13.0
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
@@ -298,6 +304,28 @@ importers:
       tsx:
         specifier: ^4.19.1
         version: 4.19.1
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.2
+
+  packages/env:
+    dependencies:
+      '@t3-oss/env-core':
+        specifier: ^0.11.1
+        version: 0.11.1(typescript@5.7.2)(zod@3.23.8)
+      '@t3-oss/env-nextjs':
+        specifier: ^0.11.1
+        version: 0.11.1(typescript@5.7.2)(zod@3.23.8)
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../config-typescript
+      '@types/node':
+        specifier: 22.9.4
+        version: 22.9.4
       typescript:
         specifier: ^5.7.2
         version: 5.7.2

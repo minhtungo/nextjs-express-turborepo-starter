@@ -1,4 +1,4 @@
-import { env } from '@/config/env';
+import { env } from '@repo/env/server';
 import { getSession } from '@/lib/auth/auth';
 import { cookies } from 'next/headers';
 

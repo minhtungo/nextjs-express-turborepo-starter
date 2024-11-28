@@ -1,4 +1,4 @@
-import { env } from '@/config/env';
+import { env } from '@repo/env/client';
 
 type MetadataProps = {
   title?: string;

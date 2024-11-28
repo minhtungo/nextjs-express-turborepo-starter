@@ -1,5 +1,5 @@
 import { apiRoutes } from '@/config';
-import { env } from '@/config/env';
+import { env } from '@repo/env/client';
 import { resetPasswordProps, sendVerificationEmailProps, signInProps, signUpProps } from '@/features/auth/lib/schemas';
 import { api } from '@/lib/api/baseFetch';
 import {
