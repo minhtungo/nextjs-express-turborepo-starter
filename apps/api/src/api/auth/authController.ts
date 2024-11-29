@@ -22,12 +22,13 @@ const signUp: RequestHandler = async (req, res) => {
 const signIn: RequestHandler = async (req, res) => {
   const user = req.user;
 
+  console.log(`req.user: ${JSON.stringify(req.user)}`);
   if (!user) {
     const serviceResponse = ServiceResponse.failure('User not found', StatusCodes.UNAUTHORIZED);
     return handleServiceResponse(serviceResponse, res);
   }
 
-  const serviceResponse = await authService.signIn(user.id, user.email, user.isTwoFactorEnabled);
+  const serviceResponse = await authService.signIn();
 
   return handleServiceResponse(serviceResponse, res);
 };
@@ -64,13 +65,6 @@ const sendVerificationEmail: RequestHandler = async (req, res) => {
   return handleServiceResponse(serviceResponse, res);
 };
 
-const handleRefreshToken: RequestHandler = async (req, res) => {
-  const user = req.user;
-  const serviceResponse = await authService.refreshToken(user?.id!, user?.email!);
-
-  return handleServiceResponse(serviceResponse, res);
-};
-
 const handleGoogleCallback: RequestHandler = async (req, res) => {
   const user = req.user;
 
@@ -79,10 +73,10 @@ const handleGoogleCallback: RequestHandler = async (req, res) => {
     return handleServiceResponse(serviceResponse, res);
   }
 
-  const { accessToken, refreshToken } = authService.generateTokens(user.id);
+  const { accessToken } = authService.generateTokens(user.id);
 
   res.redirect(
-    `${env.SITE_BASE_URL}/api/auth/google/callback?userId=${user.id}&email=${user.email}&accessToken=${accessToken}&refreshToken=${refreshToken}`
+    `${env.SITE_BASE_URL}/api/auth/google/callback?userId=${user.id}&email=${user.email}&accessToken=${accessToken}`
   );
 };
 
@@ -100,6 +94,5 @@ export const authController = {
   resetPassword,
   verifyEmail,
   sendVerificationEmail,
-  handleRefreshToken,
   handleGoogleCallback,
 };

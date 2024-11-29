@@ -9,8 +9,9 @@
   },
   "scripts": {
     "db:seed": "tsx scripts/seed.ts",
-    "db:migrate": "tsx scripts/migrate.ts",
+    "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
+    "db:push": "drizzle-kit push",
     "generate": "drizzle-kit generate:pg"
   },
   "dependencies": {

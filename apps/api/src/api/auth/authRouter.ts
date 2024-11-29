@@ -46,7 +46,7 @@ authRouter.post(
   '/sign-in',
   validateRequest(z.object({ body: LoginInputSchema })),
   (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate('local', { session: false }, (error: any, user: Express.User | false) => {
+    passport.authenticate('local', {}, (error: any, user: Express.User | false) => {
       if (error || !user) {
         const failureResponse = ServiceResponse.failure(
           error.message || 'Authentication failed',
@@ -56,7 +56,7 @@ authRouter.post(
         return handleServiceResponse(failureResponse, res);
       }
       // Authentication succeeded
-      console.log('Authentication succeeded', req.user);
+      console.log('Authentication succeeded', user);
       req.user = user;
       next();
     })(req, res, next);
@@ -167,13 +167,6 @@ authRegistry.registerPath({
   request: {},
   responses: createApiResponse(TokensSchema, 'Success'),
 });
-
-authRouter.post(
-  '/refresh-token',
-  validateRequest(z.object({ body: z.object({ refreshToken: z.string() }) })),
-  passport.authenticate('refresh-token', { session: false }),
-  authController.handleRefreshToken
-);
 
 authRegistry.registerPath({
   method: 'get',

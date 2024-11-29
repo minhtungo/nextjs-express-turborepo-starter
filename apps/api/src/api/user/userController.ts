@@ -1,6 +1,5 @@
 import type { Request, RequestHandler, Response } from "express";
 
-import { userService } from "@/api/user/userService";
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { handleServiceResponse } from "@/common/utils/httpHandlers";
 import { StatusCodes } from "http-status-codes";

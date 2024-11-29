@@ -39,6 +39,5 @@ export const useSignInForm = () => {
     error: data?.error || serverError,
     urlError,
     hasSucceeded,
-    isTwoFactorEnabled: data?.isTwoFactorEnabled,
   };
 };

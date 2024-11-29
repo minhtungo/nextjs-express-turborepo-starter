@@ -1,4 +1,4 @@
-import { hashToken, verifyToken } from '@/common/utils/token';
+import { verifyToken } from '@/common/utils/token';
 import bcrypt from 'bcryptjs';
 import { StatusCodes } from 'http-status-codes';
 import type { LoginInput, LoginResponse, SignUpInput } from './authModel';
@@ -11,8 +11,6 @@ import {
   getResetPasswordTokenByToken,
 } from '@/data-access/resetPasswordTokens';
 
-import { deleteRefreshToken, getRefreshTokenByUserId, updateRefreshToken } from '@/data-access/refreshTokens';
-
 import {
   createTwoFactorConfirmation,
   deleteTwoFactorConfirmation,
@@ -23,7 +21,6 @@ import { deleteTwoFactorToken, getTwoFactorTokenByEmail } from '@/data-access/tw
 import {
   createUser,
   getUserByEmail,
-  getUserById,
   getUserSettingsByUserId,
   updatePassword,
   updateUserEmailVerification,
@@ -36,23 +33,19 @@ import {
 } from '@/data-access/verificationToken';
 
 import { applicationName, cookie, saltRounds } from '@/common/config/config';
-import { env } from '@/common/config/env';
 import { createTransaction } from '@/common/utils/db';
-import { UnauthorizedError } from '@/common/utils/errors';
 import { sendEmail } from '@/common/utils/mail';
 import { logger } from '@/server';
 import { sign } from 'jsonwebtoken';
 
-const signIn = async (userId: string, email: string, isTwoFactorEnabled: boolean) => {
-  const { accessToken, refreshToken } = generateTokens(userId);
-
-  // const hashedRefreshToken = hashToken(refreshToken, env.REFRESH_TOKEN_SECRET);
-
-  await updateRefreshToken(userId, accessToken);
-
+const signIn = async () => {
   const serviceResponse = ServiceResponse.success(
     'Sign in successful',
-    { accessToken, refreshToken, user: { id: userId, email }, isTwoFactorEnabled },
+    {
+      isTwoFactorEnabled: false,
+      id: '1a67196a-1e94-49d1-ad83-bd8624f7d737',
+      email: 'loducfc@gmail.com',
+    },
     StatusCodes.OK
   );
 
@@ -152,7 +145,6 @@ const validateLocalUser = async ({
       {
         id: user.id,
         email: user.email!,
-        isTwoFactorEnabled: userSettings?.isTwoFactorEnabled!,
       },
       StatusCodes.OK
     );
@@ -161,28 +153,6 @@ const validateLocalUser = async ({
     logger.error(errorMessage);
     return ServiceResponse.failure('An error occurred while signing in.', null, StatusCodes.INTERNAL_SERVER_ERROR);
   }
-};
-
-const validateRefreshToken = async (userId: string, refreshToken: string) => {
-  const user = await getUserById<{
-    id: string;
-    email: string;
-  }>(userId, { id: true, email: true });
-
-  if (!user) {
-    throw new UnauthorizedError('User not found');
-  }
-
-  const existingToken = await getRefreshTokenByUserId(userId);
-
-  if (!existingToken) {
-    throw new UnauthorizedError('Refresh token not found');
-  }
-
-  return {
-    id: user.id,
-    email: user.email,
-  };
 };
 
 const forgotPassword = async (email: string): Promise<ServiceResponse<null>> => {
@@ -250,21 +220,6 @@ const resetPassword = async (token: string, newPassword: string): Promise<Servic
   }
 };
 
-const refreshToken = async (userId: string, email: string) => {
-  const { accessToken, refreshToken } = generateTokens(userId);
-
-  const hashedRefreshToken = hashToken(refreshToken, env.REFRESH_TOKEN_SECRET);
-  await updateRefreshToken(userId, hashedRefreshToken);
-
-  const serviceResponse = ServiceResponse.success(
-    'Updated refresh token',
-    { accessToken, refreshToken: hashedRefreshToken },
-    StatusCodes.OK
-  );
-
-  return serviceResponse;
-};
-
 const verifyEmail = async (token: string): Promise<ServiceResponse<null>> => {
   try {
     const existingToken = await getVerificationTokenByToken(token);
@@ -288,18 +243,7 @@ const verifyEmail = async (token: string): Promise<ServiceResponse<null>> => {
 
 const signOut = async (userId: string): Promise<ServiceResponse<null>> => {
   try {
-    const existingToken = await getRefreshTokenByUserId(userId);
-
-    if (!existingToken) {
-      return ServiceResponse.failure('Invalid refresh token', null, StatusCodes.UNAUTHORIZED);
-    }
-
     // Verify the token belongs to the user
-    if (existingToken.userId !== userId) {
-      return ServiceResponse.failure('Unauthorized', null, StatusCodes.UNAUTHORIZED);
-    }
-
-    await deleteRefreshToken(existingToken.token);
 
     return ServiceResponse.success<null>('Signed out', null, StatusCodes.OK);
   } catch (ex) {
@@ -352,18 +296,10 @@ const generateAccessToken = (userId: string) => {
   });
 };
 
-const generateRefreshToken = (userId: string) => {
-  return sign({ sub: userId }, cookie.refreshToken.secret, {
-    expiresIn: cookie.refreshToken.expiresIn,
-    algorithm: cookie.refreshToken.algorithm,
-  });
-};
-
 const generateTokens = (userId: string) => {
   const accessToken = generateAccessToken(userId);
-  const refreshToken = generateRefreshToken(userId);
 
-  return { accessToken, refreshToken };
+  return { accessToken };
 };
 
 const hashPassword = async (password: string) => {
@@ -382,11 +318,9 @@ export const authService = {
   verifyEmail,
   signOut,
   sendVerificationEmail,
-  refreshToken,
   hashPassword,
   comparePassword,
   signIn,
-  validateRefreshToken,
   generateTokens,
   verifyToken,
 };

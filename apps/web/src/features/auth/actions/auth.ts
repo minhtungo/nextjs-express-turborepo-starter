@@ -24,7 +24,7 @@ import {
 import { actionClient } from '@/lib/safe-actions';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
-
+import { cookies } from 'next/headers';
 export const signUpAction = actionClient.schema(signUpSchema).action(async ({ parsedInput }) => {
   const result = await signUpService(parsedInput);
 
@@ -55,20 +55,9 @@ export const signInAction = actionClient
       };
     }
 
-    if (result.data.isTwoFactorEnabled) {
-      return {
-        isTwoFactorEnabled: true,
-      };
-    }
+    const cookieStore = await cookies();
 
-    await createSession({
-      user: {
-        id: result.data.user.id,
-        email: result.data.user.email,
-      },
-      accessToken: result.data.accessToken,
-      refreshToken: result.data.refreshToken,
-    });
+    console.log('cookieStore', cookieStore.getAll());
 
     redirect(parsedInput.redirectTo || afterLoginUrl);
   });
@@ -77,8 +66,6 @@ export const forgotPasswordAction = actionClient
   .schema(forgotPasswordSchema)
   .action(async ({ parsedInput: { email } }) => {
     const result = await forgotPasswordService(email);
-
-    console.log('resulttest', result);
 
     if (!result.success) {
       return {

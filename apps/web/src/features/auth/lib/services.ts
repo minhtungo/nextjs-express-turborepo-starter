@@ -80,8 +80,6 @@ export const refreshTokenService = async (refreshToken: string): Promise<string>
     true
   );
 
-  console.log('refreshTokenService', result);
-
   const updateResponse = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/api/auth/update`, {
     method: 'POST',
     body: JSON.stringify({ accessToken: result.data.accessToken, refreshToken: result.data.refreshToken }),

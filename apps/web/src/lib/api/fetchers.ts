@@ -1,36 +1,50 @@
-import { deleteSession, getAccessToken, getRefreshToken } from '@/lib/auth/auth';
-import { refreshTokenService } from '@/features/auth/lib/services';
-
 export const authFetch = async (url: string | URL, options: RequestInit = {}, isPublic = false) => {
-  const accessToken = isPublic ? null : await getAccessToken();
+  options.credentials = 'include';
 
   options.headers = {
     ...options.headers,
-    ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    'Content-Type': 'application/json',
   };
 
-  options.credentials = 'include';
-
-  let response = await fetch(url, options);
+  const response = await fetch(url, options);
 
   if (response.status === 401 && !isPublic) {
-    const refreshToken = await getRefreshToken();
-    if (!refreshToken) {
-      await deleteSession();
-      throw new Error('No refresh token found');
-    }
-    console.log('currentRefreshToken', refreshToken);
-
-    const newAccessToken = await refreshTokenService(refreshToken);
-    console.log('newAccessToken', newAccessToken);
-
-    if (newAccessToken) {
-      options.headers = {
-        ...options.headers,
-        Authorization: `Bearer ${newAccessToken}`,
-      };
-      response = await fetch(url, options);
-    }
+    throw new Error('Session expired');
   }
+
   return response;
 };
+
+// export const authFetch = async (url: string | URL, options: RequestInit = {}, isPublic = false) => {
+//   // const accessToken = isPublic ? null : await getAccessToken();
+
+//   options.headers = {
+//     ...options.headers,
+//     // ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+//   };
+
+//   options.credentials = 'include';
+
+//   let response = await fetch(url, options);
+
+//   if (response.status === 401 && !isPublic) {
+//     const refreshToken = await getRefreshToken();
+//     if (!refreshToken) {
+//       await deleteSession();
+//       throw new Error('No refresh token found');
+//     }
+//     console.log('currentRefreshToken', refreshToken);
+
+//     const newAccessToken = await refreshTokenService(refreshToken);
+//     console.log('newAccessToken', newAccessToken);
+
+//     if (newAccessToken) {
+//       options.headers = {
+//         ...options.headers,
+//         Authorization: `Bearer ${newAccessToken}`,
+//       };
+//       response = await fetch(url, options);
+//     }
+//   }
+//   return response;
+// };
