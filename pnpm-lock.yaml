@@ -93,6 +93,9 @@ importers:
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../../packages/config-eslint
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/config-typescript
@@ -341,7 +344,13 @@ importers:
       http-status-codes:
         specifier: ^2.3.0
         version: 2.3.0
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
+      '@repo/database':
+        specifier: workspace:*
+        version: link:../database
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../config-eslint

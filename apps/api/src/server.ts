@@ -21,6 +21,11 @@ import session from 'express-session';
 import passport from 'passport';
 import { v4 as uuidv4 } from 'uuid';
 
+import { z } from 'zod';
+import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
+
+extendZodWithOpenApi(z);
+
 const logger = pino({ name: 'server start' });
 const app: Express = express();
 

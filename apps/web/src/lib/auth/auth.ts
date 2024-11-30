@@ -1,18 +1,6 @@
 'use server';
 
-import { env } from '@repo/env/server';
 import { cookies } from 'next/headers';
-
-export type Session = {
-  user: {
-    id: string;
-    email: string;
-  };
-  accessToken: string;
-  refreshToken: string;
-};
-
-const secretKey = env.SESSION_SECRET_KEY;
 
 export const setSessionTokenCookie = async (token: string, expiresAt: Date): Promise<void> => {
   const cookieStore = await cookies();

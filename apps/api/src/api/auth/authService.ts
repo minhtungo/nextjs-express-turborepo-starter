@@ -39,15 +39,7 @@ import { logger } from '@/server';
 import { sign } from 'jsonwebtoken';
 
 const signIn = async () => {
-  const serviceResponse = ServiceResponse.success(
-    'Sign in successful',
-    {
-      isTwoFactorEnabled: false,
-      id: '1a67196a-1e94-49d1-ad83-bd8624f7d737',
-      email: 'loducfc@gmail.com',
-    },
-    StatusCodes.OK
-  );
+  const serviceResponse = ServiceResponse.success('Sign in successfully', null, StatusCodes.OK);
 
   return serviceResponse;
 };

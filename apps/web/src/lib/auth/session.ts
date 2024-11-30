@@ -1,5 +1,5 @@
 import { env } from '@repo/env/server';
-import { getSession } from '@/lib/auth/auth';
+
 import { cookies } from 'next/headers';
 
 export const getTokenCookie = async (name: string) => {
@@ -18,8 +18,4 @@ export const setTokenCookie = async (name: string, payload: string, maxAge: numb
     path: '/',
     maxAge,
   });
-};
-
-export const getCurrentUser = async () => {
-  return await getSession();
 };

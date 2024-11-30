@@ -1,19 +1,8 @@
 'use server';
 
 import { afterLoginUrl } from '@/config';
-import { createSession, deleteSession } from '@/lib/auth/auth';
-import {
-  forgotPasswordSchema,
-  refreshTokenSchema,
-  resetPasswordSchema,
-  sendVerificationEmailSchema,
-  signInSchema,
-  signUpSchema,
-  verifyEmailSchema,
-} from '@/features/auth/lib/schemas';
 import {
   forgotPasswordService,
-  refreshTokenService,
   resetPasswordService,
   sendVerificationEmailService,
   signInService,
@@ -22,9 +11,19 @@ import {
   verifyEmailService,
 } from '@/features/auth/lib/services';
 import { actionClient } from '@/lib/safe-actions';
+import {
+  forgotPasswordSchema,
+  refreshTokenSchema,
+  resetPasswordSchema,
+  sendVerificationEmailSchema,
+  signInSchema,
+  signUpSchema,
+  verifyEmailSchema,
+} from '@repo/types/auth';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
-import { cookies } from 'next/headers';
+
 export const signUpAction = actionClient.schema(signUpSchema).action(async ({ parsedInput }) => {
   const result = await signUpService(parsedInput);
 
@@ -54,10 +53,6 @@ export const signInAction = actionClient
         error: result.message || 'An error occurred during sign in',
       };
     }
-
-    const cookieStore = await cookies();
-
-    console.log('cookieStore', cookieStore.getAll());
 
     redirect(parsedInput.redirectTo || afterLoginUrl);
   });
@@ -98,12 +93,6 @@ export const resetPasswordAction = actionClient.schema(resetPasswordSchema).acti
   };
 });
 
-export const refreshTokenAction = actionClient
-  .schema(refreshTokenSchema)
-  .action(async ({ parsedInput: { refreshToken } }) => {
-    return refreshTokenService(refreshToken);
-  });
-
 export const sendVerificationEmailAction = actionClient
   .schema(sendVerificationEmailSchema)
   .action(async ({ parsedInput }) => {
@@ -112,7 +101,7 @@ export const sendVerificationEmailAction = actionClient
 
 export const signOutAction = actionClient.action(async () => {
   await signOutService();
-  await deleteSession();
+  // await deleteSession();
 
   redirect('/');
 });

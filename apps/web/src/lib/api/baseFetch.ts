@@ -1,36 +1,14 @@
-import { env } from '@repo/env/server';
 import { authFetch } from '@/lib/api';
 import { handleApiResponse } from '@/lib/api/utils';
-import { StatusCodes } from 'http-status-codes';
-
-export class ApiResponse<T = null> {
-  readonly success: boolean;
-  readonly message: string;
-  readonly data: T;
-  readonly statusCode: number;
-
-  private constructor(success: boolean, message: string, data: T, statusCode: number) {
-    this.success = success;
-    this.message = message;
-    this.data = data;
-    this.statusCode = statusCode;
-  }
-
-  static success<T>(message: string, data: T, statusCode: number = StatusCodes.OK) {
-    return new ApiResponse(true, message, data, statusCode);
-  }
-
-  static failure<T>(message: string, data: T, statusCode: number = StatusCodes.BAD_REQUEST) {
-    return new ApiResponse(false, message, data, statusCode);
-  }
-}
+import { env } from '@repo/env/server';
+import { ApiResponse } from '@repo/types/api';
 
 interface FetchOptions extends RequestInit {
   body: any;
 }
 
 export const api = {
-  get: async <T>(path: string, options?: Omit<FetchOptions, 'method'>, isPublic?: boolean): Promise<T> => {
+  get: async <T>(path: string, options?: Omit<FetchOptions, 'method'>, isPublic?: boolean): Promise<ApiResponse<T>> => {
     const response = await authFetch(
       `${env.SERVER_BASE_URL}${path}`,
       {
@@ -41,9 +19,13 @@ export const api = {
       isPublic
     );
 
-    return handleApiResponse(response);
+    return handleApiResponse<T>(response);
   },
-  post: async <T>(path: string, options?: Omit<FetchOptions, 'method'>, isPublic?: boolean): Promise<T> => {
+  post: async <T>(
+    path: string,
+    options?: Omit<FetchOptions, 'method'>,
+    isPublic?: boolean
+  ): Promise<ApiResponse<T>> => {
     const response = await authFetch(
       `${env.SERVER_BASE_URL}${path}`,
       {
@@ -59,7 +41,7 @@ export const api = {
       isPublic
     );
 
-    return handleApiResponse(response);
+    return handleApiResponse<T>(response);
   },
   put: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
     const response = await authFetch(`${env.SERVER_BASE_URL}${path}`, {
@@ -72,7 +54,7 @@ export const api = {
       method: 'PUT',
     });
 
-    return handleApiResponse(response);
+    return handleApiResponse<T>(response);
   },
   patch: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
     const response = await authFetch(`${env.SERVER_BASE_URL}${path}`, {

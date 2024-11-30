@@ -4,24 +4,20 @@ import { z } from 'zod';
 
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
 import { authController } from '@/api/auth/authController';
-import {
-  AuthResponseSchema,
-  ChangePasswordSchema,
-  LoginInputSchema,
-  PostForgotPasswordSchema,
-  PostResetPasswordSchema,
-  PostVerifyEmailSchema,
-  ResetPasswordSchema,
-  SignUpInputSchema,
-  TokensSchema,
-  VerifyEmailSchema,
-} from '@/api/auth/authModel';
+
 import { env } from '@/common/config/env';
 import { ServiceResponse } from '@/common/models/serviceResponse';
 import { handleServiceResponse, validateRequest } from '@/common/utils/httpHandlers';
 import isAuthenticated from '@/middleware/isAuthenticated';
 import { StatusCodes } from 'http-status-codes';
 import passport from 'passport';
+import {
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  signInSchema,
+  signUpSchema,
+  verifyEmailSchema,
+} from '@repo/types/auth';
 
 export const authRegistry = new OpenAPIRegistry();
 export const authRouter: Router = express.Router();
@@ -34,29 +30,24 @@ authRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: LoginInputSchema,
+          schema: signInSchema,
         },
       },
     },
   },
-  responses: createApiResponse(AuthResponseSchema, 'Success'),
+  responses: createApiResponse(z.undefined(), 'Successfully signed in'),
 });
 
 authRouter.post(
   '/sign-in',
-  validateRequest(z.object({ body: LoginInputSchema })),
+  validateRequest(z.object({ body: signInSchema })),
   (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate('local', {}, (error: any, user: Express.User | false) => {
       if (error || !user) {
-        const failureResponse = ServiceResponse.failure(
-          error.message || 'Authentication failed',
-          null,
-          StatusCodes.UNAUTHORIZED
-        );
+        const failureResponse = ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
         return handleServiceResponse(failureResponse, res);
       }
       // Authentication succeeded
-      console.log('Authentication succeeded', user);
       req.user = user;
       next();
     })(req, res, next);
@@ -72,15 +63,15 @@ authRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: SignUpInputSchema,
+          schema: signUpSchema,
         },
       },
     },
   },
-  responses: createApiResponse(AuthResponseSchema, 'Success'),
+  responses: createApiResponse(z.undefined(), 'Successfully signed up'),
 });
 
-authRouter.post('/sign-up', validateRequest(z.object({ body: SignUpInputSchema })), authController.signUp);
+authRouter.post('/sign-up', validateRequest(z.object({ body: signUpSchema })), authController.signUp);
 
 authRegistry.registerPath({
   method: 'post',
@@ -90,7 +81,7 @@ authRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: ResetPasswordSchema,
+          schema: resetPasswordSchema,
         },
       },
     },
@@ -98,7 +89,11 @@ authRegistry.registerPath({
   responses: createApiResponse(z.string().nullable(), 'Success'),
 });
 
-authRouter.post('/reset-password', validateRequest(PostResetPasswordSchema), authController.resetPassword);
+authRouter.post(
+  '/reset-password',
+  validateRequest(z.object({ body: resetPasswordSchema })),
+  authController.resetPassword
+);
 
 authRegistry.registerPath({
   method: 'post',
@@ -108,7 +103,7 @@ authRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: ChangePasswordSchema,
+          schema: forgotPasswordSchema,
         },
       },
     },
@@ -116,7 +111,11 @@ authRegistry.registerPath({
   responses: createApiResponse(z.string().nullable(), 'Success'),
 });
 
-authRouter.post('/forgot-password', validateRequest(PostForgotPasswordSchema), authController.forgotPassword);
+authRouter.post(
+  '/forgot-password',
+  validateRequest(z.object({ body: forgotPasswordSchema })),
+  authController.forgotPassword
+);
 
 authRegistry.registerPath({
   method: 'post',
@@ -126,7 +125,7 @@ authRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: VerifyEmailSchema,
+          schema: verifyEmailSchema,
         },
       },
     },
@@ -134,7 +133,7 @@ authRegistry.registerPath({
   responses: createApiResponse(z.string().nullable(), 'Success'),
 });
 
-authRouter.post('/verify-email', validateRequest(PostVerifyEmailSchema), authController.verifyEmail);
+authRouter.post('/verify-email', validateRequest(z.object({ body: verifyEmailSchema })), authController.verifyEmail);
 
 authRouter.post('/sign-out', isAuthenticated, authController.signOut);
 
@@ -146,7 +145,7 @@ authRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: VerifyEmailSchema,
+          schema: verifyEmailSchema,
         },
       },
     },
@@ -154,26 +153,14 @@ authRegistry.registerPath({
   responses: createApiResponse(z.string().nullable(), 'Success'),
 });
 
-authRouter.post(
-  '/send-verification-email',
-  validateRequest(PostVerifyEmailSchema),
-  authController.sendVerificationEmail
-);
-
-authRegistry.registerPath({
-  method: 'post',
-  tags: ['Auth'],
-  path: '/auth/refresh-token',
-  request: {},
-  responses: createApiResponse(TokensSchema, 'Success'),
-});
+authRouter.post('/send-verification-email', validateRequest(verifyEmailSchema), authController.sendVerificationEmail);
 
 authRegistry.registerPath({
   method: 'get',
   tags: ['Auth'],
   path: '/auth/google',
   request: {},
-  responses: createApiResponse(TokensSchema, 'Success'),
+  responses: createApiResponse(z.undefined(), 'Success'),
 });
 
 authRouter.get(

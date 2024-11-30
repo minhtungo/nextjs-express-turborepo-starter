@@ -20,14 +20,6 @@ const signUp: RequestHandler = async (req, res) => {
 };
 
 const signIn: RequestHandler = async (req, res) => {
-  const user = req.user;
-
-  console.log(`req.user: ${JSON.stringify(req.user)}`);
-  if (!user) {
-    const serviceResponse = ServiceResponse.failure('User not found', StatusCodes.UNAUTHORIZED);
-    return handleServiceResponse(serviceResponse, res);
-  }
-
   const serviceResponse = await authService.signIn();
 
   return handleServiceResponse(serviceResponse, res);

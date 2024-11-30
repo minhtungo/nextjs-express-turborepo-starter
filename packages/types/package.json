@@ -3,22 +3,18 @@
   "version": "0.0.1",
   "private": true,
   "exports": {
-    ".": {
-      "types": "./src/index.ts",
-      "default": "./dist/index.js"
-    }
-  },
-  "scripts": {
-    "build": "tsc",
-    "dev": "tsc -w",
-    "lint": "eslint . --max-warnings 0"
+    ".": "./src/index.ts",
+    "./auth": "./src/auth.ts",
+    "./api": "./src/api.ts"
   },
   "dependencies": {
-    "http-status-codes": "^2.3.0"
+    "http-status-codes": "^2.3.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@repo/database": "workspace:*",
     "@types/node": "22.9.4",
     "eslint": "^9",
     "typescript": "^5.7.2"

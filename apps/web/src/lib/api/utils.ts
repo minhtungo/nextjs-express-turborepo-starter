@@ -1,10 +1,9 @@
-import { ApiResponse } from '@/lib/api/baseFetch';
+import { ApiResponse } from '@repo/types/api';
 import { cookies } from 'next/headers';
 
-export const handleApiResponse = async <T>(response: Response): Promise<T> => {
+export const handleApiResponse = async <T>(response: Response): Promise<ApiResponse<T>> => {
   try {
     const setCookieHeader = response.headers.get('Set-Cookie');
-
     if (setCookieHeader) {
       const cookieStore = await cookies();
       const [cookieName, ...rest] = setCookieHeader.split('=');
@@ -23,20 +22,21 @@ export const handleApiResponse = async <T>(response: Response): Promise<T> => {
           {} as Record<string, any>
         );
 
-      console.log('attributes', attributes);
-
       cookieStore.set(cookieName, cookieValue, {
         httpOnly: true,
-        path: attributes.path || '/',
-        expires: attributes.expires ? new Date(attributes.expires) : undefined,
-        sameSite: (attributes.samesite || 'lax').toLowerCase() as 'lax' | 'strict' | 'none',
+        path: attributes.path,
+        expires: new Date(attributes.expires),
+        sameSite: attributes.samesite,
         secure: attributes.secure === 'true',
       });
     }
 
-    const result = await response.json();
-    return result;
+    return await response.json();
   } catch (error) {
-    return ApiResponse.failure('Server error', null, response.status) as T;
+    return {
+      success: false,
+      message: 'Server error',
+      statusCode: 123,
+    } as ApiResponse<T>;
   }
 };
