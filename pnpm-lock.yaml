@@ -23,6 +23,9 @@ importers:
       '@asteasolutions/zod-to-openapi':
         specifier: ^7.0.0
         version: 7.2.0(zod@3.23.8)
+      '@repo/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       '@repo/database':
         specifier: workspace:*
         version: link:../../packages/database
@@ -166,11 +169,14 @@ importers:
         specifier: ^2.0.0
         version: 2.1.3(@types/node@22.9.4)
 
-  apps/web:
+  apps/app:
     dependencies:
       '@hookform/resolvers':
         specifier: ^3.9.1
         version: 3.9.1(react-hook-form@7.53.2(react@19.0.0-rc.1))
+      '@repo/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       '@repo/env':
         specifier: workspace:*
         version: link:../../packages/env
@@ -250,6 +256,119 @@ importers:
       tailwindcss:
         specifier: ^3.4.15
         version: 3.4.15
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.2
+
+  apps/web:
+    dependencies:
+      '@hookform/resolvers':
+        specifier: ^3.9.1
+        version: 3.9.1(react-hook-form@7.53.2(react@19.0.0-rc.1))
+      '@repo/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@repo/env':
+        specifier: workspace:*
+        version: link:../../packages/env
+      '@repo/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      class-variance-authority:
+        specifier: ^0.7.0
+        version: 0.7.0
+      http-status-codes:
+        specifier: ^2.3.0
+        version: 2.3.0
+      jose:
+        specifier: ^5.9.6
+        version: 5.9.6
+      lucide-react:
+        specifier: ^0.461.0
+        version: 0.461.0(react@19.0.0-rc.1)
+      next:
+        specifier: 15.0.3
+        version: 15.0.3(react-dom@19.0.0-rc.1(react@19.0.0-rc.1))(react@19.0.0-rc.1)
+      next-safe-action:
+        specifier: ^7.9.9
+        version: 7.9.9(next@15.0.3(react-dom@19.0.0-rc.1(react@19.0.0-rc.1))(react@19.0.0-rc.1))(react-dom@19.0.0-rc.1(react@19.0.0-rc.1))(react@19.0.0-rc.1)(zod@3.23.8)
+      next-themes:
+        specifier: ^0.4.3
+        version: 0.4.3(react-dom@19.0.0-rc.1(react@19.0.0-rc.1))(react@19.0.0-rc.1)
+      react:
+        specifier: 19.0.0-rc.1
+        version: 19.0.0-rc.1
+      react-dom:
+        specifier: 19.0.0-rc.1
+        version: 19.0.0-rc.1(react@19.0.0-rc.1)
+      react-hook-form:
+        specifier: ^7.53.2
+        version: 7.53.2(react@19.0.0-rc.1)
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/config-eslint
+      '@repo/tailwind-config':
+        specifier: workspace:*
+        version: link:../../packages/config-tailwind
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/config-typescript
+      '@types/node':
+        specifier: 22.9.4
+        version: 22.9.4
+      '@types/react':
+        specifier: npm:types-react@rc
+        version: types-react@19.0.0-rc.1
+      '@types/react-dom':
+        specifier: npm:types-react-dom@rc
+        version: types-react-dom@19.0.0-rc.1
+      clsx:
+        specifier: ^2.1.0
+        version: 2.1.1
+      eslint:
+        specifier: ^9
+        version: 9.13.0(jiti@1.21.6)
+      eslint-config-next:
+        specifier: 15.0.3
+        version: 15.0.3(eslint@9.13.0(jiti@1.21.6))(typescript@5.7.2)
+      postcss:
+        specifier: ^8.4.33
+        version: 8.4.47
+      tailwind-merge:
+        specifier: ^2.5.5
+        version: 2.5.5
+      tailwindcss:
+        specifier: ^3.4.15
+        version: 3.4.15
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.2
+
+  packages/config:
+    dependencies:
+      '@repo/env':
+        specifier: workspace:*
+        version: link:../env
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../config-eslint
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../types
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../config-typescript
+      eslint:
+        specifier: ^9
+        version: 9.13.0(jiti@1.21.6)
       typescript:
         specifier: ^5.7.2
         version: 5.7.2
@@ -1635,9 +1754,6 @@ packages:
 
   '@types/mime@1.3.5':
     resolution: {integrity: sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==}
-
-  '@types/node@22.7.7':
-    resolution: {integrity: sha512-SRxCrrg9CL/y54aiMCG3edPKdprgMVGDXjA3gB8UmmBW5TcXzRUYAh8EWzTnSJFAd1rgImPELza+A3bJ+qxz8Q==}
 
   '@types/node@22.9.4':
     resolution: {integrity: sha512-d9RWfoR7JC/87vj7n+PVTzGg9hDyuFjir3RxUHbjFSKNd9mpxbxwMEyaCim/ddCmy4IuW7HjTzF3g9p3EtWEOg==}
@@ -5962,7 +6078,7 @@ snapshots:
 
   '@types/cors@2.8.17':
     dependencies:
-      '@types/node': 22.7.7
+      '@types/node': 22.9.4
 
   '@types/estree@1.0.6': {}
 
@@ -5992,15 +6108,11 @@ snapshots:
 
   '@types/jsonwebtoken@9.0.7':
     dependencies:
-      '@types/node': 22.7.7
+      '@types/node': 22.9.4
 
   '@types/methods@1.1.4': {}
 
   '@types/mime@1.3.5': {}
-
-  '@types/node@22.7.7':
-    dependencies:
-      undici-types: 6.19.8
 
   '@types/node@22.9.4':
     dependencies:

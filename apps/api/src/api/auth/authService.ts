@@ -1,7 +1,6 @@
 import { verifyToken } from '@/common/utils/token';
 import bcrypt from 'bcryptjs';
 import { StatusCodes } from 'http-status-codes';
-import type { LoginInput, LoginResponse, SignUpInput } from './authModel';
 
 import { ServiceResponse } from '@/common/models/serviceResponse';
 
@@ -32,11 +31,12 @@ import {
   getVerificationTokenByUserId,
 } from '@/data-access/verificationToken';
 
-import { applicationName, cookie, saltRounds } from '@/common/config/config';
+import { User } from '@/api/user/userModel';
+import { applicationName, saltRounds } from '@/common/config/config';
 import { createTransaction } from '@/common/utils/db';
 import { sendEmail } from '@/common/utils/mail';
 import { logger } from '@/server';
-import { sign } from 'jsonwebtoken';
+import { signInProps, signUpProps } from '@repo/types/auth';
 
 const signIn = async () => {
   const serviceResponse = ServiceResponse.success('Sign in successfully', null, StatusCodes.OK);
@@ -44,7 +44,7 @@ const signIn = async () => {
   return serviceResponse;
 };
 
-const signUp = async ({ email, name, password }: SignUpInput): Promise<ServiceResponse<{ id: string } | null>> => {
+const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceResponse<{ id: string } | null>> => {
   try {
     const isExistingUser = await getUserByEmail(email, {
       id: true,
@@ -80,7 +80,7 @@ const validateLocalUser = async ({
   email,
   password,
   code,
-}: LoginInput): Promise<ServiceResponse<LoginResponse | null>> => {
+}: signInProps): Promise<ServiceResponse<Partial<User> | null>> => {
   try {
     const user = await getUserByEmail(email);
 
@@ -127,13 +127,7 @@ const validateLocalUser = async ({
       }
     }
 
-    return ServiceResponse.success<LoginResponse>(
-      'Sign in successful',
-      {
-        id: user.id,
-      },
-      StatusCodes.OK
-    );
+    return ServiceResponse.success<Partial<User>>('Sign in successful', user, StatusCodes.OK);
   } catch (error) {
     const errorMessage = `Error signing in: $${(error as Error).message}`;
     logger.error(errorMessage);
@@ -275,19 +269,6 @@ const sendVerificationEmail = async (email: string) => {
   }
 };
 
-const generateAccessToken = (userId: string) => {
-  return sign({ sub: userId }, cookie.accessToken.secret, {
-    expiresIn: cookie.accessToken.expiresIn,
-    algorithm: cookie.accessToken.algorithm,
-  });
-};
-
-const generateTokens = (userId: string) => {
-  const accessToken = generateAccessToken(userId);
-
-  return { accessToken };
-};
-
 const hashPassword = async (password: string) => {
   return await bcrypt.hash(password, saltRounds);
 };
@@ -322,6 +303,5 @@ export const authService = {
   hashPassword,
   comparePassword,
   signIn,
-  generateTokens,
   verifyToken,
 };

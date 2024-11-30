@@ -1,5 +1,5 @@
 {
-  "name": "site",
+  "name": "app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -12,6 +12,7 @@
   "dependencies": {
     "@repo/ui": "workspace:*",
     "@repo/env": "workspace:*",
+    "@repo/config": "workspace:*",
     "@hookform/resolvers": "^3.9.1",
     "class-variance-authority": "^0.7.0",
     "http-status-codes": "^2.3.0",

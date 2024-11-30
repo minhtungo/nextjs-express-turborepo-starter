@@ -1,5 +1,5 @@
 import { apiRoutes } from '@/config';
-import { api } from '@/lib/api/baseFetch';
+import { api } from '@/lib/api/authFetch';
 import { UserDTO } from '@/types/dto/user';
 
 export const getUserInfoService = async (): Promise<UserDTO> => {

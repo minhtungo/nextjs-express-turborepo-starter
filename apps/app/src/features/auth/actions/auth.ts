@@ -10,6 +10,7 @@ import {
   signUpService,
   verifyEmailService,
 } from '@/features/auth/lib/services';
+import { deleteSessionTokenCookie } from '@/lib/auth';
 import { actionClient } from '@/lib/safe-actions';
 import {
   forgotPasswordSchema,
@@ -102,7 +103,7 @@ export const sendVerificationEmailAction = actionClient
 
 export const signOutAction = actionClient.action(async () => {
   await signOutService();
-  // await deleteSession();
+  await deleteSessionTokenCookie();
 
   redirect('/');
 });

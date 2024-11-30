@@ -1,16 +1,5 @@
-export const authFetch = async (url: string | URL, options: RequestInit = {}, isPublic = false) => {
-  options.credentials = 'include';
-
-  options.headers = {
-    ...options.headers,
-    'Content-Type': 'application/json',
-  };
-
+export const customFetch = async (url: string | URL, options: RequestInit = {}) => {
   const response = await fetch(url, options);
-
-  if (response.status === 401 && !isPublic) {
-    throw new Error('Session expired');
-  }
 
   return response;
 };

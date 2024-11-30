@@ -3,9 +3,10 @@ import type { RequestHandler } from 'express';
 import { authService } from '@/api/auth/authService';
 import { handleServiceResponse } from '@/common/utils/httpHandlers';
 
-import { env } from '@/common/config/env';
 import { ServiceResponse } from '@/common/models/serviceResponse';
+import { signUpProps } from '@repo/types/auth';
 import { StatusCodes } from 'http-status-codes';
+import { session } from '@repo/config';
 
 const signUp: RequestHandler = async (req, res) => {
   const { name, email, password } = req.body;
@@ -14,7 +15,7 @@ const signUp: RequestHandler = async (req, res) => {
     name,
     email,
     password,
-  });
+  } as signUpProps);
 
   return handleServiceResponse(serviceResponse, res);
 };
@@ -79,22 +80,27 @@ const handleGoogleCallback: RequestHandler = async (req, res) => {
     return handleServiceResponse(serviceResponse, res);
   }
 
-  const { accessToken } = authService.generateTokens(user.id);
+  // const { accessToken } = authService.generateTokens(user.id);
 
-  res.redirect(
-    `${env.SITE_BASE_URL}/api/auth/google/callback?userId=${user.id}&email=${user.email}&accessToken=${accessToken}`
-  );
+  // res.redirect(
+  //   `${env.SITE_BASE_URL}/api/auth/google/callback?userId=${user.id}&email=${user.email}&accessToken=${accessToken}`
+  // );
 };
 
-const signOut: RequestHandler = async (req, res) => {
+const signOut: RequestHandler = async (req, res, next) => {
   await new Promise((resolve) => {
     req.session.destroy((err) => {
       if (err) console.error('Session destruction error:', err);
-      res.clearCookie('connect.sid');
+      res.clearCookie(session.name);
       resolve(true);
     });
   });
 
+  // req.logOut(function (err) {
+  //   if (err) {
+  //     return next(err);
+  //   }
+  // });
   const serviceResponse = await authService.signOut(req.user?.id!);
 
   return handleServiceResponse(serviceResponse, res);

@@ -1,5 +1,6 @@
+import { session } from '@repo/config/auth';
 import { apiRoutes } from '@/config';
-import { api } from '@/lib/api/baseFetch';
+import { api } from '@/lib/api/authFetch';
 import { getSessionToken } from '@/lib/auth/session';
 
 export type Session = {
@@ -12,16 +13,13 @@ export type Session = {
 export const getSession = async (): Promise<Session | null> => {
   const sessionToken = await getSessionToken();
 
-  console.log('sessionToken', sessionToken);
   if (!sessionToken) return null;
 
   const result = await api.get<{ user: { id: string; email: string } }>(apiRoutes.auth.session, {
-    credentials: 'include',
     cache: 'no-store',
     headers: {
-      Cookie: `connect.sid=${sessionToken}`,
+      Cookie: `${session.name}=${sessionToken}`,
     },
-    body: undefined,
   });
 
   console.log('result', result);

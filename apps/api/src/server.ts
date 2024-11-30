@@ -2,6 +2,7 @@ import cors from 'cors';
 import express, { type Express } from 'express';
 import helmet from 'helmet';
 import { pino } from 'pino';
+import { session as sessionConfig } from '@repo/config/auth';
 
 import { openAPIRouter } from '@/api-docs/openAPIRouter';
 import { authRouter } from '@/api/auth/authRouter';
@@ -54,7 +55,8 @@ const sessionStore = new pgSession({
 
 app.use(
   session({
-    secret: env.ACCESS_TOKEN_SECRET,
+    name: sessionConfig.name,
+    secret: env.SESSION_SECRET,
     genid: () => {
       return uuidv4();
     },
@@ -62,7 +64,7 @@ app.use(
     saveUninitialized: false,
     store: sessionStore,
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 7,
+      maxAge: sessionConfig.maxAge,
       secure: env.NODE_ENV === 'production',
       httpOnly: true,
       sameSite: 'lax',

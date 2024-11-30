@@ -1,6 +1,6 @@
 import { apiRoutes } from '@/config';
 import { resetPasswordProps, sendVerificationEmailProps, signInProps, signUpProps } from '@/features/auth/lib/schemas';
-import { api } from '@/lib/api/baseFetch';
+import { api } from '@/lib/api/authFetch';
 import { ApiResponse } from '@repo/types/api';
 
 export const signUpService = async (values: signUpProps) => {
@@ -63,13 +63,9 @@ export const resetPasswordService = async (values: resetPasswordProps): Promise<
 };
 
 export const sendVerificationEmailService = async ({ token }: sendVerificationEmailProps): Promise<ApiResponse> => {
-  const response = await api.post(
-    apiRoutes.auth.signIn,
-    {
-      body: { token },
-    },
-    true
-  );
+  const response = await api.post(apiRoutes.auth.signIn, {
+    body: { token },
+  });
 
   return response;
 };
