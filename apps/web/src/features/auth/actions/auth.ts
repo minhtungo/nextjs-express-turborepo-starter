@@ -13,15 +13,14 @@ import {
 import { actionClient } from '@/lib/safe-actions';
 import {
   forgotPasswordSchema,
-  refreshTokenSchema,
   resetPasswordSchema,
   sendVerificationEmailSchema,
   signInSchema,
   signUpSchema,
   verifyEmailSchema,
 } from '@repo/types/auth';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+
 import { z } from 'zod';
 
 export const signUpAction = actionClient.schema(signUpSchema).action(async ({ parsedInput }) => {
@@ -47,6 +46,8 @@ export const signInAction = actionClient
   )
   .action(async ({ parsedInput }) => {
     const result = await signInService(parsedInput.values);
+
+    console.log('signIn result', result);
 
     if (!result.success) {
       return {

@@ -1,21 +1,29 @@
-import { env } from '@repo/env/server';
-
 import { cookies } from 'next/headers';
 
-export const getTokenCookie = async (name: string) => {
-  return (await cookies()).get(name)?.value;
+const SESSION_COOKIE_NAME = 'connect.sid';
+
+export const getSessionToken = async () => {
+  return (await cookies()).get(SESSION_COOKIE_NAME)?.value;
 };
 
-export const deleteTokenCookie = async (name: string) => {
-  (await cookies()).delete(name);
-};
-
-export const setTokenCookie = async (name: string, payload: string, maxAge: number) => {
-  (await cookies()).set(name, payload, {
+export const setSessionTokenCookie = async (token: string, expiresAt: Date): Promise<void> => {
+  const cookieStore = await cookies();
+  cookieStore.set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
-    secure: env.NODE_ENV === 'production',
     sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    expires: expiresAt,
     path: '/',
-    maxAge,
+  });
+};
+
+export const deleteSessionTokenCookie = async (): Promise<void> => {
+  const cookieStore = await cookies();
+  cookieStore.set(SESSION_COOKIE_NAME, '', {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 0,
+    path: '/',
   });
 };

@@ -20,6 +20,20 @@ const signUp: RequestHandler = async (req, res) => {
 };
 
 const signIn: RequestHandler = async (req, res) => {
+  if (!req.user) {
+    return handleServiceResponse(ServiceResponse.failure('Authentication failed', null, StatusCodes.UNAUTHORIZED), res);
+  }
+
+  console.log('signIn req.user', req.user);
+
+  // Use req.login instead of manually setting session
+  await new Promise<void>((resolve, reject) => {
+    req.login(req.user!, (err) => {
+      if (err) reject(err);
+      resolve();
+    });
+  });
+
   const serviceResponse = await authService.signIn();
 
   return handleServiceResponse(serviceResponse, res);
@@ -73,7 +87,21 @@ const handleGoogleCallback: RequestHandler = async (req, res) => {
 };
 
 const signOut: RequestHandler = async (req, res) => {
+  await new Promise((resolve) => {
+    req.session.destroy((err) => {
+      if (err) console.error('Session destruction error:', err);
+      res.clearCookie('connect.sid');
+      resolve(true);
+    });
+  });
+
   const serviceResponse = await authService.signOut(req.user?.id!);
+
+  return handleServiceResponse(serviceResponse, res);
+};
+
+const getSession: RequestHandler = async (req, res) => {
+  const serviceResponse = await authService.getSession(req.user);
 
   return handleServiceResponse(serviceResponse, res);
 };
@@ -87,4 +115,5 @@ export const authController = {
   verifyEmail,
   sendVerificationEmail,
   handleGoogleCallback,
+  getSession,
 };

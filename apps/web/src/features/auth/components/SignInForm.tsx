@@ -30,7 +30,7 @@ const SignInForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input type='email' placeholder='Email' {...field} />
+                      <Input autoComplete='email' type='email' placeholder='Email' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

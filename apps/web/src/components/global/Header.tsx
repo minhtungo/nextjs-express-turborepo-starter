@@ -1,7 +1,7 @@
 import SignOutButton from '@/components/SignOutButton';
 import ThemeToggle from '@/components/ThemeToggle';
 import { authRoutes } from '@/config';
-import { getCurrentUser } from '@/lib/auth';
+import { getSession } from '@/lib/auth';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
@@ -22,7 +22,10 @@ const Header = () => {
 };
 
 const AuthButtons = async () => {
-  const user = await getCurrentUser();
+  const session = await getSession();
+
+  const user = session?.user;
+
   return (
     <div className='flex gap-x-2 items-center'>
       {user ? <SignOutButton /> : <Link href={authRoutes.signIn}>Sign In</Link>}

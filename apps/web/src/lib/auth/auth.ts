@@ -1,25 +1,32 @@
-'use server';
+import { apiRoutes } from '@/config';
+import { api } from '@/lib/api/baseFetch';
+import { getSessionToken } from '@/lib/auth/session';
 
-import { cookies } from 'next/headers';
+export type Session = {
+  user: {
+    id: string;
+    email: string;
+  };
+} | null;
 
-export const setSessionTokenCookie = async (token: string, expiresAt: Date): Promise<void> => {
-  const cookieStore = await cookies();
-  cookieStore.set('session', token, {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    expires: expiresAt,
-    path: '/',
+export const getSession = async (): Promise<Session | null> => {
+  const sessionToken = await getSessionToken();
+
+  console.log('sessionToken', sessionToken);
+  if (!sessionToken) return null;
+
+  const result = await api.get<{ user: { id: string; email: string } }>(apiRoutes.auth.session, {
+    credentials: 'include',
+    cache: 'no-store',
+    headers: {
+      Cookie: `connect.sid=${sessionToken}`,
+    },
+    body: undefined,
   });
-};
 
-export const deleteSessionTokenCookie = async (): Promise<void> => {
-  const cookieStore = await cookies();
-  cookieStore.set('session', '', {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 0,
-    path: '/',
-  });
+  console.log('result', result);
+
+  if (!result.success) return null;
+
+  return result.data?.user ? { user: result.data.user } : null;
 };

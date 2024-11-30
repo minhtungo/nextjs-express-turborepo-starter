@@ -24,8 +24,8 @@ export const handleApiResponse = async <T>(response: Response): Promise<ApiRespo
 
       cookieStore.set(cookieName, cookieValue, {
         httpOnly: true,
-        path: attributes.path,
-        expires: new Date(attributes.expires),
+        path: '/',
+        maxAge: 1000 * 60 * 60 * 24 * 30,
         sameSite: attributes.samesite,
         secure: attributes.secure === 'true',
       });

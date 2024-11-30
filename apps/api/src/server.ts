@@ -11,9 +11,8 @@ import { healthCheckRouter } from '@/api/healthCheck/healthCheckRouter';
 import { userRouter } from '@/api/user/userRouter';
 import { env } from '@/common/config/env';
 import errorHandler from '@/middleware/errorHandler';
-import isAuthenticated from '@/middleware/isAuthenticated';
+
 import notFoundHandler from '@/middleware/notFoundHandler';
-import rateLimiter from '@/middleware/rateLimiter';
 import requestLogger from '@/middleware/requestLogger';
 import { pool } from '@repo/database';
 import connectPgSimple from 'connect-pg-simple';
@@ -21,8 +20,9 @@ import session from 'express-session';
 import passport from 'passport';
 import { v4 as uuidv4 } from 'uuid';
 
-import { z } from 'zod';
+import assertAuthenticated from '@/middleware/assertAuthenticated';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
+import { z } from 'zod';
 
 extendZodWithOpenApi(z);
 
@@ -39,12 +39,12 @@ app.use(
   cors({
     origin: env.CORS_ORIGIN,
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Cookie'],
+    exposedHeaders: ['Set-Cookie'],
   })
 );
 app.use(helmet());
-app.use(rateLimiter);
 
 // Database
 const pgSession = connectPgSimple(session);
@@ -59,13 +59,14 @@ app.use(
       return uuidv4();
     },
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     store: sessionStore,
     cookie: {
-      maxAge: 1000 * 30,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
       secure: env.NODE_ENV === 'production',
       httpOnly: true,
       sameSite: 'lax',
+      path: '/',
     },
   })
 );
@@ -77,9 +78,9 @@ app.use(passport.session());
 app.use(requestLogger);
 
 // Routes
-app.use('/auth', authRouter);
 app.use('/health-check', healthCheckRouter);
-app.use('/users', isAuthenticated, userRouter);
+app.use('/auth', authRouter);
+app.use('/users', assertAuthenticated, userRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

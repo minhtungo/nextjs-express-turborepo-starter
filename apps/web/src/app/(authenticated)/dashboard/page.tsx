@@ -1,10 +1,12 @@
 import { authRoutes } from '@/config';
 import { getUserInfoService } from '@/features/user/lib/services';
-import { getCurrentUser } from '@/lib/auth';
+import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
 const DashBoard = async () => {
-  const user = await getCurrentUser();
+  const session = await getSession();
+
+  const user = session?.user;
 
   if (!user) {
     redirect(authRoutes.signIn);

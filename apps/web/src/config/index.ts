@@ -33,6 +33,7 @@ export const apiRoutes = {
     resetPassword: '/auth/reset-password',
     sendVerificationEmail: '/auth/send-verification-email',
     refreshToken: '/auth/refresh-token',
+    session: '/auth/session',
   },
   user: {
     getUserInfo: '/users',

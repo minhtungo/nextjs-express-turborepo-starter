@@ -20,14 +20,14 @@ passport.use(
       const result = await authService.validateLocalUser({ email, password, code });
 
       if (!result.success) {
-        return done(null, false);
+        return done(null, false, {
+          message: 'Invalid credentials',
+        });
       }
 
-      const user: Express.User = {
-        id: result.data?.id!,
-      };
+      console.log('Local strategy result', result.data);
 
-      return done(null, user);
+      return done(null, result.data);
     } catch (error) {
       logger.error('Local strategy error:', error);
       return done(error);
@@ -36,13 +36,13 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
+  console.log('serializeUser', user);
   done(null, user.id);
 });
 
 passport.deserializeUser(async (id: string, done) => {
   const user = await getUserById<SelectUser>(id, {
-    id: true,
-    email: true,
+    password: false,
   });
 
   if (!user) {

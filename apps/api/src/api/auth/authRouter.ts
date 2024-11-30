@@ -8,9 +8,7 @@ import { authController } from '@/api/auth/authController';
 import { env } from '@/common/config/env';
 import { ServiceResponse } from '@/common/models/serviceResponse';
 import { handleServiceResponse, validateRequest } from '@/common/utils/httpHandlers';
-import isAuthenticated from '@/middleware/isAuthenticated';
-import { StatusCodes } from 'http-status-codes';
-import passport from 'passport';
+
 import {
   forgotPasswordSchema,
   resetPasswordSchema,
@@ -18,6 +16,8 @@ import {
   signUpSchema,
   verifyEmailSchema,
 } from '@repo/types/auth';
+import { StatusCodes } from 'http-status-codes';
+import passport from 'passport';
 
 export const authRegistry = new OpenAPIRegistry();
 export const authRouter: Router = express.Router();
@@ -72,6 +72,16 @@ authRegistry.registerPath({
 });
 
 authRouter.post('/sign-up', validateRequest(z.object({ body: signUpSchema })), authController.signUp);
+
+authRegistry.registerPath({
+  method: 'get',
+  tags: ['Auth'],
+  path: '/auth/session',
+  request: {},
+  responses: createApiResponse(z.undefined(), 'Returns the current session'),
+});
+
+authRouter.get('/session', authController.getSession);
 
 authRegistry.registerPath({
   method: 'post',
@@ -135,7 +145,7 @@ authRegistry.registerPath({
 
 authRouter.post('/verify-email', validateRequest(z.object({ body: verifyEmailSchema })), authController.verifyEmail);
 
-authRouter.post('/sign-out', isAuthenticated, authController.signOut);
+authRouter.post('/sign-out', authController.signOut);
 
 authRegistry.registerPath({
   method: 'post',

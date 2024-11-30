@@ -82,12 +82,7 @@ const validateLocalUser = async ({
   code,
 }: LoginInput): Promise<ServiceResponse<LoginResponse | null>> => {
   try {
-    const user = await getUserByEmail(email, {
-      id: true,
-      emailVerified: true,
-      password: true,
-      email: true,
-    });
+    const user = await getUserByEmail(email);
 
     if (!user || !user.id || !user.password) {
       return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
@@ -136,7 +131,6 @@ const validateLocalUser = async ({
       'Sign in successful',
       {
         id: user.id,
-        email: user.email!,
       },
       StatusCodes.OK
     );
@@ -302,8 +296,23 @@ const comparePassword = async (plainTextPassword: string, hashedPassword: string
   return await bcrypt.compare(plainTextPassword, hashedPassword);
 };
 
+const getSession = async (user: Express.User | undefined): Promise<ServiceResponse<{ user: Express.User } | null>> => {
+  if (!user) {
+    return ServiceResponse.failure('User not found', null, StatusCodes.NOT_FOUND);
+  }
+
+  return ServiceResponse.success(
+    'Retrieved session',
+    {
+      user,
+    },
+    StatusCodes.OK
+  );
+};
+
 export const authService = {
   signUp,
+  getSession,
   validateLocalUser,
   forgotPassword,
   resetPassword,
