@@ -28,7 +28,7 @@ const ForgotPasswordForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input type='email' placeholder='Email' {...field} />
+                  <Input type='email' placeholder='Email' autoFocus {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

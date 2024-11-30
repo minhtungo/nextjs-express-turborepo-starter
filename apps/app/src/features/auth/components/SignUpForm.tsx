@@ -24,7 +24,7 @@ const SignUpForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder={'Name'} {...field} />
+                  <Input placeholder={'Name'} autoFocus {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

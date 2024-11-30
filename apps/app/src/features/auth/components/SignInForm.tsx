@@ -30,7 +30,7 @@ const SignInForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input autoComplete='email' type='email' placeholder='Email' {...field} />
+                      <Input autoComplete='email' type='email' placeholder='Email' autoFocus {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -42,7 +42,7 @@ const SignInForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <PasswordInput placeholder='Password' {...field} />
+                      <PasswordInput autoComplete='current-password password' placeholder='Password' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
