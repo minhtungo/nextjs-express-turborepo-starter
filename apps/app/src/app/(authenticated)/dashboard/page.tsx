@@ -4,20 +4,20 @@ import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
 const DashBoard = async () => {
-  const session = await getSession();
+  // const session = await getSession();
 
-  const user = session?.user;
+  // const user = session?.user;
 
-  if (!user) {
-    redirect(authRoutes.signIn);
-  }
+  // if (!user) {
+  //   redirect(authRoutes.signIn);
+  // }
 
   const data = await getUserInfoService();
 
   return (
     <div>
-      {user.email}
-      <h3>Response: {JSON.stringify(data)}</h3>
+      {/* {user.email}
+      <h3>Response: {JSON.stringify(data)}</h3> */}
     </div>
   );
 };

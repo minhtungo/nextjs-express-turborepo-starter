@@ -15,14 +15,16 @@ export const getSession = async (): Promise<Session | null> => {
 
   if (!sessionToken) return null;
 
+  return validateSessionToken(sessionToken);
+};
+
+export const validateSessionToken = async (token: string) => {
   const result = await api.get<{ user: { id: string; email: string } }>(apiRoutes.auth.session, {
     cache: 'no-store',
     headers: {
-      Cookie: `${session.name}=${sessionToken}`,
+      Cookie: `${session.name}=${token}`,
     },
   });
-
-  console.log('result', result);
 
   if (!result.success) return null;
 

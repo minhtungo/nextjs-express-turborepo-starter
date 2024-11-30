@@ -23,6 +23,8 @@ export const authRoutes = {
   resetPassword: '/reset-password',
 };
 
+export const protectedRoutes = ['/dashboard'];
+
 export const apiRoutes = {
   auth: {
     signIn: '/auth/sign-in',
