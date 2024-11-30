@@ -1,12 +1,12 @@
-import { getSession } from '@/lib/auth/auth';
+import { assertAuthenticated } from '@/lib/auth/auth';
 import { createMiddleware, createSafeActionClient } from 'next-safe-action';
 
 export const actionClient = createSafeActionClient();
 
 const authenticationMiddleware = createMiddleware().define(async ({ next }) => {
-  const session = await getSession();
+  const user = await assertAuthenticated();
 
-  return next({ ctx: { user: session?.user } });
+  return next({ ctx: { user } });
 });
 
 export const authActionClient = actionClient.use(authenticationMiddleware);
