@@ -174,14 +174,20 @@ authRegistry.registerPath({
 });
 
 authRouter.get('/google', (req: Request, res: Response, next: NextFunction) => {
-  req.session.redirect = req.query.redirect;
+  const { redirect } = req.query;
+  const state = redirect ? Buffer.from(JSON.stringify({ redirect })).toString('base64') : undefined;
+
   passport.authenticate('google', {
     session: true,
+    state,
   })(req, res, next);
 });
 
 authRouter.get('/google/callback', (req: Request, res: Response, next: NextFunction) => {
-  const redirect = req.session.redirect ?? undefined;
+  const { state } = req.query;
+  const { redirect } = JSON.parse(Buffer.from(state as string, 'base64').toString());
+
+  console.log('redirect', redirect);
 
   passport.authenticate('google', { session: true }, (error: any, user: Express.User | false) => {
     if (error || !user) {
@@ -194,15 +200,7 @@ authRouter.get('/google/callback', (req: Request, res: Response, next: NextFunct
         return next(err);
       }
 
-      delete req.session.redirect;
-
-      req.session.save((err) => {
-        if (err) {
-          console.error('Session save error:', err);
-          return next(err);
-        }
-        return res.redirect(`${env.SITE_BASE_URL}/${redirect}`);
-      });
+      return res.redirect(`${env.SITE_BASE_URL}/${redirect}`);
     });
   })(req, res, next);
 });

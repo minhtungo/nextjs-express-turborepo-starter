@@ -1,7 +1,7 @@
 import Google from '@/components/icons/Google';
-import { afterLoginUrl } from '@/config';
-import { cn } from '@/lib/utils';
 import { buttonVariants } from '@repo/ui/button';
+import { cn } from '@/lib/utils';
+import { afterLoginUrl } from '@/config';
 
 const GoogleSignInButton = () => {
   return (
