@@ -8,9 +8,10 @@ import { Suspense } from 'react';
 const Header = () => {
   return (
     <header className='h-14  border-b'>
-      <div className='flex p-4 h-full w-full items-center justify-between'>
+      <div className='flex p-4 h-full w-full items-center gap-x-4'>
         <Link href='/'>Home</Link>
-        <div className='flex gap-x-2 items-center'>
+        <Link href='/dashboard'>Dashboard</Link>
+        <div className='flex gap-x-2 items-center ml-auto'>
           <ThemeToggle />
           <Suspense fallback={'Loading...'}>
             <AuthButtons />
