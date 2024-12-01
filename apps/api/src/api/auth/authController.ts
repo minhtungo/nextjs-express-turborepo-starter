@@ -7,6 +7,7 @@ import { ServiceResponse } from '@/common/models/serviceResponse';
 import { signUpProps } from '@repo/types/auth';
 import { StatusCodes } from 'http-status-codes';
 import { session } from '@repo/config';
+import { env } from '@/common/config/env';
 
 const signUp: RequestHandler = async (req, res) => {
   const { name, email, password } = req.body;
@@ -76,10 +77,10 @@ const handleGoogleCallback: RequestHandler = async (req, res) => {
   const user = req.user;
 
   if (!user) {
-    const serviceResponse = ServiceResponse.failure('User not found', StatusCodes.UNAUTHORIZED);
-    return handleServiceResponse(serviceResponse, res);
+    return res.redirect(`${env.SITE_BASE_URL}/sign-in?error=${encodeURIComponent('Authentication failed')}`);
   }
 
+  return res.redirect(`${env.SITE_BASE_URL}/dashboard`);
   // const { accessToken } = authService.generateTokens(user.id);
 
   // res.redirect(

@@ -173,23 +173,36 @@ authRegistry.registerPath({
   responses: createApiResponse(z.undefined(), 'Success'),
 });
 
-authRouter.get(
-  '/google',
+authRouter.get('/google', (req: Request, res: Response, next: NextFunction) => {
+  req.session.redirect = req.query.redirect;
   passport.authenticate('google', {
-    session: false,
-  })
-);
+    session: true,
+  })(req, res, next);
+});
 
-authRouter.get(
-  '/google/callback',
-  (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate('google', { session: false }, (error: any, user: Express.User | false) => {
-      if (error || !user) {
-        return res.redirect(`${env.SITE_BASE_URL}/sign-in?error=${encodeURIComponent('Authentication failed')}`);
+authRouter.get('/google/callback', (req: Request, res: Response, next: NextFunction) => {
+  const redirect = req.session.redirect ?? undefined;
+
+  passport.authenticate('google', { session: true }, (error: any, user: Express.User | false) => {
+    if (error || !user) {
+      return res.redirect(`${env.SITE_BASE_URL}/sign-in?error=${encodeURIComponent('Authentication failed')}`);
+    }
+
+    // Log the user in using session
+    req.login(user, (err) => {
+      if (err) {
+        return next(err);
       }
-      req.user = user;
-      next();
-    })(req, res, next);
-  },
-  authController.handleGoogleCallback
-);
+
+      delete req.session.redirect;
+
+      req.session.save((err) => {
+        if (err) {
+          console.error('Session save error:', err);
+          return next(err);
+        }
+        return res.redirect(`${env.SITE_BASE_URL}/${redirect}`);
+      });
+    });
+  })(req, res, next);
+});
