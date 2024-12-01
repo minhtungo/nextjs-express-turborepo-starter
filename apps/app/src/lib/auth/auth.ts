@@ -3,6 +3,7 @@ import { apiRoutes } from '@/config';
 import { api } from '@/lib/api/authFetch';
 import { getSessionToken } from '@/lib/auth/session';
 import { AuthenticationError } from '@/lib/errors';
+import { cache } from 'react';
 
 export type Session = {
   user: {
@@ -18,7 +19,7 @@ export const validateRequest = async (): Promise<Session | null> => {
   return validateSessionToken(sessionToken);
 };
 
-export const validateSessionToken = async (token: string) => {
+export const validateSessionToken = cache(async (token: string) => {
   const result = await api.get<{ user: { id: string; email: string } }>(apiRoutes.auth.session, {
     cache: 'no-store',
     headers: {
@@ -29,7 +30,7 @@ export const validateSessionToken = async (token: string) => {
   if (!result.success) return null;
 
   return result.data?.user ? { user: result.data.user } : null;
-};
+});
 
 export const getCurrentUser = async (): Promise<UserDTO | undefined> => {
   const session = await validateRequest();

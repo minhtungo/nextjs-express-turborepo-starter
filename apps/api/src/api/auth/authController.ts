@@ -96,11 +96,11 @@ const signOut: RequestHandler = async (req, res, next) => {
     });
   });
 
-  // req.logOut(function (err) {
-  //   if (err) {
-  //     return next(err);
-  //   }
-  // });
+  req.logOut(function (err) {
+    if (err) {
+      return next(err);
+    }
+  });
   const serviceResponse = await authService.signOut(req.user?.id!);
 
   return handleServiceResponse(serviceResponse, res);

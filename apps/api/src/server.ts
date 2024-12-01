@@ -1,8 +1,8 @@
+import { session as sessionConfig } from '@repo/config/auth';
 import cors from 'cors';
 import express, { type Express } from 'express';
 import helmet from 'helmet';
 import { pino } from 'pino';
-import { session as sessionConfig } from '@repo/config/auth';
 
 import { openAPIRouter } from '@/api-docs/openAPIRouter';
 import { authRouter } from '@/api/auth/authRouter';
@@ -24,6 +24,7 @@ import { v4 as uuidv4 } from 'uuid';
 import assertAuthenticated from '@/middleware/assertAuthenticated';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
+import sessionRenewal from '@/middleware/sessionRenewal';
 
 extendZodWithOpenApi(z);
 
@@ -62,16 +63,19 @@ app.use(
     },
     resave: false,
     saveUninitialized: false,
+    rolling: false,
     store: sessionStore,
     cookie: {
       maxAge: sessionConfig.maxAge,
-      secure: env.NODE_ENV === 'production',
       httpOnly: true,
+      secure: env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
     },
   })
 );
+
+app.use(sessionRenewal);
 
 app.use(passport.initialize());
 app.use(passport.session());

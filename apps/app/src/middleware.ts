@@ -1,5 +1,5 @@
 import { authRoutes, protectedRoutes } from '@/config';
-import { validateSessionToken } from '@/lib/auth';
+import { deleteSessionTokenCookie, validateSessionToken } from '@/lib/auth';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { session as sessionConfig } from '@repo/config/auth';
@@ -32,7 +32,7 @@ export async function middleware(req: NextRequest) {
     }
   } catch (error) {
     console.error('Error verifying session:', error);
-    res.cookies.delete(sessionConfig.name);
+    deleteSessionTokenCookie();
     return redirectToSignIn(req);
   }
 
