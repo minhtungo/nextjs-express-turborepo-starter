@@ -1,5 +1,4 @@
 import { verifyToken } from '@/common/utils/token';
-import bcrypt from 'bcryptjs';
 import { StatusCodes } from 'http-status-codes';
 
 import { ServiceResponse } from '@/common/models/serviceResponse';
@@ -32,9 +31,10 @@ import {
 } from '@/data-access/verificationToken';
 
 import { User } from '@/api/user/userModel';
-import { applicationName, saltRounds } from '@/common/config/config';
+import { applicationName } from '@/common/config/config';
 import { createTransaction } from '@/common/utils/db';
 import { sendEmail } from '@/common/utils/mail';
+import { verifyPassword } from '@/common/utils/password';
 import { logger } from '@/server';
 import { signInProps, signUpProps } from '@repo/types/auth';
 
@@ -92,7 +92,7 @@ const validateLocalUser = async ({
       return ServiceResponse.failure('Email not verified', null, StatusCodes.UNAUTHORIZED);
     }
 
-    const isValidPassword = await comparePassword(password, user.password);
+    const isValidPassword = await verifyPassword(password, user.password);
 
     if (!isValidPassword) {
       return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
@@ -269,14 +269,6 @@ const sendVerificationEmail = async (email: string) => {
   }
 };
 
-const hashPassword = async (password: string) => {
-  return await bcrypt.hash(password, saltRounds);
-};
-
-const comparePassword = async (plainTextPassword: string, hashedPassword: string) => {
-  return await bcrypt.compare(plainTextPassword, hashedPassword);
-};
-
 const getSession = async (user: Express.User | undefined): Promise<ServiceResponse<{ user: Express.User } | null>> => {
   if (!user) {
     return ServiceResponse.failure('User not found', null, StatusCodes.NOT_FOUND);
@@ -300,8 +292,6 @@ export const authService = {
   verifyEmail,
   signOut,
   sendVerificationEmail,
-  hashPassword,
-  comparePassword,
   signIn,
   verifyToken,
 };

@@ -1,12 +1,11 @@
-import { authService } from '@/api/auth/authService';
-import { db } from '@repo/database';
-import { type InsertUser, type InsertUserSettings, type SelectUser, userSettings, users } from '@repo/database';
+import { hashPassword } from '@/common/utils/password';
+import { type InsertUser, type InsertUserSettings, type SelectUser, db, userSettings, users } from '@repo/database';
 import { eq } from 'drizzle-orm';
 
 export const createUser = async (data: InsertUser) => {
   const { password: plainPassword, ...rest } = data;
 
-  const password = plainPassword ? await authService.hashPassword(plainPassword) : undefined;
+  const password = plainPassword ? await hashPassword(plainPassword) : undefined;
 
   const user = await db
     .insert(users)
@@ -95,7 +94,7 @@ export const updatePassword = async ({
   newPassword: string;
   trx?: typeof db;
 }) => {
-  const hashedPassword = await authService.hashPassword(newPassword);
+  const hashedPassword = await hashPassword(newPassword);
 
   await trx.update(users).set({ password: hashedPassword }).where(eq(users.id, userId));
 };

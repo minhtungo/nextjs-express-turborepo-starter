@@ -18,9 +18,10 @@
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.0.0",
+    "@repo/config": "workspace:*",
     "@repo/database": "workspace:*",
     "@repo/env": "workspace:*",
-    "@repo/config": "workspace:*",
+    "argon2": "^0.41.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -44,8 +45,8 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
     "@repo/types": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/bcryptjs": "^2.4.6",
     "@types/connect-pg-simple": "^7.0.3",
     "@types/cors": "^2.8.17",

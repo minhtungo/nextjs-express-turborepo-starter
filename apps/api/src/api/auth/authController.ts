@@ -25,14 +25,17 @@ const signIn: RequestHandler = async (req, res) => {
     return handleServiceResponse(ServiceResponse.failure('Authentication failed', null, StatusCodes.UNAUTHORIZED), res);
   }
 
-  console.log('signIn req.user', req.user);
+  req.login(req.user, async (err) => {
+    if (err) {
+      return handleServiceResponse(
+        ServiceResponse.failure('Authentication failed', null, StatusCodes.UNAUTHORIZED),
+        res
+      );
+    }
 
-  // Use req.login instead of manually setting session
-  await new Promise<void>((resolve, reject) => {
-    req.login(req.user!, (err) => {
-      if (err) reject(err);
-      resolve();
-    });
+    const serviceResponse = await authService.signIn();
+
+    return handleServiceResponse(serviceResponse, res);
   });
 
   const serviceResponse = await authService.signIn();
