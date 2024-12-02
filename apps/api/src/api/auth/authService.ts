@@ -5,30 +5,19 @@ import { ServiceResponse } from '@/common/models/serviceResponse';
 
 import {
   createResetPasswordToken,
-  deleteResetPasswordToken,
-  getResetPasswordTokenByToken,
-} from '@/data-access/resetPasswordTokens';
-
-import {
   createTwoFactorConfirmation,
-  deleteTwoFactorConfirmation,
-  getTwoFactorConfirmation,
-} from '@/data-access/twoFactorConfirmation';
-
-import { deleteTwoFactorToken, getTwoFactorTokenByEmail } from '@/data-access/twoFactorToken';
-import {
-  createUser,
-  getUserByEmail,
-  getUserSettingsByUserId,
-  updatePassword,
-  updateUserEmailVerification,
-} from '@/data-access/users';
-import {
   createVerificationToken,
+  deleteResetPasswordToken,
+  deleteTwoFactorConfirmation,
+  deleteTwoFactorToken,
   deleteVerificationToken,
+  getResetPasswordTokenByToken,
+  getTwoFactorConfirmation,
+  getTwoFactorTokenByEmail,
   getVerificationTokenByToken,
   getVerificationTokenByUserId,
-} from '@/data-access/verificationToken';
+  updatePassword,
+} from './authRepository';
 
 import { User } from '@/api/user/userModel';
 import { applicationName } from '@/common/config/config';
@@ -37,6 +26,12 @@ import { sendEmail } from '@/common/utils/mail';
 import { verifyPassword } from '@/common/utils/password';
 import { logger } from '@/server';
 import { signInProps, signUpProps } from '@repo/types/auth';
+import {
+  createUser,
+  getUserByEmail,
+  getUserSettingsByUserId,
+  updateUserEmailVerification,
+} from '@/api/user/userRepository';
 
 const signIn = async () => {
   const serviceResponse = ServiceResponse.success('Sign in successfully', null, StatusCodes.OK);
@@ -92,7 +87,7 @@ const validateLocalUser = async ({
       return ServiceResponse.failure('Email not verified', null, StatusCodes.UNAUTHORIZED);
     }
 
-    const isValidPassword = await verifyPassword(password, user.password);
+    const isValidPassword = await verifyPassword(user.password, password);
 
     if (!isValidPassword) {
       return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
@@ -182,7 +177,7 @@ const resetPassword = async (token: string, newPassword: string): Promise<Servic
     const userId = existingToken.userId;
 
     await createTransaction(async (trx) => {
-      await updatePassword({ userId, newPassword, trx });
+      await updatePassword(userId, newPassword, trx);
       await deleteResetPasswordToken(token, trx);
     });
 
@@ -221,7 +216,7 @@ const verifyEmail = async (token: string): Promise<ServiceResponse<null>> => {
   }
 };
 
-const signOut = async (userId: string): Promise<ServiceResponse<null>> => {
+const signOut = async (): Promise<ServiceResponse<null>> => {
   try {
     // Verify the token belongs to the user
 

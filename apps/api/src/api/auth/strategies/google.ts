@@ -1,6 +1,7 @@
+import { createAccount, getAccountByUserId } from '@/api/auth/authRepository';
+import { createUser, getUserByEmail } from '@/api/user/userRepository';
 import { env } from '@/common/config/env';
-import { createAccount, getAccountByUserId } from '@/data-access/accounts';
-import { createUser, getUserByEmail } from '@/data-access/users';
+
 import passport from 'passport';
 import { Strategy, type StrategyOptions } from 'passport-google-oauth20';
 

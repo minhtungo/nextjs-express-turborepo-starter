@@ -1,5 +1,5 @@
 import { authService } from '@/api/auth/authService';
-import { getUserById } from '@/data-access/users';
+import { getUserById } from '@/api/user/userRepository';
 import { logger } from '@/server';
 import type { SelectUser } from '@repo/database';
 import passport from 'passport';
