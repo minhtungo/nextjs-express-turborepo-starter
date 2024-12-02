@@ -1,6 +1,6 @@
 import { session } from '@repo/config/auth';
 import { apiRoutes } from '@/config';
-import { api } from '@/lib/api/authFetch';
+import { api } from '@/lib/api/api';
 import { getSessionToken } from '@/lib/auth/session';
 import { AuthenticationError } from '@/lib/errors';
 import { cache } from 'react';
@@ -14,6 +14,7 @@ export type Session = {
 
 export const validateRequest = async (): Promise<Session | null> => {
   const sessionToken = await getSessionToken();
+
   if (!sessionToken) return null;
 
   return validateSessionToken(sessionToken);
@@ -22,9 +23,6 @@ export const validateRequest = async (): Promise<Session | null> => {
 export const validateSessionToken = cache(async (token: string) => {
   const result = await api.get<{ user: { id: string; email: string } }>(apiRoutes.auth.session, {
     cache: 'no-store',
-    headers: {
-      Cookie: `${session.name}=${token}`,
-    },
   });
 
   if (!result.success) return null;

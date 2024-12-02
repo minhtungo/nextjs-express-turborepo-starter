@@ -3,11 +3,10 @@ import type { RequestHandler } from 'express';
 import { authService } from '@/api/auth/authService';
 import { handleServiceResponse } from '@/common/utils/httpHandlers';
 
+import { env } from '@/common/config/env';
 import { ServiceResponse } from '@/common/models/serviceResponse';
 import { signUpProps } from '@repo/types/auth';
 import { StatusCodes } from 'http-status-codes';
-import { session } from '@repo/config';
-import { env } from '@/common/config/env';
 
 const signUp: RequestHandler = async (req, res) => {
   const { name, email, password } = req.body;
@@ -89,25 +88,27 @@ const handleGoogleCallback: RequestHandler = async (req, res) => {
 };
 
 const signOut: RequestHandler = async (req, res, next) => {
-  await new Promise((resolve) => {
-    req.session.destroy((err) => {
-      if (err) console.error('Session destruction error:', err);
-      res.clearCookie(session.name);
-      resolve(true);
-    });
-  });
+  // await new Promise((resolve) => {
+  //   req.session.destroy((err) => {
+  //     if (err) console.error('Session destruction error:', err);
+  //     res.clearCookie(session.name);
+  //     resolve(true);
+  //   });
+  // });
 
-  req.logOut(function (err) {
+  req.logOut(async (err) => {
     if (err) {
       return next(err);
     }
-  });
-  const serviceResponse = await authService.signOut(req.user?.id!);
 
-  return handleServiceResponse(serviceResponse, res);
+    const serviceResponse = await authService.signOut(req.user?.id!);
+
+    return handleServiceResponse(serviceResponse, res);
+  });
 };
 
 const getSession: RequestHandler = async (req, res) => {
+  console.log('getSession req.header', req.headers);
   const serviceResponse = await authService.getSession(req.user);
 
   return handleServiceResponse(serviceResponse, res);

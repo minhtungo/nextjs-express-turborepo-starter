@@ -1,8 +1,8 @@
-import { authRoutes, protectedRoutes, afterLoginUrl } from '@/config';
+import { afterLoginUrl, authRoutes, protectedRoutes } from '@/config';
 import { deleteSessionTokenCookie, validateSessionToken } from '@/lib/auth';
+import { session as sessionConfig } from '@repo/config/auth';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { session as sessionConfig } from '@repo/config/auth';
 
 const redirectToSignIn = (req: NextRequest) => {
   return NextResponse.redirect(new URL(authRoutes.signIn, req.url));
@@ -47,6 +47,20 @@ export async function middleware(req: NextRequest) {
   let res = NextResponse.next();
 
   try {
+    // const requestHeaders = new Headers(req.headers);
+    // requestHeaders.set('Cookie', `${sessionConfig.name}=${sessionCookie.value}`);
+    // const result = await fetch(`${env.SERVER_BASE_URL}${apiRoutes.auth.session}`, {
+    //   headers: requestHeaders,
+    // });
+    // const session = await result.json();
+    // if (!session.success) {
+    //   throw new Error('Invalid session');
+    // }
+    // return NextResponse.next({
+    //   request: {
+    //     headers: requestHeaders,
+    //   },
+    // });
     const session = await validateSessionToken(sessionCookie.value);
 
     if (!session) {
