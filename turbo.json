@@ -1,19 +1,58 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [
+    "**/.env.*local"
+  ],
   "tasks": {
+    "topo": {
+      "dependsOn": [
+        "^topo"
+      ]
+    },
     "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["build/**", "dist/**", ".next/**", "!.next/cache/**"],
-      "env": ["DATABASE_URL"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "outputs": [
+        "build/**",
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**"
+      ]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": [
+        "^topo"
+      ]
     },
-    "type-check": {},
+    "format": {
+      "dependsOn": [
+        "^topo"
+      ]
+    },
+    "lint:fix": {
+      "dependsOn": [
+        "^topo"
+      ]
+    },
+    "format:fix": {
+      "dependsOn": [
+        "^topo"
+      ]
+    },
+    "check-types": {},
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "ui:add": {
+      "dependsOn": [
+        "^topo"
+      ]
     },
     "clean": {
       "cache": false

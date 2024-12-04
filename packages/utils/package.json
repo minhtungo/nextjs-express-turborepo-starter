@@ -1,0 +1,24 @@
+{
+    "name": "@repo/utils",
+    "version": "0.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "check-types": "tsc --noEmit",
+        "build": "tsup ./src/**/*.{ts,tsx}",
+        "lint": "biome lint ./src",
+        "format": "biome format ./src "
+    },
+    "dependencies": {
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^2.5.4"
+    },
+    "devDependencies": {
+        "@repo/typescript-config": "workspace:*",
+        "tsup": "^8.1.0"
+    },
+    "exports": {
+        ".": "./src",
+        "./styles": "./src/styles.ts"
+    }
+}

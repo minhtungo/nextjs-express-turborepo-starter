@@ -1,4 +1,5 @@
 {
+  "extends": "@repo/typescript-config/base.json",
   "compilerOptions": {
     "target": "ESNext",
     "module": "NodeNext",
@@ -10,12 +11,8 @@
     "moduleResolution": "nodenext",
     "outDir": "dist",
     "importsNotUsedAsValues": "remove",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "types": ["vitest/globals"]
+    // "types": ["vitest/globals"]
   },
-  "include": ["src/**/*", "../../packages/database/schema"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }

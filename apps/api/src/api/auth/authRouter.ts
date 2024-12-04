@@ -15,7 +15,7 @@ import {
   signInSchema,
   signUpSchema,
   verifyEmailSchema,
-} from '@repo/types/auth';
+} from '@repo/types';
 import { StatusCodes } from 'http-status-codes';
 import passport from 'passport';
 

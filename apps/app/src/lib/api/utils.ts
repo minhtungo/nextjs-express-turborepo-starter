@@ -1,5 +1,5 @@
 import { setSessionTokenCookie } from '@/lib/auth';
-import { ApiResponse } from '@repo/types/api';
+import { ApiResponse } from '@repo/types';
 
 export const handleApiResponse = async <T>(response: Response): Promise<ApiResponse<T>> => {
   try {

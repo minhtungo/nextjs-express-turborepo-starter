@@ -1,5 +1,5 @@
 import { createAccount, getAccountByUserId } from '@/api/auth/authRepository';
-import { createUser, getUserByEmail } from '@/api/user/userRepository';
+import { userRepository } from '@/api/user/userRepository';
 import { env } from '@/common/config/env';
 
 import passport from 'passport';
@@ -26,7 +26,7 @@ export default passport.use(
       );
 
     try {
-      const existingUser = await getUserByEmail(email, {
+      const existingUser = await userRepository.getUserByEmail(email, {
         id: true,
         email: true,
       });
@@ -48,7 +48,7 @@ export default passport.use(
         }
       }
 
-      const newUser = await createUser({
+      const newUser = await userRepository.createUser({
         email,
         emailVerified: new Date(),
         name: profile.displayName,

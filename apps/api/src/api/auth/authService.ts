@@ -25,12 +25,9 @@ import { createTransaction } from '@/common/utils/db';
 import { sendEmail } from '@/common/utils/mail';
 import { verifyPassword } from '@/common/utils/password';
 import { logger } from '@/server';
-import { signInProps, signUpProps } from '@repo/types/auth';
+import { signInProps, signUpProps } from '@repo/types';
 import {
-  createUser,
-  getUserByEmail,
-  getUserSettingsByUserId,
-  updateUserEmailVerification,
+  userRepository
 } from '@/api/user/userRepository';
 
 const signIn = async () => {
@@ -41,7 +38,7 @@ const signIn = async () => {
 
 const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceResponse<{ id: string } | null>> => {
   try {
-    const isExistingUser = await getUserByEmail(email, {
+    const isExistingUser = await userRepository.getUserByEmail(email, {
       id: true,
       emailVerified: true,
     });
@@ -53,7 +50,7 @@ const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceRe
       return ServiceResponse.failure('User already exists', null, StatusCodes.CONFLICT);
     }
 
-    const user = await createUser({
+    const user = await userRepository.createUser({
       email,
       name,
       password,
@@ -77,7 +74,7 @@ const validateLocalUser = async ({
   code,
 }: signInProps): Promise<ServiceResponse<Partial<User> | null>> => {
   try {
-    const user = await getUserByEmail(email);
+    const user = await userRepository.getUserByEmail(email);
 
     if (!user || !user.id || !user.password) {
       return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
@@ -93,7 +90,7 @@ const validateLocalUser = async ({
       return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
     }
 
-    const userSettings = await getUserSettingsByUserId(user.id);
+    const userSettings = await userRepository.getUserSettingsByUserId(user.id);
 
     if (userSettings?.isTwoFactorEnabled) {
       if (code) {
@@ -132,7 +129,7 @@ const validateLocalUser = async ({
 
 const forgotPassword = async (email: string): Promise<ServiceResponse<null>> => {
   try {
-    const user = await getUserByEmail(email, {
+    const user = await userRepository.getUserByEmail(email, {
       id: true,
       emailVerified: true,
     });
@@ -204,7 +201,7 @@ const verifyEmail = async (token: string): Promise<ServiceResponse<null>> => {
     }
 
     await createTransaction(async (trx) => {
-      await updateUserEmailVerification(existingToken.userId, trx);
+      await userRepository.updateUserEmailVerification(existingToken.userId, trx);
       await deleteVerificationToken(token, trx);
     });
 
@@ -230,7 +227,7 @@ const signOut = async (): Promise<ServiceResponse<null>> => {
 
 const sendVerificationEmail = async (email: string) => {
   try {
-    const user = await getUserByEmail(email, {
+    const user = await userRepository.getUserByEmail(email, {
       id: true,
     });
 

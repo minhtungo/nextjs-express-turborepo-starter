@@ -1,7 +1,7 @@
 import { authFetch } from '@/lib/api/customFetch';
 import { handleApiResponse } from '@/lib/api/utils';
 import { env } from '@repo/env/server';
-import { ApiResponse } from '@repo/types/api';
+import { ApiResponse } from '@repo/types';
 
 interface FetchOptions extends RequestInit {
   body: BodyInit | null | undefined;

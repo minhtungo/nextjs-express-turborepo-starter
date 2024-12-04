@@ -34,3 +34,10 @@ yarn-error.log*
 
 # ui
 dist/
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts

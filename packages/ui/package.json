@@ -5,22 +5,18 @@
     "**/*.css"
   ],
   "exports": {
-    "./alert": "./src/components/ui/alert.tsx",
-    "./button": "./src/components/ui/button.tsx",
-    "./card": "./src/components/ui/card.tsx",
-    "./form": "./src/components/ui/form.tsx",
-    "./input": "./src/components/ui/input.tsx",
-    "./label": "./src/components/ui/label.tsx",
-    "./skeleton": "./src/components/ui/skeleton.tsx",
-    "./utils": "./src/lib/utils.ts",
-    "./styles.css": "./dist/index.css"
+    "./styles.css": "./src/styles/globals.css",
+    "./postcss.config": "./postcss.config.mjs",
+    "./tailwind.config": "./tailwind.config.ts",
+    "./*": "./src/components/ui/*.tsx",
+    "./utils": "./src/lib/utils.ts"
   },
   "scripts": {
-    "build": "tailwindcss -i ./src/styles/globals.css -o dist/index.css",
-    "lint": "eslint src/",
-    "dev": "tailwindcss -i ./src/styles/globals.css -o ./dist/index.css --watch",
-    "type-check": "tsc --noEmit",
-    "ui:add": "pnpm dlx shadcn-ui@latest add"
+    "check-types": "tsc --noEmit",
+    "ui:add": "pnpm dlx shadcn@latest add",
+    "build": "tsup",
+    "lint": "biome lint ./src",
+    "format": "biome format ./src "
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -37,7 +33,7 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/tailwind-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@types/react": "^18.2.46",
+    "@types/react": "^18.3.1",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.33",
     "tailwindcss": "^3.4.15",
@@ -45,6 +41,6 @@
     "typescript": "^5.7.2"
   },
   "peerDependencies": {
-    "react": "19.0.0-rc.1"
+    "react": "^18.3.1"
   }
 }

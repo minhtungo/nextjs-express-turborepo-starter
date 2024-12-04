@@ -11,7 +11,7 @@ import {
   twoFactorTokens,
   verificationTokens,
 } from '@repo/database';
-import { eq } from 'drizzle-orm';
+  import { eq } from 'drizzle-orm';
 
 // Reset Password Token operations
 export const createResetPasswordToken = async (userId: string) => {
@@ -73,7 +73,7 @@ export const createAccount = async (data: InsertAccount) => {
 export const updatePassword = async (userId: string, password: string, trx = db) => {
   const hashedPassword = await hashPassword(password);
 
-  await trx.update(users).set({ password: hashedPassword }).where(eq(users.id, userId));
+  await trx.update(users).set({ password: hashedPassword,  }).where(eq(users.id, userId));
 };
 
 export const getTwoFactorConfirmation = async (userId: string) => {

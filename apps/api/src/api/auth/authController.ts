@@ -5,7 +5,7 @@ import { handleServiceResponse } from '@/common/utils/httpHandlers';
 
 import { env } from '@/common/config/env';
 import { ServiceResponse } from '@/common/models/serviceResponse';
-import { signUpProps } from '@repo/types/auth';
+import { signUpProps } from '@repo/types';
 import { StatusCodes } from 'http-status-codes';
 
 const signUp: RequestHandler = async (req, res) => {

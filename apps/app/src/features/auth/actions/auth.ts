@@ -19,7 +19,8 @@ import {
   signInSchema,
   signUpSchema,
   verifyEmailSchema,
-} from '@repo/types/auth';
+  
+} from '@repo/types';
 import { redirect } from 'next/navigation';
 
 import { z } from 'zod';

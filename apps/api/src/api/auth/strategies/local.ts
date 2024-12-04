@@ -1,5 +1,5 @@
 import { authService } from '@/api/auth/authService';
-import { getUserById } from '@/api/user/userRepository';
+import { userRepository } from '@/api/user/userRepository';
 import { logger } from '@/server';
 import type { SelectUser } from '@repo/database';
 import passport from 'passport';
@@ -41,7 +41,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser(async (id: string, done) => {
-  const user = await getUserById<SelectUser>(id, {
+  const user = await userRepository.getUserById<SelectUser>(id, {
     password: false,
   });
 
