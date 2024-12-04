@@ -27,7 +27,7 @@
     "@types/node": "22.9.4",
     "@types/pg": "^8.11.10",
     "eslint": "^9",
-    "tsup": "^8.0.2",
+    "tsup": "^8.1.0",
     "tsx": "^4.19.1",
     "typescript": "^5.7.2",
     "drizzle-kit": "^0.26.2"

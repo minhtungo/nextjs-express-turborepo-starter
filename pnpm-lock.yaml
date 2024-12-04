@@ -9,7 +9,7 @@ importers:
   .:
     devDependencies:
       '@biomejs/biome':
-        specifier: ^1.7.2
+        specifier: ^1.9.4
         version: 1.9.4
       '@changesets/changelog-github':
         specifier: latest
@@ -17,9 +17,6 @@ importers:
       '@changesets/cli':
         specifier: latest
         version: 2.27.10
-      prettier-plugin-tailwindcss:
-        specifier: ^0.6.8
-        version: 0.6.8(prettier@3.3.3)
       turbo:
         specifier: latest
         version: 2.3.3
@@ -100,7 +97,7 @@ importers:
         version: 3.23.8
     devDependencies:
       '@biomejs/biome':
-        specifier: 1.9.4
+        specifier: ^1.9.4
         version: 1.9.4
       '@repo/eslint-config':
         specifier: workspace:*
@@ -163,7 +160,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       tsup:
-        specifier: ^8.0.2
+        specifier: ^8.1.0
         version: 8.3.0(jiti@1.21.6)(postcss@8.4.47)(tsx@4.19.1)(typescript@5.7.2)(yaml@2.6.0)
       tsx:
         specifier: ^4.19.1
@@ -214,7 +211,7 @@ importers:
         specifier: ^0.4.3
         version: 0.4.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
-        specifier: 18.3.1
+        specifier: ^18.3.1
         version: 18.3.1
       react-dom:
         specifier: 18.3.1
@@ -227,7 +224,7 @@ importers:
         version: 3.23.8
     devDependencies:
       '@biomejs/biome':
-        specifier: 1.9.4
+        specifier: ^1.9.4
         version: 1.9.4
       '@repo/eslint-config':
         specifier: workspace:*
@@ -245,13 +242,13 @@ importers:
         specifier: 22.9.4
         version: 22.9.4
       '@types/react':
-        specifier: 18.3.1
+        specifier: ^18.3.1
         version: 18.3.1
       '@types/react-dom':
         specifier: 18.3.1
         version: 18.3.1
       clsx:
-        specifier: ^2.1.0
+        specifier: ^2.1.1
         version: 2.1.1
       eslint:
         specifier: ^9
@@ -351,7 +348,7 @@ importers:
         specifier: ^9
         version: 9.13.0(jiti@1.21.6)
       tsup:
-        specifier: ^8.0.2
+        specifier: ^8.1.0
         version: 8.3.0(jiti@1.21.6)(postcss@8.4.47)(tsx@4.19.1)(typescript@5.7.2)(yaml@2.6.0)
       tsx:
         specifier: ^4.19.1
@@ -422,7 +419,7 @@ importers:
         specifier: ^0.7.0
         version: 0.7.0
       clsx:
-        specifier: ^2.1.0
+        specifier: ^2.1.1
         version: 2.1.1
       react:
         specifier: ^18.3.1
@@ -462,7 +459,7 @@ importers:
         specifier: ^3.4.15
         version: 3.4.15
       tsup:
-        specifier: ^8.0.2
+        specifier: ^8.1.0
         version: 8.3.0(jiti@1.21.6)(postcss@8.4.47)(tsx@4.19.1)(typescript@5.7.2)(yaml@2.6.0)
       typescript:
         specifier: ^5.7.2
@@ -474,7 +471,7 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       tailwind-merge:
-        specifier: ^2.5.4
+        specifier: ^2.5.5
         version: 2.5.5
     devDependencies:
       '@repo/typescript-config':
@@ -4418,61 +4415,6 @@ packages:
       prettier: '>= 1.16.0'
     peerDependenciesMeta:
       prettier:
-        optional: true
-
-  prettier-plugin-tailwindcss@0.6.8:
-    resolution: {integrity: sha512-dGu3kdm7SXPkiW4nzeWKCl3uoImdd5CTZEJGxyypEPL37Wj0HT2pLqjrvSei1nTeuQfO4PUfjeW5cTUNRLZ4sA==}
-    engines: {node: '>=14.21.3'}
-    peerDependencies:
-      '@ianvs/prettier-plugin-sort-imports': '*'
-      '@prettier/plugin-pug': '*'
-      '@shopify/prettier-plugin-liquid': '*'
-      '@trivago/prettier-plugin-sort-imports': '*'
-      '@zackad/prettier-plugin-twig-melody': '*'
-      prettier: ^3.0
-      prettier-plugin-astro: '*'
-      prettier-plugin-css-order: '*'
-      prettier-plugin-import-sort: '*'
-      prettier-plugin-jsdoc: '*'
-      prettier-plugin-marko: '*'
-      prettier-plugin-multiline-arrays: '*'
-      prettier-plugin-organize-attributes: '*'
-      prettier-plugin-organize-imports: '*'
-      prettier-plugin-sort-imports: '*'
-      prettier-plugin-style-order: '*'
-      prettier-plugin-svelte: '*'
-    peerDependenciesMeta:
-      '@ianvs/prettier-plugin-sort-imports':
-        optional: true
-      '@prettier/plugin-pug':
-        optional: true
-      '@shopify/prettier-plugin-liquid':
-        optional: true
-      '@trivago/prettier-plugin-sort-imports':
-        optional: true
-      '@zackad/prettier-plugin-twig-melody':
-        optional: true
-      prettier-plugin-astro:
-        optional: true
-      prettier-plugin-css-order:
-        optional: true
-      prettier-plugin-import-sort:
-        optional: true
-      prettier-plugin-jsdoc:
-        optional: true
-      prettier-plugin-marko:
-        optional: true
-      prettier-plugin-multiline-arrays:
-        optional: true
-      prettier-plugin-organize-attributes:
-        optional: true
-      prettier-plugin-organize-imports:
-        optional: true
-      prettier-plugin-sort-imports:
-        optional: true
-      prettier-plugin-style-order:
-        optional: true
-      prettier-plugin-svelte:
         optional: true
 
   prettier@2.8.8:
@@ -9437,13 +9379,10 @@ snapshots:
     optionalDependencies:
       prettier: 3.3.3
 
-  prettier-plugin-tailwindcss@0.6.8(prettier@3.3.3):
-    dependencies:
-      prettier: 3.3.3
-
   prettier@2.8.8: {}
 
-  prettier@3.3.3: {}
+  prettier@3.3.3:
+    optional: true
 
   process-warning@4.0.0: {}
 

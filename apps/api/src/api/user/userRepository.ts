@@ -1,8 +1,8 @@
-import { hashPassword } from '@/common/utils/password';
-import { type InsertUser, type InsertUserSettings, type SelectUser, db, userSettings, users } from '@repo/database';
-import { eq } from 'drizzle-orm';
+import { hashPassword } from "@/common/utils/password";
+import { type InsertUser, type InsertUserSettings, type SelectUser, db, userSettings, users } from "@repo/database";
+import { eq } from "drizzle-orm";
 
- const createUser = async (data: InsertUser) => {
+const createUser = async (data: InsertUser) => {
   const { password: plainPassword, ...rest } = data;
 
   const password = plainPassword ? await hashPassword(plainPassword) : undefined;
@@ -37,13 +37,13 @@ import { eq } from 'drizzle-orm';
   // });
 };
 
- const createUserSettings = async (data: InsertUserSettings) => {
+const createUserSettings = async (data: InsertUserSettings) => {
   await db.insert(userSettings).values(data);
 };
 
- const getUserByEmail = async <TColumns extends Partial<Record<keyof SelectUser, true>>>(
+const getUserByEmail = async <TColumns extends Partial<Record<keyof SelectUser, true>>>(
   email: string,
-  columns?: TColumns
+  columns?: TColumns,
 ) => {
   const user = await db.query.users.findFirst({
     where: eq(users.email, email),
@@ -57,7 +57,7 @@ type UserColumns = {
   [key in keyof SelectUser]?: boolean;
 };
 
- const getUserById = async <T>(id: string, columns?: UserColumns): Promise<T | SelectUser> => {
+const getUserById = async <T>(id: string, columns?: UserColumns): Promise<T | SelectUser> => {
   const user = await db.query.users.findFirst({
     where: eq(users.id, id),
     columns,
@@ -66,26 +66,26 @@ type UserColumns = {
   return user as T | SelectUser;
 };
 
- const getUserSettingsByUserId = async (userId: string) => {
+const getUserSettingsByUserId = async (userId: string) => {
   return await db.query.userSettings.findFirst({
     where: eq(userSettings.userId, userId),
   });
 };
 
- const updateUserEmailVerification = async (userId: string, trx: typeof db = db) => {
+const updateUserEmailVerification = async (userId: string, trx: typeof db = db) => {
   await trx.update(users).set({ emailVerified: new Date() }).where(eq(users.id, userId));
 };
 
- const updateProfile = async ({ userId, data }: { userId: string; data: Partial<InsertUser> }) => {
-  console.log('data', data);
+const updateProfile = async ({ userId, data }: { userId: string; data: Partial<InsertUser> }) => {
+  console.log("data", data);
   await db.update(users).set(data).where(eq(users.id, userId));
 };
 
- const updateSettings = async ({ userId, data }: { userId: string; data: Partial<InsertUserSettings> }) => {
+const updateSettings = async ({ userId, data }: { userId: string; data: Partial<InsertUserSettings> }) => {
   await db.update(userSettings).set(data).where(eq(userSettings.userId, userId));
 };
 
- const updatePassword = async ({
+const updatePassword = async ({
   userId,
   newPassword,
   trx = db,
@@ -110,4 +110,3 @@ export const userRepository = {
   updateSettings,
   updatePassword,
 };
-

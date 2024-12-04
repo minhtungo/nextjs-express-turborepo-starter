@@ -35,7 +35,6 @@
       },
       "style": {
         "noParameterAssign": "off",
-        "noForEach": "off",
         "noUselessElse": "off",
         "noNonNullAssertion": "off"
       }
