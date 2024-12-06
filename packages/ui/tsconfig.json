@@ -1,11 +1,11 @@
 {
-  "extends": "@repo/typescript-config/react-library.json",
+  "extends": "@repo/typescript-config/ui.json",
+  "include": ["**/*.ts", "**/*.tsx", "tailwind.config.ts"],
+  "exclude": ["node_modules"],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
-  },
-  "include": ["."],
-  "exclude": ["node_modules"]
+  }
 }

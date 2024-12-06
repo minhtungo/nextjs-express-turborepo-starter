@@ -5,7 +5,14 @@ import animate from 'tailwindcss-animate';
 const config: Config = {
   presets: [sharedConfig],
   darkMode: ['class'],
-  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}', './src/components/**/*.{js,ts,jsx,tsx,mdx}'],
+  content: [
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
+    '../../packages/ui/src/**/*.{ts,tsx}',
+  ],
+  prefix: '',
   theme: {
     extend: {
       colors: {

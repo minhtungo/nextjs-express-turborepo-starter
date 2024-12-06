@@ -27,7 +27,7 @@ const AuthFormWrapper = ({
     <Card className='mx-auto w-full max-w-[500px]'>
       <CardHeader className='items-center'>
         <CardTitle>{title}</CardTitle>
-        {description && <CardDescription>{description}</CardDescription>}
+        {description && <CardDescription className='text-center'>{description}</CardDescription>}
       </CardHeader>
       <CardContent className={cn(className)}>
         {children}
