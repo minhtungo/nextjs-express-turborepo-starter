@@ -37,10 +37,6 @@ const signIn: RequestHandler = async (req, res) => {
 
     return handleServiceResponse(serviceResponse, res);
   });
-
-  const serviceResponse = await authService.signIn();
-
-  return handleServiceResponse(serviceResponse, res);
 };
 
 const forgotPassword: RequestHandler = async (req, res) => {

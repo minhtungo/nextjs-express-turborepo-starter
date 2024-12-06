@@ -138,7 +138,7 @@ const deleteVerificationToken = async (token: string, trx: typeof db = db) => {
   await trx.delete(verificationTokens).where(eq(verificationTokens.token, token));
 };
 
-const createVerificationCode = async ({ userId, trx = db }: { userId: string; trx?: typeof db }) => {
+const createVerificationCode = async (userId: string, trx: typeof db = db) => {
   const code = await generateRandomCode();
   const expires = new Date(Date.now() + tokenTtl);
 

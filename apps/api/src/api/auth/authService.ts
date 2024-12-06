@@ -6,14 +6,13 @@ import { authRepository } from './authRepository';
 
 import { User } from '@/api/user/userModel';
 import { userRepository } from '@/api/user/userRepository';
-import { applicationName, tokenTtl } from '@/common/config/config';
+import { applicationName } from '@/common/config/config';
 import { createTransaction } from '@/common/utils/db';
 import { sendEmail } from '@/common/utils/mail';
 import { verifyPassword } from '@/common/utils/password';
+import { hashToken } from '@/common/utils/token';
 import { logger } from '@/server';
 import { signInProps, signUpProps } from '@repo/types';
-import { generateSecureToken, hashToken } from '@/common/utils/token';
-import { db, resetPasswordTokens } from '@repo/database';
 
 const signIn = async () => {
   const serviceResponse = ServiceResponse.success('Sign in successfully', null, StatusCodes.OK);
@@ -29,10 +28,11 @@ const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceRe
     });
 
     if (isExistingUser) {
-      if (!isExistingUser.emailVerified) {
-        return ServiceResponse.failure('Please verify your email', null, StatusCodes.CONFLICT);
-      }
-      return ServiceResponse.failure('User already exists', null, StatusCodes.CONFLICT);
+      return ServiceResponse.success(
+        'If your email is not registered, you will receive a verification email shortly.',
+        null,
+        StatusCodes.OK
+      );
     }
 
     const user = await userRepository.createUser({
@@ -41,11 +41,15 @@ const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceRe
       password,
     });
 
-    const token = await authRepository.createVerificationToken(user.id);
+    const code = await authRepository.createVerificationCode(user.id!);
 
-    await sendEmail(email, `Verify your email for ${applicationName}`, token);
+    await sendEmail(email, `Verify your email for ${applicationName}`, code);
 
-    return ServiceResponse.success<{ id: string }>('User created', { id: user.id }, StatusCodes.CREATED);
+    return ServiceResponse.success(
+      'If your email is not registered, you will receive a verification email shortly.',
+      null,
+      StatusCodes.OK
+    );
   } catch (ex) {
     const errorMessage = `Error signing up: $${(ex as Error).message}`;
     logger.error(errorMessage);
