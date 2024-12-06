@@ -1,18 +1,39 @@
-import crypto from "node:crypto";
+import crypto from 'node:crypto';
 
 export const generateToken = async (length = 32): Promise<string> => {
-  // Use crypto.randomBytes for cryptographically strong random values
-  const buffer = await crypto.randomBytes(Math.ceil(length * 0.75)); // Adjust for base64 encoding
+  const buffer = await crypto.randomBytes(Math.ceil(length * 0.75));
 
-  // Use URL-safe base64 encoding (better for URLs and emails)
-  return buffer.toString("base64url").slice(0, length);
+  return buffer.toString('base64url').slice(0, length);
 };
 
-export const hashToken = (token: string, secret: string) => {
-  return crypto.createHmac("sha256", secret).update(token).digest("hex");
+export const generateSecureToken = async (length = 32): Promise<{ token: string; hashedToken: string }> => {
+  const token = await generateToken(length);
+  const hashedToken = hashToken(token);
+
+  return { token, hashedToken };
 };
 
-export const verifyToken = (plainToken: string, hashedToken: string, secret: string) => {
-  const hashedPlainToken = hashToken(plainToken, secret);
-  return hashedPlainToken === hashedToken;
+export const hashToken = (token: string) => {
+  return crypto.createHash('sha256').update(token).digest('hex');
+};
+
+export const generateRandomCode = async (length = 8): Promise<string> => {
+  const bytesNeeded = Math.ceil(length * 0.75);
+
+  // Generate random bytes
+  const buffer = await crypto.randomBytes(bytesNeeded);
+
+  let result = '';
+
+  // Convert random bytes to numbers
+  for (const byte of buffer) {
+    // Use modulo 10 to get single digits (0-9)
+    result += byte % 10;
+
+    if (result.length >= length) {
+      break;
+    }
+  }
+
+  return result.slice(0, length).padStart(length, '0');
 };

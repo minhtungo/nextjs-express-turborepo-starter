@@ -1,4 +1,4 @@
-import { createAccount, getAccountByUserId } from '@/api/auth/authRepository';
+import { authRepository } from '@/api/auth/authRepository';
 import { userRepository } from '@/api/user/userRepository';
 import { env } from '@/common/config/env';
 
@@ -32,7 +32,7 @@ export default passport.use(
       });
 
       if (existingUser) {
-        const existingAccount = await getAccountByUserId(existingUser.id!);
+        const existingAccount = await authRepository.getAccountByUserId(existingUser.id!);
 
         if (existingAccount?.provider === 'google') {
           // User already has Google auth set up, proceed with login
@@ -55,7 +55,7 @@ export default passport.use(
         image: profile?.photos?.[0].value,
       });
 
-      await createAccount({
+      await authRepository.createAccount({
         userId: newUser.id,
         type: 'google',
         provider: 'google',

@@ -5,3 +5,4 @@ export * from './twoFactorTokens';
 export * from './users';
 export * from './userSettings';
 export * from './verificationTokens';
+export * from './verificationCodes';

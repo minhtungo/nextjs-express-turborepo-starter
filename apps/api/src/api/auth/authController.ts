@@ -104,7 +104,7 @@ const signOut: RequestHandler = async (req, res, next) => {
       return next(err);
     }
 
-    const serviceResponse = await authService.signOut(req.user?.id!);
+    const serviceResponse = await authService.signOut();
 
     return handleServiceResponse(serviceResponse, res);
   });

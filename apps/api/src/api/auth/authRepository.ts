@@ -1,20 +1,22 @@
 import { tokenLength, tokenTtl } from '@/common/config/config';
 import { hashPassword } from '@/common/utils/password';
-import { generateToken } from '@/common/utils/token';
+import { generateRandomCode, generateSecureToken, generateToken } from '@/common/utils/token';
+import { logger } from '@/server';
 import {
-  db,
   accounts,
-  users,
+  db,
   resetPasswordTokens,
-  type InsertAccount,
   twoFactorConfirmations,
   twoFactorTokens,
+  users,
+  verificationCodes,
   verificationTokens,
+  type InsertAccount,
 } from '@repo/database';
-  import { eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 // Reset Password Token operations
-export const createResetPasswordToken = async (userId: string) => {
+const createResetPasswordToken = async (userId: string) => {
   const token = await generateToken(tokenLength);
   const expires = new Date(Date.now() + tokenTtl);
 
@@ -36,7 +38,7 @@ export const createResetPasswordToken = async (userId: string) => {
   return token;
 };
 
-export const getResetPasswordTokenByToken = async (token: string) => {
+const getResetPasswordTokenByToken = async (token: string) => {
   const existingToken = await db.query.resetPasswordTokens.findFirst({
     where: eq(resetPasswordTokens.token, token),
   });
@@ -44,12 +46,12 @@ export const getResetPasswordTokenByToken = async (token: string) => {
   return existingToken;
 };
 
-export const deleteResetPasswordToken = async (token: string, trx = db) => {
+const deleteResetPasswordToken = async (token: string, trx: typeof db = db) => {
   await trx.delete(resetPasswordTokens).where(eq(resetPasswordTokens.token, token));
 };
 
 // Account operations
-export const getAccountByUserId = async (userId: string) => {
+const getAccountByUserId = async (userId: string) => {
   const account = await db.query.accounts.findFirst({
     where: eq(accounts.userId, userId),
   });
@@ -57,7 +59,7 @@ export const getAccountByUserId = async (userId: string) => {
   return account;
 };
 
-export const createAccount = async (data: InsertAccount) => {
+const createAccount = async (data: InsertAccount) => {
   const [account] = await db
     .insert(accounts)
     .values({
@@ -70,13 +72,13 @@ export const createAccount = async (data: InsertAccount) => {
   return account;
 };
 
-export const updatePassword = async (userId: string, password: string, trx = db) => {
+const updatePassword = async (userId: string, password: string, trx: typeof db = db) => {
   const hashedPassword = await hashPassword(password);
 
-  await trx.update(users).set({ password: hashedPassword,  }).where(eq(users.id, userId));
+  await trx.update(users).set({ password: hashedPassword }).where(eq(users.id, userId));
 };
 
-export const getTwoFactorConfirmation = async (userId: string) => {
+const getTwoFactorConfirmation = async (userId: string) => {
   const existingToken = await db.query.twoFactorConfirmations.findFirst({
     where: eq(twoFactorConfirmations.userId, userId),
   });
@@ -84,27 +86,27 @@ export const getTwoFactorConfirmation = async (userId: string) => {
   return existingToken;
 };
 
-export const createTwoFactorConfirmation = async (userId: string, trx = db) => {
+const createTwoFactorConfirmation = async (userId: string, trx: typeof db = db) => {
   await trx.insert(twoFactorConfirmations).values({
     userId,
   });
 };
 
-export const deleteTwoFactorConfirmation = async (id: string) => {
+const deleteTwoFactorConfirmation = async (id: string) => {
   await db.delete(twoFactorConfirmations).where(eq(twoFactorConfirmations.id, id));
 };
 
-export const getTwoFactorTokenByEmail = async (email: string) => {
+const getTwoFactorTokenByEmail = async (email: string) => {
   return await db.query.twoFactorTokens.findFirst({
     where: eq(twoFactorTokens.email, email),
   });
 };
 
-export const deleteTwoFactorToken = async (id: string, trx = db) => {
+const deleteTwoFactorToken = async (id: string, trx: typeof db = db) => {
   await trx.delete(twoFactorTokens).where(eq(twoFactorTokens.id, id));
 };
 
-export const createVerificationToken = async (userId: string) => {
+const createVerificationToken = async (userId: string) => {
   const token = await generateToken(tokenLength);
   const expires = new Date(Date.now() + tokenTtl);
   await db
@@ -124,14 +126,80 @@ export const createVerificationToken = async (userId: string) => {
   return token;
 };
 
-export const getVerificationTokenByToken = async (token: string) => {
+const getVerificationTokenByToken = async (token: string) => {
   return await db.query.verificationTokens.findFirst({ where: eq(verificationTokens.token, token) });
 };
 
-export const getVerificationTokenByUserId = async (userId: string) => {
+const getVerificationTokenByUserId = async (userId: string) => {
   return await db.query.verificationTokens.findFirst({ where: eq(verificationTokens.userId, userId) });
 };
 
-export const deleteVerificationToken = async (token: string, trx = db) => {
+const deleteVerificationToken = async (token: string, trx: typeof db = db) => {
   await trx.delete(verificationTokens).where(eq(verificationTokens.token, token));
+};
+
+const createVerificationCode = async ({ userId, trx = db }: { userId: string; trx?: typeof db }) => {
+  const code = await generateRandomCode();
+  const expires = new Date(Date.now() + tokenTtl);
+
+  await trx
+    .insert(verificationCodes)
+    .values({
+      userId,
+      code,
+      expires,
+    })
+    .onConflictDoUpdate({
+      target: [verificationCodes.userId],
+      set: {
+        code,
+        expires,
+      },
+    });
+
+  return code;
+};
+
+const getVerificationCodeByCode = async (code: string) => {
+  return await db.query.verificationCodes.findFirst({
+    where: eq(verificationCodes.code, code),
+  });
+};
+const createPasswordResetToken = async (userId: string): Promise<string> => {
+  const { token, hashedToken } = await generateSecureToken();
+
+  const expires = new Date(Date.now() + tokenTtl);
+  await db.insert(resetPasswordTokens).values({
+    userId,
+    token: hashedToken, // Store the hashed version
+    expires,
+  });
+
+  return token;
+};
+
+const getPasswordResetTokenByToken = async (hashedToken: string) => {
+  return await db.query.resetPasswordTokens.findFirst({ where: eq(resetPasswordTokens.token, hashedToken) });
+};
+
+export const authRepository = {
+  createResetPasswordToken,
+  getResetPasswordTokenByToken,
+  deleteResetPasswordToken,
+  getAccountByUserId,
+  createAccount,
+  updatePassword,
+  getTwoFactorConfirmation,
+  createTwoFactorConfirmation,
+  deleteTwoFactorConfirmation,
+  getTwoFactorTokenByEmail,
+  deleteTwoFactorToken,
+  createVerificationToken,
+  getVerificationTokenByToken,
+  getVerificationTokenByUserId,
+  deleteVerificationToken,
+  createVerificationCode,
+  getVerificationCodeByCode,
+  createPasswordResetToken,
+  getPasswordResetTokenByToken,
 };

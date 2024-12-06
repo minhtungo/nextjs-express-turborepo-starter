@@ -1,34 +1,19 @@
-import { verifyToken } from '@/common/utils/token';
 import { StatusCodes } from 'http-status-codes';
 
 import { ServiceResponse } from '@/common/models/serviceResponse';
 
-import {
-  createResetPasswordToken,
-  createTwoFactorConfirmation,
-  createVerificationToken,
-  deleteResetPasswordToken,
-  deleteTwoFactorConfirmation,
-  deleteTwoFactorToken,
-  deleteVerificationToken,
-  getResetPasswordTokenByToken,
-  getTwoFactorConfirmation,
-  getTwoFactorTokenByEmail,
-  getVerificationTokenByToken,
-  getVerificationTokenByUserId,
-  updatePassword,
-} from './authRepository';
+import { authRepository } from './authRepository';
 
 import { User } from '@/api/user/userModel';
-import { applicationName } from '@/common/config/config';
+import { userRepository } from '@/api/user/userRepository';
+import { applicationName, tokenTtl } from '@/common/config/config';
 import { createTransaction } from '@/common/utils/db';
 import { sendEmail } from '@/common/utils/mail';
 import { verifyPassword } from '@/common/utils/password';
 import { logger } from '@/server';
 import { signInProps, signUpProps } from '@repo/types';
-import {
-  userRepository
-} from '@/api/user/userRepository';
+import { generateSecureToken, hashToken } from '@/common/utils/token';
+import { db, resetPasswordTokens } from '@repo/database';
 
 const signIn = async () => {
   const serviceResponse = ServiceResponse.success('Sign in successfully', null, StatusCodes.OK);
@@ -56,7 +41,7 @@ const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceRe
       password,
     });
 
-    const token = await createVerificationToken(user.id);
+    const token = await authRepository.createVerificationToken(user.id);
 
     await sendEmail(email, `Verify your email for ${applicationName}`, token);
 
@@ -94,7 +79,7 @@ const validateLocalUser = async ({
 
     if (userSettings?.isTwoFactorEnabled) {
       if (code) {
-        const twoFactorToken = await getTwoFactorTokenByEmail(email);
+        const twoFactorToken = await authRepository.getTwoFactorTokenByEmail(email);
 
         if (!twoFactorToken || twoFactorToken.token !== code) {
           return ServiceResponse.failure('Invalid two-factor code', null, StatusCodes.UNAUTHORIZED);
@@ -105,17 +90,17 @@ const validateLocalUser = async ({
         }
 
         await createTransaction(async (trx) => {
-          await deleteTwoFactorToken(twoFactorToken.id, trx);
-          await createTwoFactorConfirmation(user.id!, trx);
+          await authRepository.deleteTwoFactorToken(twoFactorToken.id, trx);
+          await authRepository.createTwoFactorConfirmation(user.id!, trx);
         });
       } else {
-        const twoFactorConfirmation = await getTwoFactorConfirmation(user.id);
+        const twoFactorConfirmation = await authRepository.getTwoFactorConfirmation(user.id);
 
         if (!twoFactorConfirmation) {
           return ServiceResponse.failure('Two-factor authentication required', null, StatusCodes.UNAUTHORIZED);
         }
 
-        await deleteTwoFactorConfirmation(twoFactorConfirmation.id);
+        await authRepository.deleteTwoFactorConfirmation(twoFactorConfirmation.id);
       }
     }
 
@@ -142,7 +127,7 @@ const forgotPassword = async (email: string): Promise<ServiceResponse<null>> => 
       );
     }
 
-    const token = await createResetPasswordToken(user.id);
+    const token = await authRepository.createResetPasswordToken(user.id);
 
     await sendEmail(email, `Reset your password for ${applicationName}`, token);
 
@@ -165,7 +150,8 @@ const forgotPassword = async (email: string): Promise<ServiceResponse<null>> => 
 
 const resetPassword = async (token: string, newPassword: string): Promise<ServiceResponse<null>> => {
   try {
-    const existingToken = await getResetPasswordTokenByToken(token);
+    const hashedToken = hashToken(token);
+    const existingToken = await authRepository.getResetPasswordTokenByToken(hashedToken);
 
     if (!existingToken || existingToken.expires < new Date()) {
       return ServiceResponse.failure('Invalid or expired token ', null, StatusCodes.UNAUTHORIZED);
@@ -174,8 +160,8 @@ const resetPassword = async (token: string, newPassword: string): Promise<Servic
     const userId = existingToken.userId;
 
     await createTransaction(async (trx) => {
-      await updatePassword(userId, newPassword, trx);
-      await deleteResetPasswordToken(token, trx);
+      await userRepository.updatePassword({ userId, newPassword, trx });
+      await authRepository.deleteResetPasswordToken(hashedToken, trx);
     });
 
     return ServiceResponse.success<null>('Password changed successfully', null, StatusCodes.OK);
@@ -194,7 +180,7 @@ const resetPassword = async (token: string, newPassword: string): Promise<Servic
 
 const verifyEmail = async (token: string): Promise<ServiceResponse<null>> => {
   try {
-    const existingToken = await getVerificationTokenByToken(token);
+    const existingToken = await authRepository.getVerificationTokenByToken(token);
 
     if (!existingToken || existingToken.expires < new Date()) {
       return ServiceResponse.failure('Invalid or expired token', null, StatusCodes.UNAUTHORIZED);
@@ -202,7 +188,7 @@ const verifyEmail = async (token: string): Promise<ServiceResponse<null>> => {
 
     await createTransaction(async (trx) => {
       await userRepository.updateUserEmailVerification(existingToken.userId, trx);
-      await deleteVerificationToken(token, trx);
+      await authRepository.deleteVerificationToken(token, trx);
     });
 
     return ServiceResponse.success<null>('Email verified', null, StatusCodes.OK);
@@ -239,18 +225,18 @@ const sendVerificationEmail = async (email: string) => {
       return ServiceResponse.failure('User already verified', null, StatusCodes.CONFLICT);
     }
 
-    const existingToken = await getVerificationTokenByUserId(user.id);
+    const existingToken = await authRepository.getVerificationTokenByUserId(user.id);
 
     if (existingToken && existingToken.expires > new Date()) {
       return ServiceResponse.failure('Verification token already exists', null, StatusCodes.CONFLICT);
     }
 
-    const token = await createVerificationToken(user.id);
+    const token = await authRepository.createVerificationToken(user.id);
 
     await sendEmail(email, `Verify your email for ${applicationName}`, token);
 
     if (existingToken) {
-      await deleteVerificationToken(existingToken.token);
+      await authRepository.deleteVerificationToken(existingToken.token);
     }
 
     return ServiceResponse.success<null>('Email sent', null, StatusCodes.OK);
@@ -285,5 +271,4 @@ export const authService = {
   signOut,
   sendVerificationEmail,
   signIn,
-  verifyToken,
 };

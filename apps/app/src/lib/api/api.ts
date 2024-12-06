@@ -4,7 +4,7 @@ import { env } from '@repo/env/server';
 import { ApiResponse } from '@repo/types';
 
 interface FetchOptions extends RequestInit {
-  body: BodyInit | null | undefined;
+  body: any;
 }
 
 const createBaseConfig = (method: string, options?: Omit<FetchOptions, 'method'>) => {

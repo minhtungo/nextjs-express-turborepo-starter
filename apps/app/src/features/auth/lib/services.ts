@@ -16,48 +16,32 @@ export const signUpService = async (values: signUpProps) => {
 };
 
 export const signInService = async (values: signInProps): Promise<ApiResponse> => {
-  const response = await api.post(
-    apiRoutes.auth.signIn,
-    {
-      body: values,
-    },
-    true
-  );
+  const response = await api.post(apiRoutes.auth.signIn, {
+    body: values,
+  });
 
   return response;
 };
 
 export const forgotPasswordService = async (email: string): Promise<ApiResponse> => {
-  const response = await api.post(
-    apiRoutes.auth.forgotPassword,
-    {
-      body: { email },
-    },
-    true
-  );
+  const response = await api.post(apiRoutes.auth.forgotPassword, {
+    body: { email },
+  });
   return response;
 };
 
 export const verifyEmailService = async (token: string): Promise<ApiResponse> => {
-  const response = await api.post(
-    apiRoutes.auth.verifyEmail,
-    {
-      body: { token },
-    },
-    true
-  );
+  const response = await api.post(apiRoutes.auth.verifyEmail, {
+    body: { token },
+  });
 
   return response;
 };
 
 export const resetPasswordService = async (values: resetPasswordProps): Promise<ApiResponse> => {
-  const response = await api.post(
-    apiRoutes.auth.resetPassword,
-    {
-      body: values,
-    },
-    true
-  );
+  const response = await api.post(apiRoutes.auth.resetPassword, {
+    body: values,
+  });
 
   return response;
 };
