@@ -7,10 +7,11 @@
     "paths": {
       "@/*": ["src/*"]
     },
+    "jsx": "react-jsx",
     "typeRoots": ["./src/common/types"],
     "moduleResolution": "nodenext",
     "outDir": "dist",
-    "importsNotUsedAsValues": "remove",
+    "importsNotUsedAsValues": "remove"
     // "types": ["vitest/globals"]
   },
   "include": ["src/**/*"],

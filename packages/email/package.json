@@ -1,0 +1,25 @@
+{
+  "name": "@repo/email",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./templates": "./src/emails/index.tsx"
+  },
+  "scripts": {
+    "dev": "email dev -p 3001 --dir ./src/emails",
+    "export": "email export"
+  },
+  "dependencies": {
+    "@react-email/components": "^0.0.14"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^18.2.0",
+    "eslint": "^8.53.0",
+    "react": "^18.2.0",
+    "react-email": "^3.0.3",
+    "tsup": "^8.0.1",
+    "typescript": "^5.2.2"
+  }
+}

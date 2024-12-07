@@ -1,7 +1,8 @@
 import nodemailer from 'nodemailer';
 import mailgunTransport from 'nodemailer-mailgun-transport';
 import { env } from '@/common/config/env';
-import { emailTemplates } from './emailTemplates';
+import { VerificationEmail, PasswordResetEmail } from '@repo/email/templates';
+import { render } from '@repo/email';
 
 // Configure Mailgun transport
 const mailgunConfig = {
@@ -16,18 +17,16 @@ const transporter = nodemailer.createTransport(mailgunTransport(mailgunConfig));
 interface EmailOptions {
   to: string | string[];
   subject: string;
-  text?: string;
-  html?: string;
+  html: string;
 }
 
 export const emailService = {
-  async sendEmail({ to, subject, text, html }: EmailOptions) {
+  async sendEmail({ to, subject, html }: EmailOptions) {
     try {
       const info = await transporter.sendMail({
         from: env.EMAIL_FROM,
         to: Array.isArray(to) ? to.join(', ') : to,
         subject,
-        text,
         html,
       });
 
@@ -52,18 +51,31 @@ export const emailService = {
 
   // Template-specific methods
   async sendVerificationEmail(to: string, username: string, verificationLink: string) {
-    const template = emailTemplates.verificationEmail({ username, verificationLink });
+    const html = render(
+      VerificationEmail({
+        username,
+        verificationLink,
+        siteUrl: env.SITE_BASE_URL,
+      })
+    );
     return this.sendEmail({
       to,
-      ...template,
+      subject: 'Verify Your Email Address',
+      html,
     });
   },
 
   async sendPasswordResetEmail(to: string, username: string, resetLink: string) {
-    const template = emailTemplates.passwordResetEmail({ username, resetLink });
+    const html = render(
+      PasswordResetEmail({
+        username,
+        resetLink,
+      })
+    );
     return this.sendEmail({
       to,
-      ...template,
+      subject: 'Reset Your Password',
+      html,
     });
   },
 };

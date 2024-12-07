@@ -21,6 +21,7 @@
     "@repo/config": "workspace:*",
     "@repo/database": "workspace:*",
     "@repo/env": "workspace:*",
+    "@repo/email": "workspace:*",
     "argon2": "^0.41.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
