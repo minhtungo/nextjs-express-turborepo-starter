@@ -1,5 +1,5 @@
 import { users } from './users';
-import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, integer } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
 export const verificationTokens = pgTable('verificationToken', {

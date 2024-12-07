@@ -64,9 +64,9 @@ const verifyEmail: RequestHandler = async (req, res) => {
 };
 
 const sendVerificationEmail: RequestHandler = async (req, res) => {
-  const { email } = req.body;
+  const { token } = req.body;
 
-  const serviceResponse = await authService.sendVerificationEmail(email);
+  const serviceResponse = await authService.sendVerificationEmail(token);
 
   return handleServiceResponse(serviceResponse, res);
 };
@@ -113,7 +113,7 @@ const getSession: RequestHandler = async (req, res) => {
   return handleServiceResponse(serviceResponse, res);
 };
 
-export const authController = {
+export const authController: Record<string, RequestHandler> = {
   signUp,
   signIn,
   signOut,

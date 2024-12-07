@@ -1,6 +1,6 @@
-import { hashPassword } from "@/common/utils/password";
-import { type InsertUser, type InsertUserSettings, type SelectUser, db, userSettings, users } from "@repo/database";
-import { eq } from "drizzle-orm";
+import { hashPassword } from '@/common/utils/password';
+import { type InsertUser, type InsertUserSettings, type SelectUser, db, userSettings, users } from '@repo/database';
+import { eq } from 'drizzle-orm';
 
 const createUser = async (data: InsertUser) => {
   const { password: plainPassword, ...rest } = data;
@@ -43,27 +43,25 @@ const createUserSettings = async (data: InsertUserSettings) => {
 
 const getUserByEmail = async <TColumns extends Partial<Record<keyof SelectUser, true>>>(
   email: string,
-  columns?: TColumns,
-) => {
+  columns?: TColumns
+): Promise<SelectUser> => {
   const user = await db.query.users.findFirst({
     where: eq(users.email, email),
-    columns,
   });
 
-  return user as Partial<SelectUser>;
+  return user as SelectUser;
 };
 
 type UserColumns = {
   [key in keyof SelectUser]?: boolean;
 };
 
-const getUserById = async <T>(id: string, columns?: UserColumns): Promise<T | SelectUser> => {
+const getUserById = async <T>(id: string, columns?: UserColumns): Promise<SelectUser> => {
   const user = await db.query.users.findFirst({
     where: eq(users.id, id),
-    columns,
   });
 
-  return user as T | SelectUser;
+  return user as SelectUser;
 };
 
 const getUserSettingsByUserId = async (userId: string) => {
@@ -72,16 +70,11 @@ const getUserSettingsByUserId = async (userId: string) => {
   });
 };
 
-const updateUserEmailVerification = async (userId: string, trx: typeof db = db) => {
-  await trx.update(users).set({ emailVerified: new Date() }).where(eq(users.id, userId));
+const updateUser = async (userId: string, data: Partial<InsertUser>, trx: typeof db = db) => {
+  await trx.update(users).set(data).where(eq(users.id, userId));
 };
 
-const updateProfile = async ({ userId, data }: { userId: string; data: Partial<InsertUser> }) => {
-  console.log("data", data);
-  await db.update(users).set(data).where(eq(users.id, userId));
-};
-
-const updateSettings = async ({ userId, data }: { userId: string; data: Partial<InsertUserSettings> }) => {
+const updateUserSettings = async ({ userId, data }: { userId: string; data: Partial<InsertUserSettings> }) => {
   await db.update(userSettings).set(data).where(eq(userSettings.userId, userId));
 };
 
@@ -105,8 +98,7 @@ export const userRepository = {
   getUserByEmail,
   getUserById,
   getUserSettingsByUserId,
-  updateUserEmailVerification,
-  updateProfile,
-  updateSettings,
+  updateUser,
+  updateUserSettings,
   updatePassword,
 };

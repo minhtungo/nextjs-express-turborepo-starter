@@ -16,6 +16,7 @@
       "esnext"
     ],
     "module": "esnext",
+    "moduleResolution": "bundler",
     "strict": true,
     "resolveJsonModule": true,
   },

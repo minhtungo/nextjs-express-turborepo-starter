@@ -25,8 +25,6 @@ passport.use(
         });
       }
 
-      console.log('Local strategy result', result.data);
-
       return done(null, result.data);
     } catch (error) {
       logger.error('Local strategy error:', error);

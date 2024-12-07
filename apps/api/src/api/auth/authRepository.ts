@@ -1,7 +1,6 @@
-import { tokenLength, tokenTtl } from '@/common/config/config';
+import { tokenLength, tokenTtl, verificationEmailTtl } from '@/common/config/config';
 import { hashPassword } from '@/common/utils/password';
-import { generateRandomCode, generateSecureToken, generateToken } from '@/common/utils/token';
-import { logger } from '@/server';
+import { generateSecureToken, generateToken } from '@/common/utils/token';
 import {
   accounts,
   db,
@@ -9,7 +8,6 @@ import {
   twoFactorConfirmations,
   twoFactorTokens,
   users,
-  verificationCodes,
   verificationTokens,
   type InsertAccount,
 } from '@repo/database';
@@ -106,10 +104,11 @@ const deleteTwoFactorToken = async (id: string, trx: typeof db = db) => {
   await trx.delete(twoFactorTokens).where(eq(twoFactorTokens.id, id));
 };
 
-const createVerificationToken = async (userId: string) => {
+const createVerificationToken = async (userId: string, trx: typeof db = db) => {
   const token = await generateToken(tokenLength);
-  const expires = new Date(Date.now() + tokenTtl);
-  await db
+  const expires = new Date(Date.now() + verificationEmailTtl);
+
+  await trx
     .insert(verificationTokens)
     .values({
       userId,
@@ -138,33 +137,6 @@ const deleteVerificationToken = async (token: string, trx: typeof db = db) => {
   await trx.delete(verificationTokens).where(eq(verificationTokens.token, token));
 };
 
-const createVerificationCode = async (userId: string, trx: typeof db = db) => {
-  const code = await generateRandomCode();
-  const expires = new Date(Date.now() + tokenTtl);
-
-  await trx
-    .insert(verificationCodes)
-    .values({
-      userId,
-      code,
-      expires,
-    })
-    .onConflictDoUpdate({
-      target: [verificationCodes.userId],
-      set: {
-        code,
-        expires,
-      },
-    });
-
-  return code;
-};
-
-const getVerificationCodeByCode = async (code: string) => {
-  return await db.query.verificationCodes.findFirst({
-    where: eq(verificationCodes.code, code),
-  });
-};
 const createPasswordResetToken = async (userId: string): Promise<string> => {
   const { token, hashedToken } = await generateSecureToken();
 
@@ -198,8 +170,6 @@ export const authRepository = {
   getVerificationTokenByToken,
   getVerificationTokenByUserId,
   deleteVerificationToken,
-  createVerificationCode,
-  getVerificationCodeByCode,
   createPasswordResetToken,
   getPasswordResetTokenByToken,
 };

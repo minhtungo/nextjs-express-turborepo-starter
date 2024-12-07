@@ -22,10 +22,7 @@ const signIn = async () => {
 
 const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceResponse<{ id: string } | null>> => {
   try {
-    const isExistingUser = await userRepository.getUserByEmail(email, {
-      id: true,
-      emailVerified: true,
-    });
+    const isExistingUser = await userRepository.getUserByEmail(email);
 
     if (isExistingUser) {
       return ServiceResponse.success(
@@ -41,9 +38,9 @@ const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceRe
       password,
     });
 
-    const code = await authRepository.createVerificationCode(user.id!);
+    const token = await authRepository.createVerificationToken(user.id!);
 
-    await sendEmail(email, `Verify your email for ${applicationName}`, code);
+    await sendEmail(email, `Verify your email for ${applicationName}`, token);
 
     return ServiceResponse.success(
       'If your email is not registered, you will receive a verification email shortly.',
@@ -187,11 +184,15 @@ const verifyEmail = async (token: string): Promise<ServiceResponse<null>> => {
     const existingToken = await authRepository.getVerificationTokenByToken(token);
 
     if (!existingToken || existingToken.expires < new Date()) {
-      return ServiceResponse.failure('Invalid or expired token', null, StatusCodes.UNAUTHORIZED);
+      return ServiceResponse.failure(
+        'This verification link has expired. Please request a new one.',
+        null,
+        StatusCodes.GONE // 410 status indicates expired resource
+      );
     }
 
     await createTransaction(async (trx) => {
-      await userRepository.updateUserEmailVerification(existingToken.userId, trx);
+      await userRepository.updateUser(existingToken.userId, { emailVerified: new Date() }, trx);
       await authRepository.deleteVerificationToken(token, trx);
     });
 
@@ -215,35 +216,39 @@ const signOut = async (): Promise<ServiceResponse<null>> => {
   }
 };
 
-const sendVerificationEmail = async (email: string) => {
+const sendVerificationEmail = async (token: string) => {
   try {
-    const user = await userRepository.getUserByEmail(email, {
-      id: true,
+    const existingToken = await authRepository.getVerificationTokenByToken(token);
+
+    if (!existingToken) {
+      return ServiceResponse.success(
+        'If a valid verification token exists, a new verification email will be sent.',
+        null,
+        StatusCodes.OK
+      );
+    }
+
+    const user = await userRepository.getUserById(existingToken.userId);
+
+    if (!user || user.emailVerified) {
+      return ServiceResponse.success(
+        'If a valid verification token exists, a new verification email will be sent.',
+        null,
+        StatusCodes.OK
+      );
+    }
+
+    await createTransaction(async (trx) => {
+      const newToken = await authRepository.createVerificationToken(user.id!, trx);
+      await sendEmail(user.email, `Verify your email for ${applicationName}`, newToken);
+      await authRepository.deleteVerificationToken(existingToken.token);
     });
 
-    if (!user || !user.id) {
-      return ServiceResponse.failure('User not found', null, StatusCodes.NOT_FOUND);
-    }
-
-    if (user.emailVerified) {
-      return ServiceResponse.failure('User already verified', null, StatusCodes.CONFLICT);
-    }
-
-    const existingToken = await authRepository.getVerificationTokenByUserId(user.id);
-
-    if (existingToken && existingToken.expires > new Date()) {
-      return ServiceResponse.failure('Verification token already exists', null, StatusCodes.CONFLICT);
-    }
-
-    const token = await authRepository.createVerificationToken(user.id);
-
-    await sendEmail(email, `Verify your email for ${applicationName}`, token);
-
-    if (existingToken) {
-      await authRepository.deleteVerificationToken(existingToken.token);
-    }
-
-    return ServiceResponse.success<null>('Email sent', null, StatusCodes.OK);
+    return ServiceResponse.success(
+      'If a valid verification token exists, a new verification email will be sent.',
+      null,
+      StatusCodes.OK
+    );
   } catch (ex) {
     const errorMessage = `Error logging out: $${(ex as Error).message}`;
     logger.error(errorMessage);
