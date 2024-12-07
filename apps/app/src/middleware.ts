@@ -14,7 +14,6 @@ const redirectToDashboard = (req: NextRequest) => {
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  console.log('middleware', pathname);
 
   const isProtectedRoute = protectedRoutes.includes(pathname);
   const isAuthRoute = Object.values(authRoutes).includes(pathname);

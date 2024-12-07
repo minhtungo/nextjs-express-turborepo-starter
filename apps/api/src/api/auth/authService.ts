@@ -7,12 +7,12 @@ import { authRepository } from './authRepository';
 import { userRepository } from '@/api/user/userRepository';
 import { applicationName } from '@/common/config/config';
 import { createTransaction } from '@/common/lib/db';
-import { sendEmail } from '@/common/lib/mail';
 import { verifyPassword } from '@/common/lib/password';
 import { hashToken } from '@/common/lib/token';
 import { logger } from '@/server';
 import { signInProps, signUpProps } from '@repo/types';
 import { handleServiceError } from '@/common/lib/utils';
+import { emailService } from '@/common/lib/emailService';
 
 const signIn = async () => {
   const serviceResponse = ServiceResponse.success('Sign in successfully', null, StatusCodes.OK);
@@ -40,7 +40,7 @@ const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceRe
 
     const token = await authRepository.createVerificationToken(user.id!);
 
-    await sendEmail(email, `Verify your email for ${applicationName}`, token);
+    await emailService.sendVerificationEmail(email, name, token);
 
     return ServiceResponse.success(
       'If your email is not registered, you will receive a verification email shortly.',
@@ -141,7 +141,7 @@ const forgotPassword = async (email: string): Promise<ServiceResponse<null>> => 
 
     const token = await authRepository.createResetPasswordToken(user.id);
 
-    await sendEmail(email, `Reset your password for ${applicationName}`, token);
+    await emailService.sendPasswordResetEmail(email, user.name!, token);
 
     return ServiceResponse.success<null>(
       'If a matching account is found, a password reset email will be sent',
@@ -232,8 +232,8 @@ const sendVerificationEmail = async (token: string) => {
 
     await createTransaction(async (trx) => {
       const newToken = await authRepository.createVerificationToken(user.id!, trx);
-      await sendEmail(user.email, `Verify your email for ${applicationName}`, newToken);
-      await authRepository.deleteVerificationToken(existingToken.token);
+      await emailService.sendVerificationEmail(user.email, user.name!, newToken);
+      await authRepository.deleteVerificationToken(existingToken.token, trx);
     });
 
     return ServiceResponse.success(

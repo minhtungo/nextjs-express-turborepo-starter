@@ -16,4 +16,8 @@ export const env = cleanEnv(process.env, {
   GOOGLE_CLIENT_SECRET: str(),
   GOOGLE_CALLBACK_URL: str(),
   SITE_BASE_URL: str(),
+  // Email configuration
+  MAILGUN_API_KEY: str(),
+  MAILGUN_DOMAIN: str(),
+  EMAIL_FROM: str(),
 });
