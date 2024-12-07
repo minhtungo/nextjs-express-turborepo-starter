@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express';
 
 import { authService } from '@/api/auth/authService';
-import { handleServiceResponse } from '@/common/utils/httpHandlers';
+import { handleServiceResponse } from '@/common/lib/httpHandlers';
 
 import { env } from '@/common/config/env';
 import { ServiceResponse } from '@/common/models/serviceResponse';

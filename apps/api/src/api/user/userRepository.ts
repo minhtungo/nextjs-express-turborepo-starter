@@ -1,4 +1,4 @@
-import { hashPassword } from '@/common/utils/password';
+import { hashPassword } from '@/common/lib/password';
 import { type InsertUser, type InsertUserSettings, type SelectUser, db, userSettings, users } from '@repo/database';
 import { eq } from 'drizzle-orm';
 

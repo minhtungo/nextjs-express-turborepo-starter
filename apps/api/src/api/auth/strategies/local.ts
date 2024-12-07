@@ -19,7 +19,7 @@ passport.use(
 
       const result = await authService.validateLocalUser({ email, password, code });
 
-      if (!result.success) {
+      if (!result.success || !result.data) {
         return done(null, false, {
           message: 'Invalid credentials',
         });

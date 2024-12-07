@@ -1,6 +1,6 @@
 import { tokenLength, tokenTtl, verificationEmailTtl } from '@/common/config/config';
-import { hashPassword } from '@/common/utils/password';
-import { generateSecureToken, generateToken } from '@/common/utils/token';
+import { hashPassword } from '@/common/lib/password';
+import { generateSecureToken, generateToken } from '@/common/lib/token';
 import {
   accounts,
   db,

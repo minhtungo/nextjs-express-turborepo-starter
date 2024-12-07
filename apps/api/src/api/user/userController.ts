@@ -1,12 +1,11 @@
-import type { Request, RequestHandler, Response } from "express";
+import type { Request, RequestHandler, Response } from 'express';
 
-import { ServiceResponse } from "@/common/models/serviceResponse";
-import { handleServiceResponse } from "@/common/utils/httpHandlers";
-import { StatusCodes } from "http-status-codes";
+import { ServiceResponse } from '@/common/models/serviceResponse';
+import { handleServiceResponse } from '@/common/lib/httpHandlers';
+import { StatusCodes } from 'http-status-codes';
 
 const getUsers: RequestHandler = async (_req: Request, res: Response) => {
-  console.log("getUsers", _req.cookies);
-  const serviceResponse = ServiceResponse.success("Hello", null, StatusCodes.OK);
+  const serviceResponse = ServiceResponse.success('Hello', null, StatusCodes.OK);
 
   return handleServiceResponse(serviceResponse, res);
 };
@@ -17,7 +16,7 @@ const getUsers: RequestHandler = async (_req: Request, res: Response) => {
 //   return handleServiceResponse(serviceResponse, res);
 // };
 
-export const userController = {
+export const userController: Record<string, RequestHandler> = {
   getUsers,
   // getUser,
 };

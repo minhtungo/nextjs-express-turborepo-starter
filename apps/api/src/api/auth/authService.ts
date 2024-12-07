@@ -4,15 +4,15 @@ import { ServiceResponse } from '@/common/models/serviceResponse';
 
 import { authRepository } from './authRepository';
 
-import { User } from '@/api/user/userModel';
 import { userRepository } from '@/api/user/userRepository';
 import { applicationName } from '@/common/config/config';
-import { createTransaction } from '@/common/utils/db';
-import { sendEmail } from '@/common/utils/mail';
-import { verifyPassword } from '@/common/utils/password';
-import { hashToken } from '@/common/utils/token';
+import { createTransaction } from '@/common/lib/db';
+import { sendEmail } from '@/common/lib/mail';
+import { verifyPassword } from '@/common/lib/password';
+import { hashToken } from '@/common/lib/token';
 import { logger } from '@/server';
 import { signInProps, signUpProps } from '@repo/types';
+import { handleServiceError } from '@/common/lib/utils';
 
 const signIn = async () => {
   const serviceResponse = ServiceResponse.success('Sign in successfully', null, StatusCodes.OK);
@@ -48,9 +48,7 @@ const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceRe
       StatusCodes.OK
     );
   } catch (ex) {
-    const errorMessage = `Error signing up: $${(ex as Error).message}`;
-    logger.error(errorMessage);
-    return ServiceResponse.failure('An error occurred while signing up.', null, StatusCodes.INTERNAL_SERVER_ERROR);
+    return handleServiceError(ex as Error, 'Signing Up');
   }
 };
 
@@ -58,7 +56,12 @@ const validateLocalUser = async ({
   email,
   password,
   code,
-}: signInProps): Promise<ServiceResponse<Partial<User> | null>> => {
+}: signInProps): Promise<
+  ServiceResponse<{
+    id: string;
+    email: string;
+  } | null>
+> => {
   try {
     const user = await userRepository.getUserByEmail(email);
 
@@ -105,11 +108,19 @@ const validateLocalUser = async ({
       }
     }
 
-    return ServiceResponse.success<Partial<User>>('Sign in successful', user, StatusCodes.OK);
+    return ServiceResponse.success<{
+      id: string;
+      email: string;
+    }>(
+      'Sign in successful',
+      {
+        id: user.id,
+        email: user.email,
+      },
+      StatusCodes.OK
+    );
   } catch (error) {
-    const errorMessage = `Error signing in: $${(error as Error).message}`;
-    logger.error(errorMessage);
-    return ServiceResponse.failure('An error occurred while signing in.', null, StatusCodes.INTERNAL_SERVER_ERROR);
+    return handleServiceError(error as Error, 'Signing In');
   }
 };
 
@@ -138,14 +149,7 @@ const forgotPassword = async (email: string): Promise<ServiceResponse<null>> => 
       StatusCodes.OK
     );
   } catch (ex) {
-    const errorMessage = `Error resetting password: $${(ex as Error).message}`;
-    logger.error(errorMessage);
-
-    return ServiceResponse.failure(
-      'An error occurred while resetting password.',
-      null,
-      StatusCodes.INTERNAL_SERVER_ERROR
-    );
+    return handleServiceError(ex as Error, 'Resetting Password');
   }
 };
 
@@ -167,15 +171,7 @@ const resetPassword = async (token: string, newPassword: string): Promise<Servic
 
     return ServiceResponse.success<null>('Password changed successfully', null, StatusCodes.OK);
   } catch (ex) {
-    const errorMessage = `Error changing password: $${(ex as Error).message}`;
-
-    logger.error(errorMessage);
-
-    return ServiceResponse.failure(
-      'An error occurred while changing password.',
-      null,
-      StatusCodes.INTERNAL_SERVER_ERROR
-    );
+    return handleServiceError(ex as Error, 'Resetting Password');
   }
 };
 
@@ -198,9 +194,7 @@ const verifyEmail = async (token: string): Promise<ServiceResponse<null>> => {
 
     return ServiceResponse.success<null>('Email verified', null, StatusCodes.OK);
   } catch (ex) {
-    const errorMessage = `Error verifying email: $${(ex as Error).message}`;
-    logger.error(errorMessage);
-    return ServiceResponse.failure('An error occurred while verifying email.', null, StatusCodes.INTERNAL_SERVER_ERROR);
+    return handleServiceError(ex as Error, 'Verifying Email');
   }
 };
 
@@ -210,9 +204,7 @@ const signOut = async (): Promise<ServiceResponse<null>> => {
 
     return ServiceResponse.success<null>('Signed out', null, StatusCodes.OK);
   } catch (ex) {
-    const errorMessage = `Error logging out: $${(ex as Error).message}`;
-    logger.error(errorMessage);
-    return ServiceResponse.failure('An error occurred while logging out.', null, StatusCodes.INTERNAL_SERVER_ERROR);
+    return handleServiceError(ex as Error, 'Signing Out');
   }
 };
 
@@ -250,9 +242,7 @@ const sendVerificationEmail = async (token: string) => {
       StatusCodes.OK
     );
   } catch (ex) {
-    const errorMessage = `Error logging out: $${(ex as Error).message}`;
-    logger.error(errorMessage);
-    return ServiceResponse.failure('An error occurred while logging out.', null, StatusCodes.INTERNAL_SERVER_ERROR);
+    return handleServiceError(ex as Error, 'Sending Verification Email');
   }
 };
 

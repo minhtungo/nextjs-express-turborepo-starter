@@ -7,15 +7,9 @@ import { authController } from '@/api/auth/authController';
 
 import { env } from '@/common/config/env';
 import { ServiceResponse } from '@/common/models/serviceResponse';
-import { handleServiceResponse, validateRequest } from '@/common/utils/httpHandlers';
+import { handleServiceResponse, validateRequest } from '@/common/lib/httpHandlers';
 
-import {
-  forgotPasswordSchema,
-  resetPasswordSchema,
-  signInSchema,
-  signUpSchema,
-  verifyEmailSchema,
-} from '@repo/types';
+import { forgotPasswordSchema, resetPasswordSchema, signInSchema, signUpSchema, verifyEmailSchema } from '@repo/types';
 import { StatusCodes } from 'http-status-codes';
 import passport from 'passport';
 
