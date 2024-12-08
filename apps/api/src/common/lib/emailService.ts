@@ -50,13 +50,11 @@ export const emailService = {
   },
 
   // Template-specific methods
-  async sendVerificationEmail(to: string, username: string, verificationLink: string) {
-    console.log('sendVerificationEmail', to, username, verificationLink);
+  async sendVerificationEmail(to: string, username: string, token: string) {
     const html = render(
       VerificationEmail({
         username,
-        verificationLink,
-        siteUrl: env.SITE_BASE_URL,
+        token,
       })
     );
     return this.sendEmail({
@@ -66,11 +64,11 @@ export const emailService = {
     });
   },
 
-  async sendPasswordResetEmail(to: string, username: string, resetLink: string) {
+  async sendPasswordResetEmail(to: string, username: string, token: string) {
     const html = render(
       PasswordResetEmail({
         username,
-        resetLink,
+        token,
       })
     );
     return this.sendEmail({
