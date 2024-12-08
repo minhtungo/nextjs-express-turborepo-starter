@@ -1,5 +1,5 @@
 import Google from '@/components/icons/Google';
-import { buttonVariants } from '../../../../../../packages/ui/src/button';
+import { buttonVariants } from '@repo/ui/button';
 import { cn } from '@/lib/utils';
 import { afterLoginUrl } from '@/config';
 

@@ -12,13 +12,15 @@ import {
   Tailwind,
   Text,
 } from '@react-email/components';
+import config from '@repo/config';
+import React from 'react';
 
 interface PasswordResetEmailProps {
   username: string;
-  resetLink: string;
+  token: string;
 }
 
-const PasswordResetEmail = ({ username, resetLink }: PasswordResetEmailProps) => {
+const PasswordResetEmail = ({ username, token }: PasswordResetEmailProps) => {
   return (
     <Html>
       <Head />
@@ -34,15 +36,11 @@ const PasswordResetEmail = ({ username, resetLink }: PasswordResetEmailProps) =>
             <Section className='text-center my-8'>
               <Button
                 className='bg-green-500 text-white px-7 py-4 rounded-md font-semibold text-base no-underline inline-block hover:bg-green-600'
-                href={resetLink}
+                href={`${config.app.url}/reset-password?token=${token}`}
               >
                 Reset Password
               </Button>
             </Section>
-            <Text className='text-gray-700 text-base leading-6'>Or copy and paste this link in your browser:</Text>
-            <Link href={resetLink} className='text-gray-600 underline block mb-4 break-all'>
-              {resetLink}
-            </Link>
             <Text className='text-gray-700 text-base leading-6'>This reset link will expire in 1 hour.</Text>
             <Text className='text-gray-700 text-base leading-6'>
               If you didn't request a password reset, you can safely ignore this email.

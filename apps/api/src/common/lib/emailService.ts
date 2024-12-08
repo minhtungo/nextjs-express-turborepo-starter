@@ -51,6 +51,7 @@ export const emailService = {
 
   // Template-specific methods
   async sendVerificationEmail(to: string, username: string, verificationLink: string) {
+    console.log('sendVerificationEmail', to, username, verificationLink);
     const html = render(
       VerificationEmail({
         username,

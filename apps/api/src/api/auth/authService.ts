@@ -5,14 +5,12 @@ import { ServiceResponse } from '@/common/models/serviceResponse';
 import { authRepository } from './authRepository';
 
 import { userRepository } from '@/api/user/userRepository';
-import { applicationName } from '@/common/config/config';
 import { createTransaction } from '@/common/lib/db';
+import { emailService } from '@/common/lib/emailService';
 import { verifyPassword } from '@/common/lib/password';
 import { hashToken } from '@/common/lib/token';
-import { logger } from '@/server';
-import { signInProps, signUpProps } from '@repo/types';
 import { handleServiceError } from '@/common/lib/utils';
-import { emailService } from '@/common/lib/emailService';
+import { signInProps, signUpProps } from '@repo/types';
 
 const signIn = async () => {
   const serviceResponse = ServiceResponse.success('Sign in successfully', null, StatusCodes.OK);
@@ -25,6 +23,7 @@ const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceRe
     const isExistingUser = await userRepository.getUserByEmail(email);
 
     if (isExistingUser) {
+      console.log('isExistingUser', isExistingUser);
       return ServiceResponse.success(
         'If your email is not registered, you will receive a verification email shortly.',
         null,

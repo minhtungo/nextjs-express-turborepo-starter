@@ -7,7 +7,10 @@
     "./auth": "./src/auth.ts"
   },
   "dependencies": {
-    "@repo/env": "workspace:*"
+    "@repo/env": "workspace:*",
+    "zod": "^3.23.8",
+    "@t3-oss/env-core": "^0.11.1",
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

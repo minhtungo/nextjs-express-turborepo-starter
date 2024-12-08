@@ -1,4 +1,3 @@
-import { session as sessionConfig } from '@repo/config/auth';
 import cors from 'cors';
 import express, { type Express } from 'express';
 import helmet from 'helmet';
@@ -25,6 +24,7 @@ import assertAuthenticated from '@/middleware/assertAuthenticated';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
 import sessionRenewal from '@/middleware/sessionRenewal';
+import config from '@repo/config';
 
 extendZodWithOpenApi(z);
 
@@ -56,7 +56,7 @@ const sessionStore = new pgSession({
 
 app.use(
   session({
-    name: sessionConfig.name,
+    name: config.auth.sessionCookie.name,
     secret: env.SESSION_SECRET,
     genid: () => {
       return uuidv4();
@@ -66,7 +66,7 @@ app.use(
     rolling: false,
     store: sessionStore,
     cookie: {
-      maxAge: sessionConfig.maxAge,
+      maxAge: config.auth.sessionCookie.maxAge,
       httpOnly: true,
       secure: env.NODE_ENV === 'production',
       sameSite: 'lax',

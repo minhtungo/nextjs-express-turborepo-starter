@@ -1,6 +1,6 @@
 import { afterLoginUrl, authRoutes, protectedRoutes } from '@/config';
 import { deleteSessionTokenCookie, validateSessionToken } from '@/lib/auth';
-import { session as sessionConfig } from '@repo/config/auth';
+import appConfig from '@repo/config';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
@@ -18,7 +18,7 @@ export async function middleware(req: NextRequest) {
   const isProtectedRoute = protectedRoutes.includes(pathname);
   const isAuthRoute = Object.values(authRoutes).includes(pathname);
 
-  const sessionCookie = req.cookies.get(sessionConfig.name);
+  const sessionCookie = req.cookies.get(appConfig.auth.sessionCookie.name);
 
   // If user is logged in and trying to access auth routes, redirect to dashboard
   if (isAuthRoute && sessionCookie) {

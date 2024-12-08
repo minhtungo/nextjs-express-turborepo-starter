@@ -1,12 +1,12 @@
 import { getSessionToken } from '@/lib/auth';
-import { session } from '@repo/config';
+import config from '@repo/config';
 
 export const authFetch = async (url: string | URL, options: RequestInit = {}) => {
   const sessionCookie = typeof window === 'undefined' ? await getSessionToken() : null;
 
   options.headers = {
     ...options.headers,
-    ...(sessionCookie ? { Cookie: `${session.name}=${sessionCookie}` } : {}),
+    ...(sessionCookie ? { Cookie: `${config.auth.sessionCookie.name}=${sessionCookie}` } : {}),
   };
 
   const response = await fetch(url, options);

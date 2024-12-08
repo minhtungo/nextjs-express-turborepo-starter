@@ -1,4 +1,4 @@
-import { session } from '@repo/config';
+import config from '@repo/config';
 import type { RequestHandler } from 'express';
 
 const sessionRenewal: RequestHandler = (req, res, next) => {
@@ -9,7 +9,7 @@ const sessionRenewal: RequestHandler = (req, res, next) => {
   const now = Date.now();
   const expires = req.session.cookie.expires?.getTime() ?? 0;
 
-  if (expires - now < session.renewThreshold) {
+  if (expires - now < config.auth.sessionCookie.renewThreshold) {
     req.session.touch();
   }
 

@@ -6,20 +6,20 @@ import {
   Heading,
   Hr,
   Html,
-  Link,
   Preview,
   Section,
   Tailwind,
   Text,
 } from '@react-email/components';
+import config from '@repo/config';
+import React from 'react';
 
 interface VerificationEmailProps {
   username: string;
-  verificationLink: string;
-  siteUrl: string;
+  token: string;
 }
 
-const VerificationEmail = ({ username, verificationLink, siteUrl }: VerificationEmailProps) => {
+const VerificationEmail = ({ username, token }: VerificationEmailProps) => {
   return (
     <Html>
       <Head />
@@ -27,7 +27,7 @@ const VerificationEmail = ({ username, verificationLink, siteUrl }: Verification
       <Tailwind>
         <Body className='bg-white font-sans'>
           <Container className='mx-auto py-5 px-4 max-w-[600px]'>
-            <Heading className='text-2xl font-semibold text-gray-800 my-0'>Welcome to {siteUrl}!</Heading>
+            <Heading className='text-2xl font-semibold text-gray-800 my-0'>Welcome to {config.app.name}!</Heading>
             <Text className='text-gray-700 text-base leading-6 mt-4'>Hi {username},</Text>
             <Text className='text-gray-700 text-base leading-6'>
               Thank you for signing up! Please verify your email address by clicking the button below:
@@ -35,15 +35,11 @@ const VerificationEmail = ({ username, verificationLink, siteUrl }: Verification
             <Section className='text-center my-8'>
               <Button
                 className='bg-green-500 text-white px-7 py-4 rounded-md font-semibold text-base no-underline inline-block hover:bg-green-600'
-                href={verificationLink}
+                href={`${config.app.url}/verify-email?token=${token}`}
               >
                 Verify Email Address
               </Button>
             </Section>
-            <Text className='text-gray-700 text-base leading-6'>Or copy and paste this link in your browser:</Text>
-            <Link href={verificationLink} className='text-gray-600 underline block mb-4 break-all'>
-              {verificationLink}
-            </Link>
             <Text className='text-gray-700 text-base leading-6'>This verification link will expire in 24 hours.</Text>
             <Text className='text-gray-700 text-base leading-6'>
               If you didn't create an account, you can safely ignore this email.

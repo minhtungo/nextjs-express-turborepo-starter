@@ -1,7 +1,7 @@
 'use client';
 
 import Spinner from '@/components/Spinner';
-import { Button, ButtonProps } from '../../../../packages/ui/src/button';
+import { Button, ButtonProps } from '@repo/ui/button';
 import { cn } from '@/lib/utils';
 
 interface LoaderButtonProps extends ButtonProps {
