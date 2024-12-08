@@ -25,6 +25,7 @@ import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
 import sessionRenewal from '@/middleware/sessionRenewal';
 import config from '@repo/config';
+import rateLimiter from '@/middleware/rateLimiter';
 
 extendZodWithOpenApi(z);
 
@@ -47,6 +48,7 @@ app.use(
   })
 );
 app.use(helmet());
+app.use(rateLimiter);
 
 // Database
 const pgSession = connectPgSimple(session);
