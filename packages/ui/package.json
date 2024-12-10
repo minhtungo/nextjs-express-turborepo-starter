@@ -14,7 +14,6 @@
   "scripts": {
     "check-types": "tsc --noEmit",
     "ui:add": "pnpm dlx shadcn@latest add",
-    "build": "tsup",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },

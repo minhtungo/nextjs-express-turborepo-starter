@@ -5,3 +5,10 @@ node_modules
 .prettierignore
 .eslintrc.json
 .eslintignore
+.vscode
+tests
+__tests__
+*.test.*
+*.spec.*
+.git
+.gitignore

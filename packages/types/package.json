@@ -6,9 +6,8 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "build": "tsc",
-    "lint": "biome lint ./src",
-    "check-types": "tsc --noEmit"
+    "lint": "eslint",
+    "lint:fix": "eslint --fix"
   },
   "dependencies": {
     "http-status-codes": "^2.3.0",

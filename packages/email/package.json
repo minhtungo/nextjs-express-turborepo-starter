@@ -7,8 +7,7 @@
     "./templates": "./src/emails/index.tsx"
   },
   "scripts": {
-    "build": "tailwindcss -i ./src/styles.css -o ./dist/styles.css --minify",
-    "dev": "email dev -p 3001 --dir ./src/emails",
+    "dev": "email dev -p 3002 --dir ./src/emails",
     "export": "email export"
   },
   "dependencies": {

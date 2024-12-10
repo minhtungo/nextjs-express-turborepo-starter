@@ -17,6 +17,7 @@
     "@repo/typescript-config": "workspace:*",
     "@repo/types": "workspace:*",
     "eslint": "^9",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "@types/node": "22.9.4"
   }
 }
