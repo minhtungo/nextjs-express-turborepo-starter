@@ -1,11 +1,11 @@
 import { verifyEmailService } from '@/features/auth/lib/services';
 
 interface VerifyEmailFormProps {
-  searchParams: Promise<{ token: string }>;
+  params: Promise<{ token: string }>;
 }
 
-const VerifyEmailForm = async ({ searchParams }: VerifyEmailFormProps) => {
-  const { token } = await searchParams;
+const VerifyEmailForm = async ({ params }: VerifyEmailFormProps) => {
+  const { token } = await params;
 
   if (!token) {
     throw new Error('No token provided');

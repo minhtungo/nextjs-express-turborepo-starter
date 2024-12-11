@@ -36,22 +36,18 @@ WORKDIR /app
 
 # Copy pruned package.json files and lockfile
 COPY --from=builder /app/out/json/ .
-COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+# COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 # Install dependencies based on the pruned workspace
 RUN pnpm install 
 
 # Build the project and its dependencies
 COPY --from=builder /app/out/full/ .
-ENV NEXT_TELEMETRY_DISABLED=1
 RUN pnpm turbo build
 
 # Stage 3: Runner
 # Run the production build
 FROM base AS runner
 WORKDIR /app
-
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
 
 # Create a non-root user
 RUN addgroup --system --gid 1001 nodejs

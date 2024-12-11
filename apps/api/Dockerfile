@@ -33,7 +33,7 @@ WORKDIR /app
 
 # Copy pruned package.json files and lockfile
 COPY --from=builder /app/out/json/ .
-COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+# COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN pnpm install
 
 # Build the project and its dependencies

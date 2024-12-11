@@ -24,7 +24,10 @@ export const useSignUpForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof signUpSchema>) => {
-    execute(values);
+    await execute(values);
+    if (hasSucceeded) {
+      form.reset();
+    }
   };
 
   return {

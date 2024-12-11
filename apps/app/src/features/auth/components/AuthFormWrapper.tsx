@@ -24,7 +24,7 @@ const AuthFormWrapper = ({
   className,
 }: AuthFormWrapperProps) => {
   return (
-    <Card className='mx-auto w-full max-w-[500px]'>
+    <Card className='mx-auto w-full max-w-[500px] border-0 shadow-none sm:border sm:shadow-sm'>
       <CardHeader className='items-center'>
         <CardTitle>{title}</CardTitle>
         {description && <CardDescription className='text-center'>{description}</CardDescription>}
@@ -32,7 +32,7 @@ const AuthFormWrapper = ({
       <CardContent className={cn(className)}>
         {children}
         {backButtonHref && backButtonLabel && (
-          <BackButton className='mt-2.5' href={backButtonHref} label={backButtonLabel} variant='outline' />
+          <BackButton className='mt-6' href={backButtonHref} label={backButtonLabel} variant='outline' />
         )}
       </CardContent>
     </Card>

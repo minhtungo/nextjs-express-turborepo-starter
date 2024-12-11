@@ -13,6 +13,7 @@ import Link from 'next/link';
 
 const SignUpForm = () => {
   const { form, onSubmit, isPending, error, success } = useSignUpForm();
+
   return (
     <AuthFormWrapper title='Sign Up' description='Sign up an account' noBorderMobile>
       <GoogleSignInButton />
