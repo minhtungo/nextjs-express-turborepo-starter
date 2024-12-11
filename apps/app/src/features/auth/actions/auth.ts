@@ -19,7 +19,6 @@ import {
   signInSchema,
   signUpSchema,
   verifyEmailSchema,
-  
 } from '@repo/types';
 import { redirect } from 'next/navigation';
 
@@ -57,7 +56,7 @@ export const signInAction = actionClient
       };
     }
 
-    redirect(parsedInput.redirectTo || afterLoginUrl);
+    redirect(parsedInput.redirectTo ?? afterLoginUrl);
   });
 
 export const forgotPasswordAction = actionClient
