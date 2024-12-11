@@ -41,7 +41,6 @@ authRouter.post(
         const failureResponse = ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
         return handleServiceResponse(failureResponse, res);
       }
-      // Authentication succeeded
       req.user = user;
       next();
     })(req, res, next);

@@ -16,16 +16,15 @@ passport.use(
   new Strategy(opts, async (req, email, password, done) => {
     try {
       const { code } = req.body;
+      const user = await authService.validateCredentials(email, password, code);
 
-      const result = await authService.validateLocalUser({ email, password, code });
-
-      if (!result.success || !result.data) {
+      if (!user) {
         return done(null, false, {
           message: 'Invalid credentials',
         });
       }
 
-      return done(null, result.data);
+      return done(null, user);
     } catch (error) {
       logger.error('Local strategy error:', error);
       return done(error);
