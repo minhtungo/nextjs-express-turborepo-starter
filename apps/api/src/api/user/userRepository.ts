@@ -41,12 +41,10 @@ const createUserSettings = async (data: InsertUserSettings) => {
   await db.insert(userSettings).values(data);
 };
 
-const getUserByEmail = async <TColumns extends Partial<Record<keyof SelectUser, true>>>(
-  email: string,
-  columns?: TColumns
-): Promise<SelectUser> => {
+const getUserByEmail = async <T>(email: string, columns?: UserColumns): Promise<SelectUser> => {
   const user = await db.query.users.findFirst({
     where: eq(users.email, email),
+    ...(columns ? { columns } : {}),
   });
 
   return user as SelectUser;
@@ -59,6 +57,7 @@ type UserColumns = {
 const getUserById = async <T>(id: string, columns?: UserColumns): Promise<SelectUser> => {
   const user = await db.query.users.findFirst({
     where: eq(users.id, id),
+    ...(columns ? { columns } : {}),
   });
 
   return user as SelectUser;

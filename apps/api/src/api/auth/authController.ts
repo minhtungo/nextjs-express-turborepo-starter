@@ -108,7 +108,6 @@ const signOut: RequestHandler = async (req, res, next) => {
 };
 
 const getSession: RequestHandler = async (req, res) => {
-  console.log('getSession req.header', req.headers);
   const serviceResponse = await authService.getSession(req.user);
 
   return handleServiceResponse(serviceResponse, res);

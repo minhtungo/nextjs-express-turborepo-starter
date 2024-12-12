@@ -1,5 +1,5 @@
 import { afterLoginUrl, authRoutes, protectedRoutes } from '@/config';
-import { deleteSessionTokenCookie, verifySession } from '@/lib/auth';
+import { deleteSessionTokenCookie, verifySessionToken } from '@/lib/auth';
 import { config as appConfig } from '@repo/lib/config';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
@@ -28,7 +28,7 @@ export async function middleware(req: NextRequest) {
     return redirectToSignIn(req);
   }
 
-  const session = await verifySession(sessionCookie.value);
+  const session = await verifySessionToken(sessionCookie.value);
 
   if (!session) {
     await deleteSessionTokenCookie();
@@ -36,7 +36,6 @@ export async function middleware(req: NextRequest) {
   }
 
   if (isAuthRoute) {
-    console.log('hello');
     return redirectToDashboard(req);
   }
 

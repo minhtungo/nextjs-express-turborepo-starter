@@ -1,21 +1,21 @@
 'use client';
 
-import { Session } from '@/lib/auth';
+import { SessionUser } from '@repo/types/user';
 import { createContext, use, useContext, useEffect, useState } from 'react';
 
 interface AuthProviderProps {
   children: React.ReactNode;
-  sessionPromise: Promise<Session | null>;
+  userPromise: Promise<SessionUser | null>;
 }
 
 interface AuthContextProps {
-  user: Session | null;
-  setUser: (user: Session | null) => void;
+  user: SessionUser | null;
+  setUser: (user: SessionUser | null) => void;
 }
 
 const AuthContext = createContext<AuthContextProps | null>(null);
 
-export const useAuth = () => {
+export const useUser = () => {
   const context = useContext(AuthContext);
 
   if (context === null) {
@@ -25,9 +25,9 @@ export const useAuth = () => {
   return context;
 };
 
-export const AuthProvider = ({ children, sessionPromise }: AuthProviderProps) => {
-  let initialUser = use(sessionPromise);
-  const [user, setUser] = useState<Session | null>(initialUser);
+export const AuthProvider = ({ children, userPromise }: AuthProviderProps) => {
+  let initialUser = use(userPromise);
+  const [user, setUser] = useState<SessionUser | null>(initialUser);
 
   useEffect(() => {
     setUser(initialUser);

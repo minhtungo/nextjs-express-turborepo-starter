@@ -1,17 +1,12 @@
-import '@/assets/styles/globals.css';
-import Header from '@/components/global/Header';
-import Container from '@/components/layout/Container';
-import Providers from '@/components/providers';
 import { AuthProvider } from '@/components/providers/AuthProvider';
-import { validateRequest, verifySession } from '@/lib/auth';
-import '@repo/ui/styles.css';
+import { getCurrentUser, verifySession } from '@/lib/auth';
 
-export default function RootLayout({
+export default function PrivateLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const sessionPromise = validateRequest();
+  const userPromise = getCurrentUser();
 
-  return <AuthProvider sessionPromise={sessionPromise}>{children}</AuthProvider>;
+  return <AuthProvider userPromise={userPromise}>{children}</AuthProvider>;
 }

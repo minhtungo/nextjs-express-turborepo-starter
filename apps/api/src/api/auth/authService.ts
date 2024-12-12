@@ -12,6 +12,7 @@ import { hashToken } from '@/common/lib/token';
 import { handleServiceError } from '@/common/lib/utils';
 import { signInProps, signUpProps } from '@repo/types';
 import { logger } from '@/server';
+import { SessionUser } from '@repo/types/user';
 
 const signIn = async () => {
   const serviceResponse = ServiceResponse.success('Sign in successfully', null, StatusCodes.OK);
@@ -74,25 +75,21 @@ const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceRe
   }
 };
 
-interface AuthenticatedUser {
-  id: string;
-  email: string;
-}
-
-const validateCredentials = async (
-  email: string,
-  password: string,
-  code?: string
-): Promise<AuthenticatedUser | null> => {
+const validateCredentials = async (email: string, password: string, code?: string): Promise<SessionUser | null> => {
   try {
-    const user = await userRepository.getUserByEmail(email);
-    console.log(user);
+    const user = await userRepository.getUserByEmail(email, {
+      id: true,
+      email: true,
+      image: true,
+      name: true,
+    });
 
     if (!user?.id || !user.password || !user.emailVerified) {
       return null;
     }
 
     const isValidPassword = await verifyPassword(user.password, password);
+
     if (!isValidPassword) {
       return null;
     }
@@ -109,6 +106,8 @@ const validateCredentials = async (
     return {
       id: user.id,
       email: user.email,
+      image: user.image,
+      name: user.name,
     };
   } catch (error) {
     logger.error('Error validating credentials:', error);

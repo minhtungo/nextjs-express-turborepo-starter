@@ -1,7 +1,7 @@
 import { authService } from '@/api/auth/authService';
 import { userRepository } from '@/api/user/userRepository';
 import { logger } from '@/server';
-import type { SelectUser } from '@repo/database';
+import type { SessionUser } from '@repo/types/user';
 import passport from 'passport';
 import { type IStrategyOptionsWithRequest, Strategy } from 'passport-local';
 
@@ -38,9 +38,12 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser(async (id: string, done) => {
-  const user = await userRepository.getUserById<SelectUser>(id, {
-    password: false,
-  });
+  const user = (await userRepository.getUserById<SessionUser>(id, {
+    id: true,
+    email: true,
+    image: true,
+    name: true,
+  })) as SessionUser;
 
   if (!user) {
     return done(null, false);

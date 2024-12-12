@@ -4,24 +4,10 @@ import { getSessionToken } from '@/lib/auth/session';
 import { AuthenticationError } from '@/lib/errors';
 import { config } from '@repo/lib';
 import { cache } from 'react';
+import { SessionUser, Session } from '@repo/types/user';
 
-export type Session = {
-  user: {
-    id: string;
-    email: string;
-  };
-} | null;
-
-export const validateRequest = async (): Promise<Session | null> => {
-  const sessionToken = await getSessionToken();
-
-  if (!sessionToken) return null;
-
-  return verifySession(sessionToken);
-};
-
-export const verifySession = cache(async (token: string) => {
-  const result = await api.get<{ user: { id: string; email: string } }>(apiRoutes.auth.session, {
+export const verifySessionToken = cache(async (token: string): Promise<Session | null> => {
+  const result = await api.get<Session>(apiRoutes.auth.session, {
     cache: 'no-store',
     headers: {
       Cookie: `${config.auth.sessionCookie.name}=${token}`,
@@ -33,9 +19,17 @@ export const verifySession = cache(async (token: string) => {
   return result.data?.user ? { user: result.data.user } : null;
 });
 
-export const getCurrentUser = async (): Promise<UserDTO | undefined> => {
-  const session = await validateRequest();
-  return session?.user ?? undefined;
+export const verifySession = async (): Promise<Session | null> => {
+  const sessionToken = await getSessionToken();
+
+  if (!sessionToken) return null;
+
+  return await verifySessionToken(sessionToken);
+};
+
+export const getCurrentUser = async (): Promise<SessionUser | null> => {
+  const session = await verifySession();
+  return session?.user ?? null;
 };
 
 export const assertAuthenticated = async () => {
