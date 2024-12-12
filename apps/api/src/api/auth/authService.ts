@@ -86,6 +86,7 @@ const validateCredentials = async (
 ): Promise<AuthenticatedUser | null> => {
   try {
     const user = await userRepository.getUserByEmail(email);
+    console.log(user);
 
     if (!user?.id || !user.password || !user.emailVerified) {
       return null;

@@ -4,13 +4,9 @@ import { api } from '@/lib/api/api';
 import { ApiResponse } from '@repo/types';
 
 export const signUpService = async (values: signUpProps) => {
-  const response = await api.post(
-    apiRoutes.auth.signUp,
-    {
-      body: values,
-    },
-    true
-  );
+  const response = await api.post(apiRoutes.auth.signUp, {
+    body: values,
+  });
 
   return response;
 };

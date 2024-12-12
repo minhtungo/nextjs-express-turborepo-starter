@@ -19,15 +19,15 @@
     "drizzle-zod": "^0.5.1",
     "dotenv": "^16.4.5",
     "pg": "^8.13.0",
-    "zod": "^3.23.8"
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@types/node": "22.9.4",
+    "@types/node": "22.10.2",
     "@types/pg": "^8.11.10",
     "eslint": "^9",
-    "tsup": "^8.1.0",
+    "tsup": "^8.3.5",
     "tsx": "^4.19.1",
     "typescript": "^5.7.2",
     "drizzle-kit": "^0.26.2"

@@ -2,6 +2,7 @@ import { apiRoutes } from '@/config';
 import { api } from '@/lib/api/api';
 import { getSessionToken } from '@/lib/auth/session';
 import { AuthenticationError } from '@/lib/errors';
+import { config } from '@repo/lib';
 import { cache } from 'react';
 
 export type Session = {
@@ -16,12 +17,15 @@ export const validateRequest = async (): Promise<Session | null> => {
 
   if (!sessionToken) return null;
 
-  return validateSessionToken(sessionToken);
+  return verifySession(sessionToken);
 };
 
-export const validateSessionToken = cache(async (token: string) => {
+export const verifySession = cache(async (token: string) => {
   const result = await api.get<{ user: { id: string; email: string } }>(apiRoutes.auth.session, {
     cache: 'no-store',
+    headers: {
+      Cookie: `${config.auth.sessionCookie.name}=${token}`,
+    },
   });
 
   if (!result.success) return null;
