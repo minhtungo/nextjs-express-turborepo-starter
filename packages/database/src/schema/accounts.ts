@@ -1,6 +1,6 @@
 import { users } from './users';
 import { integer, pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
-import { createInsertSchema } from 'drizzle-zod';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
 export const roleEnum = pgEnum('role', ['member', 'admin']);
 export const accountTypeEnum = pgEnum('type', ['email', 'google', 'facebook']);
@@ -28,4 +28,4 @@ export type InsertAccount = typeof accounts.$inferInsert;
 export type SelectAccount = typeof accounts.$inferSelect;
 
 export const insertAccountSchema = createInsertSchema(accounts);
-export const selectAccountSchema = createInsertSchema(accounts);
+export const selectAccountSchema = createSelectSchema(accounts);

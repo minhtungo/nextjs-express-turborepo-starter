@@ -55,9 +55,9 @@ RUN adduser --system --uid 1001 nextjs
 USER nextjs
 
 # Copy necessary files from installer
-COPY --from=installer --chown=nextjs:nodejs /app/apps/app/.next/standalone ./
-COPY --from=installer --chown=nextjs:nodejs /app/apps/app/.next/static ./apps/app/.next/static
-COPY --from=installer --chown=nextjs:nodejs /app/apps/app/public ./apps/app/public
+COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
+COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
 
 EXPOSE 3000
 

@@ -7,3 +7,11 @@ export const getUserInfoService = async (): Promise<UserDTO> => {
 
   return result.data;
 };
+
+export const updateUserService = async (): Promise<UserDTO> => {
+  const result = await api.patch<UserDTO>(apiRoutes.user.updateUser, {
+    body: data,
+  });
+
+  return result.data;
+};

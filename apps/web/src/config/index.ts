@@ -39,5 +39,6 @@ export const apiRoutes = {
   },
   user: {
     getUserInfo: '/users',
+    updateUser: '/user',
   },
 };

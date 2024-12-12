@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./user": "./src/user.ts",
+    "./auth": "./src/auth.ts"
   },
   "scripts": {
     "lint": "eslint",
