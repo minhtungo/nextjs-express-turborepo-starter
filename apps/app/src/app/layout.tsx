@@ -3,6 +3,7 @@ import '@repo/ui/styles.css';
 import '@/assets/styles/globals.css';
 import Header from '@/components/global/Header';
 import Providers from '@/components/providers';
+import Container from '@/components/layout/Container';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -19,7 +20,9 @@ export default function RootLayout({
       <body>
         <Providers>
           <Header />
-          {children}
+          <Container tag='main' className='py-6'>
+            {children}
+          </Container>
         </Providers>
       </body>
     </html>

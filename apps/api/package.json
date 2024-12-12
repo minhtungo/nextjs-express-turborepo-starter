@@ -18,9 +18,8 @@
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.0.0",
-    "@repo/config": "workspace:*",
+    "@repo/lib": "workspace:*",
     "@repo/database": "workspace:*",
-    "@repo/env": "workspace:*",
     "@repo/email": "workspace:*",
     "argon2": "^0.41.1",
     "cors": "^2.8.5",

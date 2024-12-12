@@ -1,24 +1,18 @@
-import { env } from './env';
-
 export const APP_CONSTANTS = {
   name: 'Your App Name',
   description: 'Your app description',
   keywords: ['keyword1', 'keyword2', 'keyword3'],
   defaultLocale: 'en',
   supportedLocales: ['en', 'es', 'fr'] as const,
-  url: env.WEB_URL,
+  url: process.env.WEBAPP_URL,
 } as const;
 
 export const AUTH_CONSTANTS = {
-  accessTokenExpiresIn: '15m',
-  refreshTokenExpiresIn: '7d',
-  verificationTokenExpiresIn: '24h',
-  passwordResetTokenExpiresIn: '1h',
   sessionCookie: {
     name: 'session',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     httpOnly: true,
-    secure: env.NODE_ENV === 'production',
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax' as const,
     path: '/',
     renewThreshold: 1000 * 60 * 60 * 24 * 3, // 3 days

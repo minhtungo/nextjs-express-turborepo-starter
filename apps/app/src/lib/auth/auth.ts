@@ -1,4 +1,3 @@
-import { session } from '@repo/config/auth';
 import { apiRoutes } from '@/config';
 import { api } from '@/lib/api/api';
 import { getSessionToken } from '@/lib/auth/session';

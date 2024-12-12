@@ -1,13 +1,12 @@
 {
-  "name": "@repo/config",
+  "name": "@repo/lib",
   "version": "0.0.1",
   "private": true,
   "exports": {
     ".": "./src/index.ts",
-    "./auth": "./src/auth.ts"
+    "./config": "./src/config.ts"
   },
   "dependencies": {
-    "@repo/env": "workspace:*",
     "zod": "^3.23.8",
     "@t3-oss/env-core": "^0.11.1",
     "dotenv": "^16.4.5"

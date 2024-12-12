@@ -11,7 +11,7 @@ import {
   Tailwind,
   Text,
 } from '@react-email/components';
-import config from '@repo/config';
+import { config } from '@repo/lib/config';
 import React from 'react';
 
 interface VerificationEmailProps {

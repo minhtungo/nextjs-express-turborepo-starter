@@ -1,4 +1,4 @@
-import config from '@repo/config';
+import { config } from '@repo/lib/config';
 import type { RequestHandler } from 'express';
 
 const sessionRenewal: RequestHandler = (req, res, next) => {

@@ -1,4 +1,5 @@
-import config from '@repo/config';
+import { config } from '@repo/lib/config';
+
 import { cookies } from 'next/headers';
 
 export const getSessionToken = async () => {

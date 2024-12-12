@@ -24,7 +24,7 @@ import assertAuthenticated from '@/middleware/assertAuthenticated';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
 import sessionRenewal from '@/middleware/sessionRenewal';
-import config from '@repo/config';
+import { config } from '@repo/lib/config';
 import rateLimiter from '@/middleware/rateLimiter';
 
 extendZodWithOpenApi(z);

@@ -7,6 +7,7 @@ import { env } from '@/common/config/env';
 import { ServiceResponse } from '@/common/models/serviceResponse';
 import { signUpProps } from '@repo/types';
 import { StatusCodes } from 'http-status-codes';
+import { config } from '@repo/lib';
 
 const signUp: RequestHandler = async (req, res) => {
   const { name, email, password } = req.body;
@@ -75,10 +76,10 @@ const handleGoogleCallback: RequestHandler = async (req, res) => {
   const user = req.user;
 
   if (!user) {
-    return res.redirect(`${env.SITE_BASE_URL}/sign-in?error=${encodeURIComponent('Authentication failed')}`);
+    return res.redirect(`${config.app.url}/sign-in?error=${encodeURIComponent('Authentication failed')}`);
   }
 
-  return res.redirect(`${env.SITE_BASE_URL}/dashboard`);
+  return res.redirect(`${config.app.url}/dashboard`);
   // const { accessToken } = authService.generateTokens(user.id);
 
   // res.redirect(

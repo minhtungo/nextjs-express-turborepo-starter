@@ -1,6 +1,6 @@
 import { authFetch } from '@/lib/api/customFetch';
 import { handleApiResponse } from '@/lib/api/utils';
-import { env } from '@repo/env/server';
+import { config } from '@repo/lib/config';
 import { ApiResponse } from '@repo/types';
 
 interface FetchOptions extends RequestInit {
@@ -22,7 +22,7 @@ const createBaseConfig = (method: string, options?: Omit<FetchOptions, 'method'>
 
 export const api = {
   get: async <T>(path: string, options?: Omit<FetchOptions, 'method' | 'body'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${env.SERVER_BASE_URL}${path}`, {
+    const response = await authFetch(`${config.server.url}${path}`, {
       ...options,
       method: 'GET',
       credentials: 'include',
@@ -31,28 +31,28 @@ export const api = {
     return handleApiResponse<T>(response);
   },
   post: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${env.SERVER_BASE_URL}${path}`, {
+    const response = await authFetch(`${config.server.url}${path}`, {
       ...createBaseConfig('POST', options),
     });
 
     return handleApiResponse<T>(response);
   },
   put: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${env.SERVER_BASE_URL}${path}`, {
+    const response = await authFetch(`${config.server.url}${path}`, {
       ...createBaseConfig('PUT', options),
     });
 
     return handleApiResponse<T>(response);
   },
   patch: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${env.SERVER_BASE_URL}${path}`, {
+    const response = await authFetch(`${config.server.url}${path}`, {
       ...createBaseConfig('PATCH', options),
     });
 
     return handleApiResponse(response);
   },
   delete: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${env.SERVER_BASE_URL}${path}`, {
+    const response = await authFetch(`${config.server.url}${path}`, {
       ...createBaseConfig('DELETE', options),
     });
 

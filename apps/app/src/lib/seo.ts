@@ -1,4 +1,4 @@
-import { env } from '@repo/env/client';
+import { config } from '@repo/lib/config';
 
 type MetadataProps = {
   title?: string;
@@ -19,7 +19,7 @@ export const constructMetadata = ({
   ogImage = '/images/og-image.png',
 }: MetadataProps) => {
   return {
-    metadataBase: new URL(env.NEXT_PUBLIC_BASE_URL),
+    metadataBase: new URL(config.app.url),
     title,
     description,
     keywords: [],

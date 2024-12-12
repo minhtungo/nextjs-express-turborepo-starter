@@ -5,10 +5,10 @@ import { z } from 'zod';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
 import { authController } from '@/api/auth/authController';
 
-import { env } from '@/common/config/env';
-import { ServiceResponse } from '@/common/models/serviceResponse';
 import { handleServiceResponse, validateRequest } from '@/common/lib/httpHandlers';
+import { ServiceResponse } from '@/common/models/serviceResponse';
 
+import { config } from '@repo/lib';
 import { forgotPasswordSchema, resetPasswordSchema, signInSchema, signUpSchema, verifyEmailSchema } from '@repo/types';
 import { StatusCodes } from 'http-status-codes';
 import passport from 'passport';
@@ -184,7 +184,7 @@ authRouter.get('/google/callback', (req: Request, res: Response, next: NextFunct
 
   passport.authenticate('google', { session: true }, (error: any, user: Express.User | false) => {
     if (error || !user) {
-      return res.redirect(`${env.SITE_BASE_URL}/sign-in?error=${encodeURIComponent('Authentication failed')}`);
+      return res.redirect(`${config.app.url}/sign-in?error=${encodeURIComponent('Authentication failed')}`);
     }
 
     // Log the user in using session
@@ -193,7 +193,7 @@ authRouter.get('/google/callback', (req: Request, res: Response, next: NextFunct
         return next(err);
       }
 
-      return res.redirect(`${env.SITE_BASE_URL}/${redirect}`);
+      return res.redirect(`${config.app.url}/${redirect}`);
     });
   })(req, res, next);
 });

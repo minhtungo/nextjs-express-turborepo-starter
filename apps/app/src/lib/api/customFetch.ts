@@ -1,5 +1,5 @@
 import { getSessionToken } from '@/lib/auth';
-import config from '@repo/config';
+import { config } from '@repo/lib/config';
 
 export const authFetch = async (url: string | URL, options: RequestInit = {}) => {
   const sessionCookie = typeof window === 'undefined' ? await getSessionToken() : null;

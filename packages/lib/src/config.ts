@@ -1,9 +1,8 @@
-import { env } from './env';
 import { APP_CONSTANTS, AUTH_CONSTANTS, RATE_LIMIT_CONSTANTS, API_CONSTANTS } from './constants';
 
-export class Config {
+class Config {
   get nodeEnv() {
-    return env.NODE_ENV;
+    return process.env.NODE_ENV;
   }
 
   get isDevelopment() {
@@ -15,34 +14,34 @@ export class Config {
   }
 
   get server() {
-    const apiUrl = env.API_URL;
+    const url = process.env.SERVER_URL;
 
     return {
-      apiUrl,
-      corsOrigin: env.WEB_URL,
+      url,
+      corsOrigin: process.env.WEBAPP_URL,
     };
   }
 
   get database() {
     return {
-      url: env.DATABASE_URL,
+      url: process.env.DATABASE_URL,
     };
   }
 
   get storage() {
     return {
-      s3Bucket: env.S3_BUCKET,
+      s3Bucket: process.env.S3_BUCKET,
       aws: {
-        accessKeyId: env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
-        region: env.AWS_REGION,
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        region: process.env.AWS_REGION,
       },
     };
   }
 
   get redis() {
     return {
-      url: env.REDIS_URL,
+      url: process.env.REDIS_URL,
     };
   }
 
@@ -64,3 +63,5 @@ export class Config {
     return API_CONSTANTS;
   }
 }
+
+export const config = new Config();
