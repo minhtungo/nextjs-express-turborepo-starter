@@ -16,11 +16,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en' suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body>
         <Providers>
           <Header />
-          <Container tag='main' className='py-6'>
+          <Container tag="main" className="py-6">
             {children}
           </Container>
         </Providers>
