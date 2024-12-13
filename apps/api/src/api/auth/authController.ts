@@ -3,11 +3,10 @@ import type { RequestHandler } from 'express';
 import { authService } from '@/api/auth/authService';
 import { handleServiceResponse } from '@/common/lib/httpHandlers';
 
-import { env } from '@/common/config/env';
 import { ServiceResponse } from '@/common/models/serviceResponse';
+import { config } from '@repo/lib';
 import { signUpProps } from '@repo/types';
 import { StatusCodes } from 'http-status-codes';
-import { config } from '@repo/lib';
 
 const signUp: RequestHandler = async (req, res) => {
   const { name, email, password } = req.body;

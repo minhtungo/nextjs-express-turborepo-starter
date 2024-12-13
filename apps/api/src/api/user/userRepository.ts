@@ -7,34 +7,23 @@ const createUser = async (data: InsertUser) => {
 
   const password = plainPassword ? await hashPassword(plainPassword) : undefined;
 
-  const user = await db
-    .insert(users)
-    .values({ ...rest, password })
-    .returning({
-      id: users.id,
-      email: users.email,
+  return await db.transaction(async (tx) => {
+    const [user] = await tx
+      .insert(users)
+      .values({ ...rest, password })
+      .returning({
+        id: users.id,
+        email: users.email,
+      });
+
+    // Create default user settings
+    await tx.insert(userSettings).values({
+      userId: user.id,
+      // Add any default settings here
     });
 
-  return user[0];
-
-  // Using a transaction to ensure both operations succeed or fail together
-  // return await db.transaction(async (tx) => {
-  //   const [user] = await tx
-  //     .insert(users)
-  //     .values({ ...rest, password })
-  //     .returning({
-  //       id: users.id,
-  //       email: users.email,
-  //     });
-
-  //   // Create default user settings
-  //   await tx.insert(userSettings).values({
-  //     userId: user.id,
-  //     // Add any default settings here
-  //   });
-
-  //   return user;
-  // });
+    return user;
+  });
 };
 
 const createUserSettings = async (data: InsertUserSettings) => {
@@ -70,7 +59,11 @@ const getUserSettingsByUserId = async (userId: string) => {
 };
 
 const updateUser = async (userId: string, data: Partial<InsertUser>, trx: typeof db = db) => {
-  await trx.update(users).set(data).where(eq(users.id, userId));
+  const user = await trx.update(users).set(data).where(eq(users.id, userId)).returning({
+    id: users.id,
+  });
+
+  return user[0];
 };
 
 const updateUserSettings = async ({ userId, data }: { userId: string; data: Partial<InsertUserSettings> }) => {

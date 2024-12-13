@@ -26,6 +26,7 @@ import { z } from 'zod';
 import sessionRenewal from '@/middleware/sessionRenewal';
 import { config } from '@repo/lib/config';
 import rateLimiter from '@/middleware/rateLimiter';
+import { kMaxLength } from 'node:buffer';
 
 extendZodWithOpenApi(z);
 
@@ -88,7 +89,7 @@ app.use(requestLogger);
 // Routes
 app.use('/health-check', healthCheckRouter);
 app.use('/auth', authRouter);
-app.use('/users', assertAuthenticated, userRouter);
+app.use('/user', assertAuthenticated, userRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

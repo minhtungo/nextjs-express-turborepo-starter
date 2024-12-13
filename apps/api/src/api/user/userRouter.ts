@@ -13,12 +13,21 @@ userRegistry.register('User', UserSchema);
 
 userRegistry.registerPath({
   method: 'get',
-  path: '/users',
+  path: '/user',
   tags: ['User'],
   responses: createApiResponse(z.array(UserSchema), 'Success'),
 });
 
-userRouter.get('/', userController.getUsers);
+userRouter.get('/', userController.getUser);
+
+userRegistry.registerPath({
+  method: 'patch',
+  path: '/user',
+  tags: ['User'],
+  responses: createApiResponse(z.array(UserSchema), 'Success'),
+});
+
+userRouter.patch('/', userController.updateUser);
 
 // userRegistry.registerPath({
 //   method: "get",
