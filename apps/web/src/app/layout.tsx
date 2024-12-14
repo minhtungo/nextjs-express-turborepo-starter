@@ -1,9 +1,8 @@
-import type { Metadata } from 'next';
-import '@repo/ui/styles.css';
 import '@/assets/styles/globals.css';
-import Header from '@/components/global/Header';
-import Providers from '@/components/providers';
 import Container from '@/components/layout/Container';
+import ThemeProvider from '@/components/providers/ThemeProvider';
+import '@repo/ui/styles.css';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -18,12 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <Providers>
-          <Header />
-          <Container tag="main" className="py-6">
-            {children}
-          </Container>
-        </Providers>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

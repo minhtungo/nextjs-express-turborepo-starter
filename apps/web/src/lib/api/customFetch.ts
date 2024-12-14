@@ -4,12 +4,14 @@ import { config } from '@repo/lib';
 export const authFetch = async (url: string | URL, options: RequestInit = {}) => {
   const sessionCookie = typeof window === 'undefined' ? await getSessionToken() : null;
 
+  const finalUrl = typeof window === 'undefined' ? `${config.app.url}${url}` : url;
+
   options.headers = {
     ...options.headers,
     ...(sessionCookie ? { Cookie: `${config.auth.sessionCookie.name}=${sessionCookie}` } : {}),
   };
 
-  const response = await fetch(url, options);
+  const response = await fetch(finalUrl, options);
 
   return response;
 };

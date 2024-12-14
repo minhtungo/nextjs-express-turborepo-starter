@@ -11,14 +11,14 @@ const nextConfig: NextConfig = {
       fullUrl: true,
     },
   },
-  // async rewrites() {
-  //   return [
-  //     {
-  //       source: '/api/:path*',
-  //       destination: `${env.}/api/:path*`,
-  //     },
-  //   ];
-  // },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${process.env.SERVER_URL}/:path*`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

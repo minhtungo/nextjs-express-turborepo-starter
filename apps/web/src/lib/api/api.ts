@@ -22,7 +22,7 @@ const createBaseConfig = (method: string, options?: Omit<FetchOptions, 'method'>
 
 export const api = {
   get: async <T>(path: string, options?: Omit<FetchOptions, 'method' | 'body'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${config.server.url}${path}`, {
+    const response = await authFetch(`/api${path}`, {
       ...options,
       method: 'GET',
       credentials: 'include',
@@ -31,28 +31,28 @@ export const api = {
     return handleApiResponse<T>(response);
   },
   post: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${config.server.url}${path}`, {
+    const response = await authFetch(`/api${path}`, {
       ...createBaseConfig('POST', options),
     });
 
     return handleApiResponse<T>(response);
   },
   put: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${config.server.url}${path}`, {
+    const response = await authFetch(`/api${path}`, {
       ...createBaseConfig('PUT', options),
     });
 
     return handleApiResponse<T>(response);
   },
   patch: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${config.server.url}${path}`, {
+    const response = await authFetch(`/api${path}`, {
       ...createBaseConfig('PATCH', options),
     });
 
     return handleApiResponse(response);
   },
   delete: async <T>(path: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${config.server.url}${path}`, {
+    const response = await authFetch(`/api${path}`, {
       ...createBaseConfig('DELETE', options),
     });
 
