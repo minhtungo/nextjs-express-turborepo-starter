@@ -1,5 +1,4 @@
 import { tokenLength, tokenTtl, verificationEmailTtl } from '@/common/config/config';
-import { hashPassword } from '@/common/lib/password';
 import { generateSecureToken, generateToken } from '@/common/lib/token';
 import {
   accounts,
@@ -7,7 +6,6 @@ import {
   resetPasswordTokens,
   twoFactorConfirmations,
   twoFactorTokens,
-  users,
   verificationTokens,
   type InsertAccount,
 } from '@repo/database';
@@ -68,12 +66,6 @@ const createAccount = async (data: InsertAccount) => {
     });
 
   return account;
-};
-
-const updatePassword = async (userId: string, password: string, trx: typeof db = db) => {
-  const hashedPassword = await hashPassword(password);
-
-  await trx.update(users).set({ password: hashedPassword }).where(eq(users.id, userId));
 };
 
 const getTwoFactorConfirmation = async (userId: string) => {
@@ -160,7 +152,6 @@ export const authRepository = {
   deleteResetPasswordToken,
   getAccountByUserId,
   createAccount,
-  updatePassword,
   getTwoFactorConfirmation,
   createTwoFactorConfirmation,
   deleteTwoFactorConfirmation,

@@ -78,7 +78,7 @@ app.use(
   })
 );
 
-app.use(sessionRenewal);
+// app.use(sessionRenewal);
 
 app.use(passport.initialize());
 app.use(passport.session());

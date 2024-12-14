@@ -17,20 +17,20 @@ const SignInForm = () => {
   const { form, onSubmit, isPending, error, urlError, isTwoFactorEnabled } = useSignInForm();
 
   return (
-    <AuthFormWrapper title='Sign in' description='Sign in to your account' noBorderMobile>
+    <AuthFormWrapper title="Sign in" description="Sign in to your account" noBorderMobile>
       <GoogleSignInButton />
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4 mt-4'>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
           {!isTwoFactorEnabled ? (
             <>
               <FormField
                 control={form.control}
-                name='email'
+                name="email"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input autoComplete='email' type='email' placeholder='Email' autoFocus {...field} />
+                      <Input autoComplete="email" type="email" placeholder="Email" autoFocus {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -38,11 +38,11 @@ const SignInForm = () => {
               />
               <FormField
                 control={form.control}
-                name='password'
+                name="password"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <PasswordInput autoComplete='current-password password' placeholder='Password' {...field} />
+                      <PasswordInput autoComplete="current-password password" placeholder="Password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -53,45 +53,45 @@ const SignInForm = () => {
             <>
               <FormField
                 control={form.control}
-                name='code'
+                name="code"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Code</FormLabel>
                     <FormControl>
-                      <Input type='number' placeholder='123456' {...field} />
+                      <Input type="number" placeholder="123456" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <FormResponse
-                variant='success'
-                description='Please enter the code sent to your email'
-                title='Code sent'
+                variant="success"
+                description="Please enter the code sent to your email"
+                title="Code sent"
               />
             </>
           )}
 
           {(error || urlError) && (
-            <FormResponse variant='destructive' description={error || urlError || ''} title='Error' />
+            <FormResponse variant="destructive" description={error || urlError || ''} title="Error" />
           )}
 
-          <div className='pt-2'>
-            <LoaderButton className='w-full' isPending={isPending}>
+          <div className="pt-2">
+            <LoaderButton className="w-full" isPending={isPending}>
               Sign In
               {/* {data && data.twoFactor ? 'Confirm' : 'Sign In'} */}
             </LoaderButton>
           </div>
         </form>
       </Form>
-      <div className='mt-6 text-center text-sm'>
+      <div className="mt-6 text-center text-sm">
         Don't have an account?{' '}
-        <Link href={authRoutes.signUp} className='underline'>
+        <Link href={authRoutes.signUp} className="underline">
           Sign Up
         </Link>
       </div>
-      <div className='text-center'>
-        <Link href={authRoutes.forgotPassword} className='inline-block text-sm text-muted-foreground hover:underline'>
+      <div className="text-center">
+        <Link href={authRoutes.forgotPassword} className="inline-block text-sm text-muted-foreground hover:underline">
           Forgot password?
         </Link>
       </div>

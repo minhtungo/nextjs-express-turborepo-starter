@@ -5,12 +5,12 @@ import { createContext, use, useContext, useEffect, useState } from 'react';
 
 interface AuthProviderProps {
   children: React.ReactNode;
-  userPromise: Promise<SessionUser | null>;
+  userPromise: Promise<SessionUser>;
 }
 
 interface AuthContextProps {
-  user: SessionUser | null;
-  setUser: (user: SessionUser | null) => void;
+  user: SessionUser;
+  setUser: (user: SessionUser) => void;
 }
 
 const AuthContext = createContext<AuthContextProps | null>(null);
@@ -27,7 +27,7 @@ export const useUser = () => {
 
 export const AuthProvider = ({ children, userPromise }: AuthProviderProps) => {
   let initialUser = use(userPromise);
-  const [user, setUser] = useState<SessionUser | null>(initialUser);
+  const [user, setUser] = useState<SessionUser>(initialUser);
 
   useEffect(() => {
     setUser(initialUser);

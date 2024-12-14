@@ -1,5 +1,5 @@
 import { AuthProvider } from '@/components/providers/AuthProvider';
-import { getCurrentUser, verifySession } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/auth';
 
 export default function PrivateLayout({
   children,

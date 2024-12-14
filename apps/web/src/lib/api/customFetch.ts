@@ -1,10 +1,13 @@
-export const authFetch = async (url: string | URL, options: RequestInit = {}) => {
-  // const sessionCookie = typeof window === 'undefined' ? await getSessionToken() : null;
+import { getSessionToken } from '@/lib/auth';
+import { config } from '@repo/lib';
 
-  // options.headers = {
-  //   ...options.headers,
-  //   ...(sessionCookie ? { Cookie: `${config.auth.sessionCookie.name}=${sessionCookie}` } : {}),
-  // };
+export const authFetch = async (url: string | URL, options: RequestInit = {}) => {
+  const sessionCookie = typeof window === 'undefined' ? await getSessionToken() : null;
+
+  options.headers = {
+    ...options.headers,
+    ...(sessionCookie ? { Cookie: `${config.auth.sessionCookie.name}=${sessionCookie}` } : {}),
+  };
 
   const response = await fetch(url, options);
 

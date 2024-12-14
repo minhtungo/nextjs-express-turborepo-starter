@@ -10,8 +10,8 @@ import { emailService } from '@/common/lib/emailService';
 import { verifyPassword } from '@/common/lib/password';
 import { hashToken } from '@/common/lib/token';
 import { handleServiceError } from '@/common/lib/utils';
-import { signInProps, signUpProps } from '@repo/types';
 import { logger } from '@/server';
+import { signUpProps } from '@repo/types';
 import { SessionUser } from '@repo/types/user';
 
 const signIn = async () => {
@@ -77,12 +77,7 @@ const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceRe
 
 const validateCredentials = async (email: string, password: string, code?: string): Promise<SessionUser | null> => {
   try {
-    const user = await userRepository.getUserByEmail(email, {
-      id: true,
-      email: true,
-      image: true,
-      name: true,
-    });
+    const user = await userRepository.getUserByEmail(email);
 
     if (!user?.id || !user.password || !user.emailVerified) {
       return null;

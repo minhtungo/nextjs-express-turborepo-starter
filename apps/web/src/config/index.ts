@@ -23,7 +23,7 @@ export const authRoutes = {
   resetPassword: '/reset-password',
 };
 
-export const protectedRoutes = ['/dashboard'];
+export const protectedRoutes = ['/dashboard', '/dashboard/settings'];
 
 export const apiRoutes = {
   auth: {
@@ -38,7 +38,8 @@ export const apiRoutes = {
     session: '/auth/session',
   },
   user: {
-    getUserInfo: '/users',
+    getUserInfo: '/user',
     updateUser: '/user',
+    changePassword: '/user/change-password',
   },
 };

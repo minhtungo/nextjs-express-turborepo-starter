@@ -29,6 +29,15 @@ userRegistry.registerPath({
 
 userRouter.patch('/', userController.updateUser);
 
+userRegistry.registerPath({
+  method: 'patch',
+  path: '/user/change-password',
+  tags: ['User'],
+  responses: createApiResponse(z.array(UserSchema), 'Success'),
+});
+
+userRouter.patch('/change-password', userController.changePassword);
+
 // userRegistry.registerPath({
 //   method: "get",
 //   path: "/users/{id}",
