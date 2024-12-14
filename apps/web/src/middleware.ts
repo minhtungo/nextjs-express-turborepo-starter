@@ -17,13 +17,19 @@ export async function middleware(req: NextRequest) {
 
   const isProtectedRoute = protectedRoutes.includes(pathname);
   const isAuthRoute = Object.values(authRoutes).includes(pathname);
+  const sessionCookie = req.cookies.get(appConfig.auth.sessionCookie.name);
+
+  if (isAuthRoute) {
+    if (sessionCookie) {
+      return redirectToDashboard(req);
+    }
+    return NextResponse.next();
+  }
 
   if (!isProtectedRoute) {
     console.log('not protected or auth route');
     return NextResponse.next();
   }
-
-  const sessionCookie = req.cookies.get(appConfig.auth.sessionCookie.name);
 
   if (!sessionCookie) {
     return redirectToSignIn(req);
@@ -35,10 +41,6 @@ export async function middleware(req: NextRequest) {
   //   await deleteSessionTokenCookie();
   //   return redirectToSignIn(req);
   // }
-
-  if (isAuthRoute) {
-    return redirectToDashboard(req);
-  }
 
   // const requestHeaders = new Headers(req.headers);
   // requestHeaders.set('Cookie', `${sessionCookie.name}=${sessionCookie.value}`);

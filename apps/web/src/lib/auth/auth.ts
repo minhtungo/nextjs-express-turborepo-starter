@@ -1,10 +1,10 @@
 import { apiRoutes } from '@/config';
 import { api } from '@/lib/api/api';
 import { getSessionToken } from '@/lib/auth/session';
-import { AuthenticationError } from '@/lib/errors';
 import { config } from '@repo/lib';
+import { Session, SessionUser } from '@repo/types/user';
+import { unauthorized } from 'next/navigation';
 import { cache } from 'react';
-import { SessionUser, Session } from '@repo/types/user';
 
 export const verifySessionToken = cache(async (token: string): Promise<Session | null> => {
   const result = await api.get<Session>(apiRoutes.auth.session, {
@@ -35,7 +35,7 @@ export const getCurrentUser = async (): Promise<SessionUser | null> => {
 export const assertAuthenticated = async () => {
   const user = await getCurrentUser();
   if (!user) {
-    throw new AuthenticationError();
+    unauthorized();
   }
   return user;
 };
