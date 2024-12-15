@@ -1,5 +1,5 @@
 import { apiRoutes } from '@/config';
-import { api } from '@/lib/api/api';
+import { api } from '@/lib/api';
 import { UserDTO } from '@/types/dto/user';
 import { ApiResponse } from '@repo/types';
 import { ChangeUserPassword, UpdateUser } from '@repo/types/user';

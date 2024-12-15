@@ -1,6 +1,6 @@
 import { apiRoutes } from '@/config';
-import { api } from '@/lib/api/api';
-import { getSessionToken } from '@/lib/auth/session';
+import { api } from '@/lib/api';
+import { getSessionToken } from '@/lib/auth/session.server';
 import { config } from '@repo/lib';
 import { Session, SessionUser } from '@repo/types/user';
 import { unauthorized } from 'next/navigation';

@@ -1,6 +1,6 @@
 import { apiRoutes } from '@/config';
 import { resetPasswordProps, sendVerificationEmailProps, signInProps, signUpProps } from '@/features/auth/lib/schemas';
-import { api } from '@/lib/api/api';
+import { api } from '@/lib/api';
 import { ApiResponse } from '@repo/types';
 
 export const signUpService = async (values: signUpProps) => {

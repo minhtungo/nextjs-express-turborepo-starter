@@ -9,6 +9,7 @@
     "./postcss.config": "./postcss.config.mjs",
     "./tailwind.config": "./tailwind.config.ts",
     "./*": "./src/*.tsx",
+    "./icons": "./src/icons/index.tsx",
     "./utils": "./src/lib/utils.ts"
   },
   "scripts": {

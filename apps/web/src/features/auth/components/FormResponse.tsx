@@ -1,6 +1,6 @@
 import { Alert, AlertDescription, AlertTitle } from '@repo/ui/alert';
 import { cva, VariantProps } from 'class-variance-authority';
-import { Info } from 'lucide-react';
+import { Info } from '@repo/ui/icons';
 
 const formResponseVariants = cva('', {
   variants: {
@@ -24,7 +24,7 @@ export interface FormResponseProps
 const FormResponse = ({ title, description, className, variant, ...props }: FormResponseProps) => {
   return (
     <Alert variant={variant} className={className} {...props}>
-      <Info className='size-4' />
+      <Info className="size-4" />
       <AlertTitle>{title}</AlertTitle>
       <AlertDescription>{description}</AlertDescription>
     </Alert>
