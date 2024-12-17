@@ -18,9 +18,10 @@
   "devDependencies": {
     "@changesets/changelog-github": "latest",
     "@changesets/cli": "latest",
-    "turbo": "latest",
     "prettier": "^3.4.2",
-    "prettier-plugin-tailwindcss": "^0.6.9"
+    "prettier-plugin-tailwindcss": "^0.6.9",
+    "husky": "^9.1.7",
+    "turbo": "latest"
   },
   "packageManager": "pnpm@9.15.0",
   "engines": {
