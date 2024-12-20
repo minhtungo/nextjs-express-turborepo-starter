@@ -9,7 +9,7 @@ import '@/api/auth/strategies/google';
 import '@/api/auth/strategies/local';
 import { healthCheckRouter } from '@/api/healthCheck/healthCheckRouter';
 import { userRouter } from '@/api/user/userRouter';
-import { env } from '@/common/config/env';
+import { env } from '@/common/lib/env';
 import errorHandler from '@/middleware/errorHandler';
 
 import notFoundHandler from '@/middleware/notFoundHandler';
@@ -21,12 +21,10 @@ import passport from 'passport';
 import { v4 as uuidv4 } from 'uuid';
 
 import assertAuthenticated from '@/middleware/assertAuthenticated';
-import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
-import { z } from 'zod';
-import sessionRenewal from '@/middleware/sessionRenewal';
-import { config } from '@repo/lib/config';
 import rateLimiter from '@/middleware/rateLimiter';
-import { kMaxLength } from 'node:buffer';
+import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
+import { config } from '@repo/lib/config';
+import { z } from 'zod';
 
 extendZodWithOpenApi(z);
 

@@ -1,5 +1,4 @@
 import { afterLoginUrl, authRoutes, protectedRoutes } from '@/config';
-import { deleteSessionTokenCookie, verifySessionToken } from '@/lib/auth';
 import { config as appConfig } from '@repo/lib/config';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';

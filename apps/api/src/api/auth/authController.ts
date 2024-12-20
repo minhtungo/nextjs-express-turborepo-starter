@@ -11,6 +11,8 @@ import { StatusCodes } from 'http-status-codes';
 const signUp: RequestHandler = async (req, res) => {
   const { name, email, password } = req.body;
 
+  console.log('signup');
+
   const serviceResponse = await authService.signUp({
     name,
     email,

@@ -10,14 +10,10 @@
     "allowJs": true,
     "incremental": true,
     "jsx": "preserve",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "module": "esnext",
     "moduleResolution": "bundler",
     "strict": true,
-    "resolveJsonModule": true,
-  },
+    "resolveJsonModule": true
+  }
 }

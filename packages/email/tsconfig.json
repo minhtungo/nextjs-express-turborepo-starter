@@ -1,9 +1,7 @@
 {
-  "extends": "@repo/typescript-config/react-library.json",
-  "include": ["src/**/*"],
-  "exclude": ["dist", "build", "node_modules"],
+  "extends": "@repo/typescript-config/base.json",
+  "exclude": ["node_modules"],
   "compilerOptions": {
-    "strict": true,
     "jsx": "react-jsx"
   }
 }

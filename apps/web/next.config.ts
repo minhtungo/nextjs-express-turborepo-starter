@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
   experimental: {
     authInterrupts: true,
   },
+  serverExternalPackages: ['@repo/database'],
   logging: {
     fetches: {
       fullUrl: true,

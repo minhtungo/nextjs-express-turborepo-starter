@@ -23,7 +23,7 @@ const UpdateUserForm = () => {
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label>Email</Label>
-                <Input placeholder="Email" value={user.email!} disabled />
+                <Input placeholder="Email" value={user?.email!} disabled />
               </div>
               <FormField
                 control={form.control}

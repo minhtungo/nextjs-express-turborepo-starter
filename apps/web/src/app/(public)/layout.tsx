@@ -1,9 +1,8 @@
-import type { Metadata } from 'next';
-import '@repo/ui/styles.css';
 import '@/assets/styles/globals.css';
 import PublicHeader from '@/components/global/PublicHeader';
-import Providers from '@/components/providers';
 import Container from '@/components/layout/Container';
+import '@repo/ui/styles.css';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Create Next App',

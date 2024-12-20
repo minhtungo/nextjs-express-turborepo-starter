@@ -1,6 +1,6 @@
 import { authRepository } from '@/api/auth/authRepository';
 import { userRepository } from '@/api/user/userRepository';
-import { env } from '@/common/config/env';
+import { env } from '@/common/lib/env';
 
 import passport from 'passport';
 import { Strategy, type StrategyOptions } from 'passport-google-oauth20';

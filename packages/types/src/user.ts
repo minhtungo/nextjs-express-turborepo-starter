@@ -1,4 +1,4 @@
-import { insertUserSchema, selectUserSchema } from '@repo/database/users';
+import { insertUserSchema, selectUserSchema } from '@repo/database';
 import { z } from 'zod';
 import { commonValidations } from './lib/common';
 

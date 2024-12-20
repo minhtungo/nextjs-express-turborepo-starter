@@ -33,6 +33,8 @@ const ChangeUserPasswordForm = () => {
                   </FormItem>
                 )}
               />
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="newPassword"

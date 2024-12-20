@@ -11,8 +11,8 @@
     "typeRoots": ["./src/common/types"],
     "moduleResolution": "nodenext",
     "outDir": "dist",
-    "importsNotUsedAsValues": "remove"
-    // "types": ["vitest/globals"]
+    "importsNotUsedAsValues": "remove",
+    "types": ["vitest/globals"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]

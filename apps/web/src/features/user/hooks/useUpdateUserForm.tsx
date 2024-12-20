@@ -1,7 +1,8 @@
 import { useUser } from '@/components/providers/AuthProvider';
 import { updateUserAction } from '@/features/user/actions/user';
+import { updateUserSchema } from '@/features/user/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { updateUserSchema } from '@repo/types/user';
+import { toast } from '@repo/ui/hooks/use-toast';
 import { useAction } from 'next-safe-action/hooks';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -26,6 +27,18 @@ export const useUpdateUserForm = () => {
 
   const onSubmit = async (values: z.infer<typeof updateUserSchema>) => {
     execute(values);
+    if (data?.success) {
+      form.reset();
+      toast({
+        title: 'Profile updated',
+        description: 'Your profile has been successfully updated.',
+      });
+    } else {
+      toast({
+        title: 'Failed to update profile',
+        description: 'Please try again.',
+      });
+    }
   };
 
   return {

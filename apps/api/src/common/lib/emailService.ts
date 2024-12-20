@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import mailgunTransport from 'nodemailer-mailgun-transport';
-import { env } from '@/common/config/env';
+import { env } from '@/common/lib/env';
 import { VerificationEmail, PasswordResetEmail } from '@repo/email/templates';
 import { render } from '@repo/email';
 

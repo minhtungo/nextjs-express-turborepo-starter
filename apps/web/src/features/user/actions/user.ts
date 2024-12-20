@@ -1,8 +1,8 @@
 'use server';
 
 import { changeUserPasswordService, updateUserService } from '@/features/user/lib/services';
+import { changeUserPasswordFormSchema, updateUserSchema } from '@/features/user/lib/validations';
 import { actionClient } from '@/lib/safe-actions';
-import { changeUserPasswordFormSchema, changeUserPasswordSchema, updateUserSchema } from '@repo/types/user';
 
 export const updateUserAction = actionClient.schema(updateUserSchema).action(async ({ parsedInput }) => {
   const result = await updateUserService(parsedInput);

@@ -5,12 +5,12 @@ import { ServiceResponse } from '@/common/models/serviceResponse';
 import { authRepository } from './authRepository';
 
 import { userRepository } from '@/api/user/userRepository';
-import { createTransaction } from '@/common/lib/db';
 import { emailService } from '@/common/lib/emailService';
 import { verifyPassword } from '@/common/lib/password';
 import { hashToken } from '@/common/lib/token';
 import { handleServiceError } from '@/common/lib/utils';
 import { logger } from '@/server';
+import { createTransaction } from '@repo/database/utils';
 import { signUpProps } from '@repo/types';
 import { SessionUser } from '@repo/types/user';
 

@@ -9,21 +9,10 @@
     ],
     "baseUrl": "./",
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"]
     },
     "target": "ES2017"
   },
-  "include": [
-    "src",
-    "next.config.js",
-    "next-env.d.ts",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    ".next",
-    "**/node_modules/*"
-  ]
+  "include": ["src", "next.config.ts", "next-env.d.ts", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", ".next", "**/node_modules/*"]
 }

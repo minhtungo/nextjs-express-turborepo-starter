@@ -1,5 +1,4 @@
 import '@/assets/styles/globals.css';
-import Container from '@/components/layout/Container';
 import ThemeProvider from '@/components/providers/ThemeProvider';
 import '@repo/ui/styles.css';
 import type { Metadata } from 'next';
