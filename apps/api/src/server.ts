@@ -18,10 +18,12 @@ import { pool } from '@repo/database';
 import connectPgSimple from 'connect-pg-simple';
 import session from 'express-session';
 import passport from 'passport';
-import { v4 as uuidv4 } from 'uuid';
 
 import assertAuthenticated from '@/middleware/assertAuthenticated';
+
 import rateLimiter from '@/middleware/rateLimiter';
+import { v4 as uuidv4 } from 'uuid';
+
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { config } from '@repo/lib/config';
 import { z } from 'zod';

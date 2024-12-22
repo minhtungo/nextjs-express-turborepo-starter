@@ -1,5 +1,5 @@
 {
-  "extends": "@repo/typescript-config/base.json",
+  "extends": "@repo/tsconfig/base.json",
   "exclude": ["node_modules"],
   "compilerOptions": {
     "jsx": "react-jsx"

@@ -8,24 +8,23 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "ui:add": "turbo run ui:add",
-    "lint": "turbo lint",
-    "lint:fix": "turbo lint --continue -- --apply",
+    "format": "pnpm biome format . --write && pnpm biome check . --write ",
+    "lint:fix": "pnpm biome lint --write --unsafe .",
+    "lint:turbo": "turbo run lint",
     "type-check": "turbo type-check",
     "clean": "turbo clean",
-    "format": "turbo format --continue --",
     "prettier": "npx prettier --write \"**/*.{ts,tsx}\"",
-    "format:fix": "turbo format --continue -- --write",
-    "prepare": "husky install"
+    "format:fix": "turbo format --continue -- --write"
   },
   "devDependencies": {
     "@changesets/changelog-github": "latest",
     "@changesets/cli": "latest",
-    "husky": "^9.1.7",
+    "knip": "^5.41.1",
     "lint-staged": "^15.2.11",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.9",
     "turbo": "latest",
-    "knip": "^5.41.1"
+    "@biomejs/biome": "^1.9.4"
   },
   "lint-staged": {
     "*.{ts,tsx,md}": "prettier --write"

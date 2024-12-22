@@ -7,17 +7,13 @@
     "./user": "./src/user.ts",
     "./auth": "./src/auth.ts"
   },
-  "scripts": {
-    "lint": "eslint",
-    "lint:fix": "eslint --fix"
-  },
+  "scripts": {},
   "dependencies": {
     "http-status-codes": "^2.3.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
     "@repo/database": "workspace:*",
     "@types/node": "22.10.2",
     "typescript": "^5.7.2"
