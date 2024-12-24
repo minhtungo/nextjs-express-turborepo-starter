@@ -6,7 +6,7 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./utils": "./src/utils.ts"
+    "./schema/*": "./src/schema/*"
   },
   "scripts": {
     "seed": "tsx scripts/seed.ts",
