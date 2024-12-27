@@ -1,5 +1,5 @@
-import { Input, InputProps } from '@repo/ui/input';
 import { Eye, EyeOff } from '@repo/ui/icons';
+import { Input, type InputProps } from '@repo/ui/input';
 import { useState } from 'react';
 
 const PasswordInput = (props: InputProps) => {

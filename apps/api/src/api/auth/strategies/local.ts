@@ -1,14 +1,14 @@
-import { authService } from '@/api/auth/authService';
-import { userRepository } from '@/api/user/userRepository';
-import { logger } from '@/server';
-import type { SessionUser } from '@repo/types/user';
-import passport from 'passport';
-import { type IStrategyOptionsWithRequest, Strategy } from 'passport-local';
+import { authService } from "@/api/auth/authService";
+import { userRepository } from "@/api/user/userRepository";
+import { logger } from "@/server";
+import type { SessionUser } from "@repo/validation/user";
+import passport from "passport";
+import { type IStrategyOptionsWithRequest, Strategy } from "passport-local";
 
 const opts: IStrategyOptionsWithRequest = {
   session: true,
-  usernameField: 'email',
-  passwordField: 'password',
+  usernameField: "email",
+  passwordField: "password",
   passReqToCallback: true,
 };
 
@@ -20,20 +20,20 @@ passport.use(
 
       if (!user) {
         return done(null, false, {
-          message: 'Invalid credentials',
+          message: "Invalid credentials",
         });
       }
 
       return done(null, user);
     } catch (error) {
-      logger.error('Local strategy error:', error);
+      logger.error("Local strategy error:", error);
       return done(error);
     }
-  })
+  }),
 );
 
 passport.serializeUser((user, done) => {
-  console.log('serializeUser', user);
+  console.log("serializeUser", user);
   done(null, user.id);
 });
 

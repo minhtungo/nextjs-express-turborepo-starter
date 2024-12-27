@@ -1,22 +1,30 @@
-'use server';
+"use server";
 
-import { changeUserPasswordService, updateUserService } from '@/features/user/lib/services';
-import { changeUserPasswordFormSchema, updateUserSchema } from '@/features/user/lib/validations';
-import { actionClient } from '@/lib/safe-actions';
+import {
+  changeUserPasswordService,
+  updateUserService,
+} from "@/features/user/lib/services";
+import { actionClient } from "@/lib/safe-actions";
+import {
+  changeUserPasswordFormSchema,
+  updateUserSchema,
+} from "@repo/validation/user";
 
-export const updateUserAction = actionClient.schema(updateUserSchema).action(async ({ parsedInput }) => {
-  const result = await updateUserService(parsedInput);
+export const updateUserAction = actionClient
+  .schema(updateUserSchema)
+  .action(async ({ parsedInput }) => {
+    const result = await updateUserService(parsedInput);
 
-  if (!result.success) {
+    if (!result.success) {
+      return {
+        error: result.message || "An error occurred during reset password",
+      };
+    }
+
     return {
-      error: result.message || 'An error occurred during reset password',
+      success: result.message || "Update user successfully",
     };
-  }
-
-  return {
-    success: result.message || 'Update user successfully',
-  };
-});
+  });
 
 export const changeUserPasswordAction = actionClient
   .schema(changeUserPasswordFormSchema)
@@ -25,11 +33,11 @@ export const changeUserPasswordAction = actionClient
 
     if (!result.success) {
       return {
-        error: result.message || 'An error occurred during reset password',
+        error: result.message || "An error occurred during reset password",
       };
     }
 
     return {
-      success: result.message || 'Update user successfully',
+      success: result.message || "Update user successfully",
     };
   });

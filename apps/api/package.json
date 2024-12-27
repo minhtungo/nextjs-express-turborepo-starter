@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.0.0",
-    "@repo/lib": "workspace:*",
     "@repo/database": "workspace:*",
     "@repo/email": "workspace:*",
     "argon2": "^0.41.1",
@@ -40,7 +39,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@repo/types": "workspace:*",
+    "@repo/validation": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@types/connect-pg-simple": "^7.0.3",
     "@types/cors": "^2.8.17",
@@ -73,11 +72,7 @@
     "**/*.{js,ts}": "pnpm run lint:fix"
   },
   "tsup": {
-    "entry": [
-      "src",
-      "!src/**/__tests__/**",
-      "!src/**/*.test.*"
-    ],
+    "entry": ["src", "!src/**/__tests__/**", "!src/**/*.test.*"],
     "splitting": false,
     "sourcemap": true,
     "clean": true

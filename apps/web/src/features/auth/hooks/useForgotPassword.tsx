@@ -1,9 +1,9 @@
 import { forgotPasswordAction } from '@/features/auth/actions/auth';
-import { forgotPasswordSchema } from '@/features/auth/lib/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { forgotPasswordSchema } from '@repo/validation/auth';
 import { useAction } from 'next-safe-action/hooks';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import type { z } from 'zod';
 
 export const useForgotPasswordForm = () => {
   const {

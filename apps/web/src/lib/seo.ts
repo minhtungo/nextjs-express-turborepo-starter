@@ -1,4 +1,4 @@
-import { env } from '@/lib/env';
+import { env } from "@/lib/env";
 
 type MetadataProps = {
   title?: string;
@@ -8,18 +8,18 @@ type MetadataProps = {
 };
 
 const defaultMetadata = {
-  title: '',
-  description: '',
+  title: "",
+  description: "",
 };
 
 export const constructMetadata = ({
   title = defaultMetadata.description,
   description = defaultMetadata.description,
-  canonical = '/',
-  ogImage = '/images/og-image.png',
+  canonical = "/",
+  ogImage = "/images/og-image.png",
 }: MetadataProps) => {
   return {
-    metadataBase: new URL(env.WEBAPP_URL),
+    metadataBase: new URL(env.NEXT_PUBLIC_BASE_URL),
     title,
     description,
     keywords: [],
@@ -29,14 +29,14 @@ export const constructMetadata = ({
     openGraph: {
       title,
       description,
-      type: 'website',
+      type: "website",
       url: canonical,
       images: [
         {
           url: ogImage,
           width: 1200,
           height: 630,
-          alt: 'OG Image',
+          alt: "OG Image",
         },
       ],
     },

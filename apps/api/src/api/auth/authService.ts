@@ -11,8 +11,8 @@ import { hashToken } from "@/common/lib/token";
 import { handleServiceError } from "@/common/lib/utils";
 import { logger } from "@/server";
 import { createTransaction } from "@repo/database";
-import type { signUpProps } from "@repo/types";
-import type { SessionUser } from "@repo/types/user";
+import type { signUpProps } from "@repo/validation/auth";
+import type { SessionUser } from "@repo/validation/user";
 
 const signIn = async () => {
   const serviceResponse = ServiceResponse.success(
@@ -59,12 +59,15 @@ const signUp = async ({
             trx,
           );
 
-          // Send new verification email
-          await emailService.sendVerificationEmail(
-            email,
-            existingUser.name!,
-            newToken,
-          );
+          try {
+            await emailService.sendVerificationEmail(
+              email,
+              existingUser.name!,
+              newToken,
+            );
+          } catch (emailError) {
+            throw new Error(`Failed to send verification email: ${emailError}`);
+          }
         });
       }
 
@@ -75,15 +78,22 @@ const signUp = async ({
       );
     }
 
-    const user = await userRepository.createUser({
-      email,
-      name,
-      password,
+    await createTransaction(async (trx) => {
+      const user = await userRepository.createUser(
+        {
+          email,
+          name,
+          password,
+        },
+        trx,
+      );
+
+      console.log("signup", user);
+
+      const token = await authRepository.createVerificationToken(user.id, trx);
+
+      await emailService.sendVerificationEmail(email, name, token);
     });
-
-    const token = await authRepository.createVerificationToken(user.id!);
-
-    await emailService.sendVerificationEmail(email, name, token);
 
     return ServiceResponse.success(
       "If your email is not registered, you will receive a verification email shortly.",

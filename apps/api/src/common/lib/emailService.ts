@@ -1,18 +1,15 @@
-import nodemailer from 'nodemailer';
-import mailgunTransport from 'nodemailer-mailgun-transport';
-import { env } from '@/common/lib/env';
-import { VerificationEmail, PasswordResetEmail } from '@repo/email/templates';
-import { render } from '@repo/email';
+import { env } from "@/common/lib/env";
+import { render } from "@repo/email";
+import { PasswordResetEmail, VerificationEmail } from "@repo/email/templates";
+import nodemailer from "nodemailer";
 
-// Configure Mailgun transport
-const mailgunConfig = {
-  auth: {
-    api_key: env.MAILGUN_API_KEY,
-    domain: env.MAILGUN_DOMAIN,
-  },
-};
-
-const transporter = nodemailer.createTransport(mailgunTransport(mailgunConfig));
+// Configure MailHog transport
+const transporter = nodemailer.createTransport({
+  host: "mailhog", // Docker service name
+  port: env.EMAIL_SERVER_PORT, // MailHog SMTP port
+  secure: false,
+  ignoreTLS: true, // MailHog doesn't support TLS
+});
 
 interface EmailOptions {
   to: string | string[];
@@ -25,16 +22,16 @@ export const emailService = {
     try {
       const info = await transporter.sendMail({
         from: env.EMAIL_FROM,
-        to: Array.isArray(to) ? to.join(', ') : to,
+        to: Array.isArray(to) ? to.join(", ") : to,
         subject,
         html,
       });
 
-      console.log('Email sent:', info);
+      console.log("Email sent:", info);
 
       return { success: true, messageId: info.messageId };
     } catch (error) {
-      console.error('Error sending email:', error);
+      console.error("Error sending email:", error);
       throw error;
     }
   },
@@ -44,36 +41,35 @@ export const emailService = {
       await transporter.verify();
       return true;
     } catch (error) {
-      console.error('Error verifying email connection:', error);
+      console.error("Error verifying email connection:", error);
       return false;
     }
   },
 
-  // Template-specific methods
   async sendVerificationEmail(to: string, username: string, token: string) {
-    const html = render(
+    const html = await render(
       VerificationEmail({
         username,
         token,
-      })
+      }),
     );
     return this.sendEmail({
       to,
-      subject: 'Verify Your Email Address',
+      subject: "Verify Your Email Address",
       html,
     });
   },
 
   async sendPasswordResetEmail(to: string, username: string, token: string) {
-    const html = render(
+    const html = await render(
       PasswordResetEmail({
         username,
         token,
-      })
+      }),
     );
     return this.sendEmail({
       to,
-      subject: 'Reset Your Password',
+      subject: "Reset Your Password",
       html,
     });
   },

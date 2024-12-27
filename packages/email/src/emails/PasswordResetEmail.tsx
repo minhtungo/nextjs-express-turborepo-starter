@@ -6,14 +6,12 @@ import {
   Heading,
   Hr,
   Html,
-  Link,
   Preview,
   Section,
   Tailwind,
   Text,
 } from '@react-email/components';
-import { config } from '@repo/lib/config';
-import React from 'react';
+import { env } from '../env';
 
 interface PasswordResetEmailProps {
   username: string;
@@ -36,7 +34,7 @@ const PasswordResetEmail = ({ username, token }: PasswordResetEmailProps) => {
             <Section className="text-center my-8">
               <Button
                 className="bg-green-500 text-white px-7 py-4 rounded-md font-semibold text-base no-underline inline-block hover:bg-green-600"
-                href={`${config.app.url}/reset-password?token=${token}`}
+                href={`${env.APP_ORIGIN}/reset-password?token=${token}`}
               >
                 Reset Password
               </Button>

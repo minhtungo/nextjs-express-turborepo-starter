@@ -2,12 +2,12 @@
 
 import { useUser } from '@/components/providers/AuthProvider';
 import { changeUserPasswordAction } from '@/features/user/actions/user';
-import { changeUserPasswordFormSchema } from '@/features/user/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useToast } from '@repo/ui/hooks/use-toast';
+import { changeUserPasswordFormSchema } from '@repo/validation/user';
 import { useAction } from 'next-safe-action/hooks';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { useToast } from '@repo/ui/hooks/use-toast';
+import type { z } from 'zod';
 
 export const useChangeUserPassword = () => {
   const { user } = useUser();

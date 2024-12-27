@@ -1,15 +1,16 @@
-import { tokenLength, tokenTtl, verificationEmailTtl } from '@/common/config/config';
-import { generateSecureToken, generateToken } from '@/common/lib/token';
 import {
-  accounts,
-  db,
-  resetPasswordTokens,
-  twoFactorConfirmations,
-  twoFactorTokens,
-  verificationTokens,
-  type InsertAccount,
-} from '@repo/database';
-import { eq } from 'drizzle-orm';
+  tokenLength,
+  tokenTtl,
+  verificationEmailTtl,
+} from "@/common/config/app.config";
+import { generateSecureToken, generateToken } from "@/common/lib/token";
+import { db } from "@repo/database";
+import { type InsertAccount, accounts } from "@repo/database/schema/accounts";
+import { resetPasswordTokens } from "@repo/database/schema/resetPasswordTokens";
+import { twoFactorConfirmations } from "@repo/database/schema/twoFactorConfirmations";
+import { twoFactorTokens } from "@repo/database/schema/twoFactorTokens";
+import { verificationTokens } from "@repo/database/schema/verificationTokens";
+import { eq } from "drizzle-orm";
 
 // Reset Password Token operations
 const createResetPasswordToken = async (userId: string) => {
@@ -43,7 +44,9 @@ const getResetPasswordTokenByToken = async (token: string) => {
 };
 
 const deleteResetPasswordToken = async (token: string, trx: typeof db = db) => {
-  await trx.delete(resetPasswordTokens).where(eq(resetPasswordTokens.token, token));
+  await trx
+    .delete(resetPasswordTokens)
+    .where(eq(resetPasswordTokens.token, token));
 };
 
 // Account operations
@@ -76,14 +79,19 @@ const getTwoFactorConfirmation = async (userId: string) => {
   return existingToken;
 };
 
-const createTwoFactorConfirmation = async (userId: string, trx: typeof db = db) => {
+const createTwoFactorConfirmation = async (
+  userId: string,
+  trx: typeof db = db,
+) => {
   await trx.insert(twoFactorConfirmations).values({
     userId,
   });
 };
 
 const deleteTwoFactorConfirmation = async (id: string) => {
-  await db.delete(twoFactorConfirmations).where(eq(twoFactorConfirmations.id, id));
+  await db
+    .delete(twoFactorConfirmations)
+    .where(eq(twoFactorConfirmations.id, id));
 };
 
 const getTwoFactorTokenByEmail = async (email: string) => {
@@ -118,15 +126,21 @@ const createVerificationToken = async (userId: string, trx: typeof db = db) => {
 };
 
 const getVerificationTokenByToken = async (token: string) => {
-  return await db.query.verificationTokens.findFirst({ where: eq(verificationTokens.token, token) });
+  return await db.query.verificationTokens.findFirst({
+    where: eq(verificationTokens.token, token),
+  });
 };
 
 const getVerificationTokenByUserId = async (userId: string) => {
-  return await db.query.verificationTokens.findFirst({ where: eq(verificationTokens.userId, userId) });
+  return await db.query.verificationTokens.findFirst({
+    where: eq(verificationTokens.userId, userId),
+  });
 };
 
 const deleteVerificationToken = async (token: string, trx: typeof db = db) => {
-  await trx.delete(verificationTokens).where(eq(verificationTokens.token, token));
+  await trx
+    .delete(verificationTokens)
+    .where(eq(verificationTokens.token, token));
 };
 
 const createPasswordResetToken = async (userId: string): Promise<string> => {
@@ -143,7 +157,9 @@ const createPasswordResetToken = async (userId: string): Promise<string> => {
 };
 
 const getPasswordResetTokenByToken = async (hashedToken: string) => {
-  return await db.query.resetPasswordTokens.findFirst({ where: eq(resetPasswordTokens.token, hashedToken) });
+  return await db.query.resetPasswordTokens.findFirst({
+    where: eq(resetPasswordTokens.token, hashedToken),
+  });
 };
 
 export const authRepository = {

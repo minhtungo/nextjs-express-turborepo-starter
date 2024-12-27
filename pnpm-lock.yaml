@@ -44,9 +44,6 @@ importers:
       '@repo/email':
         specifier: workspace:*
         version: link:../../packages/email
-      '@repo/lib':
-        specifier: workspace:*
-        version: link:../../packages/lib
       argon2:
         specifier: ^0.41.1
         version: 0.41.1
@@ -114,9 +111,9 @@ importers:
       '@repo/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
-      '@repo/types':
+      '@repo/validation':
         specifier: workspace:*
-        version: link:../../packages/types
+        version: link:../../packages/validation
       '@types/connect-pg-simple':
         specifier: ^7.0.3
         version: 7.0.3
@@ -198,9 +195,6 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.9.1
         version: 3.9.1(react-hook-form@7.54.1(react@19.0.0))
-      '@repo/lib':
-        specifier: workspace:*
-        version: link:../../packages/lib
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -235,15 +229,12 @@ importers:
         specifier: ^3.24.1
         version: 3.24.1
     devDependencies:
-      '@repo/tailwind-config':
-        specifier: workspace:*
-        version: link:../../packages/config-tailwind
       '@repo/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
-      '@repo/types':
+      '@repo/validation':
         specifier: workspace:*
-        version: link:../../packages/types
+        version: link:../../packages/validation
       '@types/node':
         specifier: 22.10.2
         version: 22.10.2
@@ -271,15 +262,6 @@ importers:
       typescript:
         specifier: ^5.7.2
         version: 5.7.2
-
-  packages/config-tailwind:
-    devDependencies:
-      '@repo/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      tailwindcss:
-        specifier: ^3.4.17
-        version: 3.4.17
 
   packages/database:
     dependencies:
@@ -320,19 +302,25 @@ importers:
       '@react-email/components':
         specifier: ^0.0.31
         version: 0.0.31(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@repo/lib':
-        specifier: workspace:*
-        version: link:../lib
+      '@t3-oss/env-core':
+        specifier: ^0.11.1
+        version: 0.11.1(typescript@5.7.2)(zod@3.24.1)
       react:
         specifier: ^19.0.0
         version: 19.0.0
       react-dom:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
+      zod:
+        specifier: ^3.24.1
+        version: 3.24.1
     devDependencies:
       '@repo/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
+      '@types/node':
+        specifier: 22.10.2
+        version: 22.10.2
       '@types/react':
         specifier: 19.0.2
         version: 19.0.2
@@ -343,54 +331,7 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
 
-  packages/lib:
-    dependencies:
-      '@t3-oss/env-core':
-        specifier: ^0.11.1
-        version: 0.11.1(typescript@5.7.2)(zod@3.24.1)
-      dotenv:
-        specifier: ^16.4.5
-        version: 16.4.5
-      zod:
-        specifier: ^3.24.1
-        version: 3.24.1
-    devDependencies:
-      '@repo/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      '@repo/types':
-        specifier: workspace:*
-        version: link:../types
-      '@types/node':
-        specifier: 22.10.2
-        version: 22.10.2
-      typescript:
-        specifier: ^5.7.2
-        version: 5.7.2
-
   packages/tsconfig: {}
-
-  packages/types:
-    dependencies:
-      http-status-codes:
-        specifier: ^2.3.0
-        version: 2.3.0
-      zod:
-        specifier: ^3.24.1
-        version: 3.24.1
-    devDependencies:
-      '@repo/database':
-        specifier: workspace:*
-        version: link:../database
-      '@repo/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      '@types/node':
-        specifier: 22.10.2
-        version: 22.10.2
-      typescript:
-        specifier: ^5.7.2
-        version: 5.7.2
 
   packages/ui:
     dependencies:
@@ -437,9 +378,6 @@ importers:
         specifier: ^3.24.1
         version: 3.24.1
     devDependencies:
-      '@repo/tailwind-config':
-        specifier: workspace:*
-        version: link:../config-tailwind
       '@repo/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
@@ -452,6 +390,28 @@ importers:
       tailwindcss:
         specifier: ^3.4.17
         version: 3.4.17
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.2
+
+  packages/validation:
+    dependencies:
+      http-status-codes:
+        specifier: ^2.3.0
+        version: 2.3.0
+      zod:
+        specifier: ^3.24.1
+        version: 3.24.1
+    devDependencies:
+      '@repo/database':
+        specifier: workspace:*
+        version: link:../database
+      '@repo/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 22.10.2
+        version: 22.10.2
       typescript:
         specifier: ^5.7.2
         version: 5.7.2
@@ -2466,9 +2426,6 @@ packages:
 
   '@types/node@22.10.2':
     resolution: {integrity: sha512-Xxr6BBRCAOQixvonOye19wnzyDiUtTeqldOOmj3CkeblonbccA12PFwlufvRdrpjXxqnmUaeiU5EOA+7s5diUQ==}
-
-  '@types/node@22.9.4':
-    resolution: {integrity: sha512-d9RWfoR7JC/87vj7n+PVTzGg9hDyuFjir3RxUHbjFSKNd9mpxbxwMEyaCim/ddCmy4IuW7HjTzF3g9p3EtWEOg==}
 
   '@types/nodemailer-mailgun-transport@1.4.6':
     resolution: {integrity: sha512-6qhtDo+1ZLtrmmpQN7O9e3NLK5ggnTS2Oca+22SvmhwChNKxDZErecTlF6qTOLnNW/CCcHmDaSmG2MXUeP1w9g==}
@@ -5473,9 +5430,6 @@ packages:
   uid2@0.0.4:
     resolution: {integrity: sha512-IevTus0SbGwQzYh3+fRsAMTVVPOoIVufzacXcHPmdlle1jUpq7BRL+mw3dgeLanvGZdwwbWhRV6XrcFNdBmjWA==}
 
-  undici-types@6.19.8:
-    resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
-
   undici-types@6.20.0:
     resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
@@ -7257,7 +7211,7 @@ snapshots:
 
   '@types/cors@2.8.17':
     dependencies:
-      '@types/node': 22.9.4
+      '@types/node': 22.10.2
 
   '@types/estree@1.0.6': {}
 
@@ -7285,7 +7239,7 @@ snapshots:
 
   '@types/jsonwebtoken@9.0.7':
     dependencies:
-      '@types/node': 22.9.4
+      '@types/node': 22.10.2
 
   '@types/methods@1.1.4': {}
 
@@ -7297,17 +7251,13 @@ snapshots:
     dependencies:
       undici-types: 6.20.0
 
-  '@types/node@22.9.4':
-    dependencies:
-      undici-types: 6.19.8
-
   '@types/nodemailer-mailgun-transport@1.4.6':
     dependencies:
       '@types/nodemailer': 6.4.17
 
   '@types/nodemailer@6.4.17':
     dependencies:
-      '@types/node': 22.9.4
+      '@types/node': 22.10.2
 
   '@types/oauth@0.9.6':
     dependencies:
@@ -10265,8 +10215,6 @@ snapshots:
       random-bytes: 1.0.0
 
   uid2@0.0.4: {}
-
-  undici-types@6.19.8: {}
 
   undici-types@6.20.0: {}
 

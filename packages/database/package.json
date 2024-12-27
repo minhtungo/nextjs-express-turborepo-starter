@@ -6,7 +6,14 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./schema/*": "./src/schema/*"
+    "./schema/users": "./src/schema/users/index.ts",
+    "./schema/accounts": "./src/schema/accounts/index.ts",
+    "./schema/userSettings": "./src/schema/userSettings/index.ts",
+    "./schema/sessions": "./src/schema/sessions/index.ts",
+    "./schema/verificationTokens": "./src/schema/verificationTokens/index.ts",
+    "./schema/resetPasswordTokens": "./src/schema/resetPasswordTokens/index.ts",
+    "./schema/twoFactorTokens": "./src/schema/twoFactorTokens/index.ts",
+    "./schema/twoFactorConfirmations": "./src/schema/twoFactorConfirmations/index.ts"
   },
   "scripts": {
     "seed": "tsx scripts/seed.ts",

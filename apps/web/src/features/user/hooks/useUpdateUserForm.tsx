@@ -1,11 +1,11 @@
 import { useUser } from '@/components/providers/AuthProvider';
 import { updateUserAction } from '@/features/user/actions/user';
-import { updateUserSchema } from '@/features/user/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from '@repo/ui/hooks/use-toast';
+import { updateUserSchema } from '@repo/validation/user';
 import { useAction } from 'next-safe-action/hooks';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import type { z } from 'zod';
 
 export const useUpdateUserForm = () => {
   const { user } = useUser();

@@ -1,7 +1,6 @@
-import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
-import { z } from 'zod';
-
-import { commonValidations } from '@/common/lib/commonValidation';
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { commonValidations } from "@repo/validation/common";
+import { z } from "zod";
 
 extendZodWithOpenApi(z);
 

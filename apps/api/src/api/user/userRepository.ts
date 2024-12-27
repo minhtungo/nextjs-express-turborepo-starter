@@ -1,36 +1,49 @@
-import { hashPassword } from '@/common/lib/password';
-import { type InsertUser, type InsertUserSettings, type SelectUser, db, userSettings, users } from '@repo/database';
-import { eq } from 'drizzle-orm';
+import { hashPassword } from "@/common/lib/password";
+import { db } from "@repo/database";
+import {
+  type InsertUser,
+  type SelectUser,
+  users,
+} from "@repo/database/schema/users";
 
-const createUser = async (data: InsertUser) => {
+import {
+  type InsertUserSettings,
+  userSettings,
+} from "@repo/database/schema/userSettings";
+
+import { eq } from "drizzle-orm";
+
+const createUser = async (data: InsertUser, trx: typeof db = db) => {
   const { password: plainPassword, ...rest } = data;
 
-  const password = plainPassword ? await hashPassword(plainPassword) : undefined;
+  const password = plainPassword
+    ? await hashPassword(plainPassword)
+    : undefined;
 
-  return await db.transaction(async (tx) => {
-    const [user] = await tx
-      .insert(users)
-      .values({ ...rest, password })
-      .returning({
-        id: users.id,
-        email: users.email,
-      });
-
-    // Create default user settings
-    await tx.insert(userSettings).values({
-      userId: user.id,
-      // Add any default settings here
+  const [user] = await trx
+    .insert(users)
+    .values({ ...rest, password })
+    .returning({
+      id: users.id,
     });
 
-    return user;
+  // Create default user settings
+  await trx.insert(userSettings).values({
+    userId: user.id,
+    // Add any default settings here
   });
+
+  return user;
 };
 
 const createUserSettings = async (data: InsertUserSettings) => {
   await db.insert(userSettings).values(data);
 };
 
-const getUserByEmail = async <T>(email: string, columns?: UserColumns): Promise<SelectUser> => {
+const getUserByEmail = async <T>(
+  email: string,
+  columns?: UserColumns,
+): Promise<SelectUser> => {
   const user = await db.query.users.findFirst({
     where: eq(users.email, email),
     ...(columns ? { columns } : {}),
@@ -43,7 +56,10 @@ type UserColumns = {
   [key in keyof SelectUser]?: boolean;
 };
 
-const getUserById = async <T>(id: string, columns?: UserColumns): Promise<SelectUser> => {
+const getUserById = async <T>(
+  id: string,
+  columns?: UserColumns,
+): Promise<SelectUser> => {
   const user = await db.query.users.findFirst({
     where: eq(users.id, id),
     ...(columns ? { columns } : {}),
@@ -58,16 +74,30 @@ const getUserSettingsByUserId = async (userId: string) => {
   });
 };
 
-const updateUser = async (userId: string, data: Partial<InsertUser>, trx: typeof db = db) => {
-  const user = await trx.update(users).set(data).where(eq(users.id, userId)).returning({
-    id: users.id,
-  });
+const updateUser = async (
+  userId: string,
+  data: Partial<InsertUser>,
+  trx: typeof db = db,
+) => {
+  const user = await trx
+    .update(users)
+    .set(data)
+    .where(eq(users.id, userId))
+    .returning({
+      id: users.id,
+    });
 
   return user[0];
 };
 
-const updateUserSettings = async ({ userId, data }: { userId: string; data: Partial<InsertUserSettings> }) => {
-  await db.update(userSettings).set(data).where(eq(userSettings.userId, userId));
+const updateUserSettings = async ({
+  userId,
+  data,
+}: { userId: string; data: Partial<InsertUserSettings> }) => {
+  await db
+    .update(userSettings)
+    .set(data)
+    .where(eq(userSettings.userId, userId));
 };
 
 const updatePassword = async ({
@@ -81,7 +111,10 @@ const updatePassword = async ({
 }) => {
   const hashedPassword = await hashPassword(newPassword);
 
-  await trx.update(users).set({ password: hashedPassword }).where(eq(users.id, userId));
+  await trx
+    .update(users)
+    .set({ password: hashedPassword })
+    .where(eq(users.id, userId));
 };
 
 export const userRepository = {

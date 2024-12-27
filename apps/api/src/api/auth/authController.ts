@@ -1,17 +1,15 @@
-import type { RequestHandler } from 'express';
+import type { RequestHandler } from "express";
 
-import { authService } from '@/api/auth/authService';
-import { handleServiceResponse } from '@/common/lib/httpHandlers';
+import { authService } from "@/api/auth/authService";
+import { handleServiceResponse } from "@/common/lib/httpHandlers";
 
-import { ServiceResponse } from '@/common/models/serviceResponse';
-import { config } from '@repo/lib';
-import { signUpProps } from '@repo/types';
-import { StatusCodes } from 'http-status-codes';
+import { env } from "@/common/lib/env";
+import { ServiceResponse } from "@/common/models/serviceResponse";
+import type { signUpProps } from "@repo/validation/auth";
+import { StatusCodes } from "http-status-codes";
 
 const signUp: RequestHandler = async (req, res) => {
   const { name, email, password } = req.body;
-
-  console.log('signup');
 
   const serviceResponse = await authService.signUp({
     name,
@@ -24,14 +22,25 @@ const signUp: RequestHandler = async (req, res) => {
 
 const signIn: RequestHandler = async (req, res) => {
   if (!req.user) {
-    return handleServiceResponse(ServiceResponse.failure('Authentication failed', null, StatusCodes.UNAUTHORIZED), res);
+    return handleServiceResponse(
+      ServiceResponse.failure(
+        "Authentication failed",
+        null,
+        StatusCodes.UNAUTHORIZED,
+      ),
+      res,
+    );
   }
 
   req.login(req.user, async (err) => {
     if (err) {
       return handleServiceResponse(
-        ServiceResponse.failure('Authentication failed', null, StatusCodes.UNAUTHORIZED),
-        res
+        ServiceResponse.failure(
+          "Authentication failed",
+          null,
+          StatusCodes.UNAUTHORIZED,
+        ),
+        res,
       );
     }
 
@@ -77,10 +86,12 @@ const handleGoogleCallback: RequestHandler = async (req, res) => {
   const user = req.user;
 
   if (!user) {
-    return res.redirect(`${config.app.url}/sign-in?error=${encodeURIComponent('Authentication failed')}`);
+    return res.redirect(
+      `${env.APP_ORIGIN}/sign-in?error=${encodeURIComponent("Authentication failed")}`,
+    );
   }
 
-  return res.redirect(`${config.app.url}/dashboard`);
+  return res.redirect(`${env.APP_ORIGIN}/dashboard`);
   // const { accessToken } = authService.generateTokens(user.id);
 
   // res.redirect(

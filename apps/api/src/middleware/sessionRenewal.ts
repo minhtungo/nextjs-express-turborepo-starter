@@ -1,5 +1,5 @@
-import { config } from '@repo/lib/config';
-import type { RequestHandler } from 'express';
+import { appConfig } from "@/common/config/app.config";
+import type { RequestHandler } from "express";
 
 const sessionRenewal: RequestHandler = (req, res, next) => {
   if (!req.session) {
@@ -9,7 +9,7 @@ const sessionRenewal: RequestHandler = (req, res, next) => {
   const now = Date.now();
   const expires = req.session.cookie.expires?.getTime() ?? 0;
 
-  if (expires - now < config.auth.sessionCookie.renewThreshold) {
+  if (expires - now < appConfig.sessionCookie.renewThreshold) {
     req.session.touch();
   }
 

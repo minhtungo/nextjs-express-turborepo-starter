@@ -1,6 +1,6 @@
 'use client';
 
-import { SessionUser } from '@repo/types/user';
+import type { SessionUser } from '@repo/validation/user';
 import { createContext, use, useContext, useEffect, useState } from 'react';
 
 interface AuthProviderProps {
@@ -26,7 +26,7 @@ export const useUser = () => {
 };
 
 export const AuthProvider = ({ children, userPromise }: AuthProviderProps) => {
-  let initialUser = use(userPromise || null);
+  const initialUser = use(userPromise || null);
   const [user, setUser] = useState<SessionUser | null>(initialUser);
 
   useEffect(() => {

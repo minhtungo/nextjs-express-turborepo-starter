@@ -8,6 +8,13 @@
       "when": 1732603458630,
       "tag": "0000_small_champions",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1735335854731,
+      "tag": "0001_tan_shard",
+      "breakpoints": true
     }
   ]
 }

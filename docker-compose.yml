@@ -1,45 +1,22 @@
 services:
-  app:
-    container_name: app
-    build:
-      context: .
-      dockerfile: ./apps/app/Dockerfile
-    ports:
-      - 3000:3000
-    volumes:
-      - ./apps/app/node_modules:/app/node_modules
-      - ./apps/app/.next:/app/.next
-    networks:
-      - app_network
-    environment:
-      - NODE_ENV=development
-    depends_on:
-      - api
-  api:
-    container_name: api
-    build:
-      context: .
-      dockerfile: ./apps/api/Dockerfile
-    ports:
-      - 3001:3001
-    volumes:
-      - ./apps/api/node_modules:/usr/src/app/node_modules
-      - ./apps/api/dist:/usr/src/app/dist
-    networks:
-      - app_network
-    environment:
-      - NODE_ENV=development
-    depends_on:
-      - db
   db:
     extends:
-      file: docker-compose.base.yml
+      file: ./packages/database/docker-compose.yml
       service: db
+    env_file:
+      - ./packages/database/.env
+    networks:
+      - app_network
+
+  mailhog:
+    extends:
+      file: ./apps/api/docker-compose.yml
+      service: mailhog
+    env_file:
+      - ./apps/api/.env
     networks:
       - app_network
 
 networks:
   app_network:
-    external: true
-volumes:
-  postgres_data:
+    driver: bridge

@@ -1,11 +1,11 @@
 import { signInAction } from '@/features/auth/actions/auth';
-import { signInSchema } from '@/features/auth/lib/schemas';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { signInSchema } from '@repo/validation/auth';
 import { useAction } from 'next-safe-action/hooks';
 import { useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import type { z } from 'zod';
 
 export const useSignInForm = () => {
   const searchParams = useSearchParams();

@@ -1,10 +1,8 @@
-import { apiRoutes } from '@/config';
-import { api } from '@/lib/api';
-import { commonValidations } from '@/lib/validation';
-import { UserDTO } from '@/types/dto/user';
-import { ApiResponse } from '@repo/types';
-import { ChangeUserPassword, UpdateUser } from '@repo/types/user';
-import { z } from 'zod';
+import { apiRoutes } from "@/config";
+import { api } from "@/lib/api";
+import type { UserDTO } from "@/types/dto/user";
+import type { ApiResponse } from "@repo/validation/api";
+import type { ChangeUserPassword, UpdateUser } from "@repo/validation/user";
 
 export const getUserInfoService = async (): Promise<UserDTO> => {
   const result = await api.get<UserDTO>(apiRoutes.user.getUserInfo);
@@ -12,7 +10,9 @@ export const getUserInfoService = async (): Promise<UserDTO> => {
   return result.data;
 };
 
-export const updateUserService = async (data: UpdateUser): Promise<ApiResponse> => {
+export const updateUserService = async (
+  data: UpdateUser,
+): Promise<ApiResponse> => {
   const result = await api.patch<UserDTO>(apiRoutes.user.updateUser, {
     body: data,
   });
@@ -20,7 +20,9 @@ export const updateUserService = async (data: UpdateUser): Promise<ApiResponse> 
   return result;
 };
 
-export const changeUserPasswordService = async (data: ChangeUserPassword): Promise<ApiResponse> => {
+export const changeUserPasswordService = async (
+  data: ChangeUserPassword,
+): Promise<ApiResponse> => {
   const result = await api.patch<UserDTO>(apiRoutes.user.changePassword, {
     body: data,
   });

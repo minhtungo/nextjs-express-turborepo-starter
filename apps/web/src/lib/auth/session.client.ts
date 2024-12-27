@@ -1,6 +1,6 @@
-import { config } from '@repo/lib';
-import { getCookie } from 'cookies-next';
+import { getCookie } from "cookies-next";
+import { env } from "../env";
 
 export const getClientSessionToken = () => {
-  return getCookie(config.auth.sessionCookie.name);
+  return getCookie(env.SESSION_COOKIE_NAME);
 };

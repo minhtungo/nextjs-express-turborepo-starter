@@ -1,7 +1,7 @@
-import { afterLoginUrl, authRoutes, protectedRoutes } from '@/config';
-import { config as appConfig } from '@repo/lib/config';
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { afterLoginUrl, authRoutes, protectedRoutes } from "@/config";
+import { env } from "@/lib/env";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 const redirectToSignIn = (req: NextRequest) => {
   return NextResponse.redirect(new URL(authRoutes.signIn, req.url));
@@ -16,7 +16,7 @@ export async function middleware(req: NextRequest) {
 
   const isProtectedRoute = protectedRoutes.includes(pathname);
   const isAuthRoute = Object.values(authRoutes).includes(pathname);
-  const sessionCookie = req.cookies.get(appConfig.auth.sessionCookie.name);
+  const sessionCookie = req.cookies.get(env.SESSION_COOKIE_NAME);
 
   if (isAuthRoute) {
     if (sessionCookie) {
@@ -26,7 +26,7 @@ export async function middleware(req: NextRequest) {
   }
 
   if (!isProtectedRoute) {
-    console.log('not protected or auth route');
+    console.log("not protected or auth route");
     return NextResponse.next();
   }
 
@@ -47,5 +47,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

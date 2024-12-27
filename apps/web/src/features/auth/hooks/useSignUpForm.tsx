@@ -1,9 +1,9 @@
 import { signUpAction } from '@/features/auth/actions/auth';
-import { signUpSchema } from '@/features/auth/lib/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { signUpSchema } from '@repo/validation/auth';
 import { useAction } from 'next-safe-action/hooks';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import type { z } from 'zod';
 
 export const useSignUpForm = () => {
   const {

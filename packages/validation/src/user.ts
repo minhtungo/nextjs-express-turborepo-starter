@@ -1,6 +1,9 @@
-import { insertUserSchema, selectUserSchema } from '@repo/database';
-import { z } from 'zod';
-import { commonValidations } from './lib/common';
+import {
+  insertUserSchema,
+  selectUserSchema,
+} from "@repo/database/schema/users";
+import { z } from "zod";
+import { commonValidations } from "./common";
 
 const SessionUser = selectUserSchema.pick({
   id: true,
@@ -25,7 +28,7 @@ export type UpdateUser = z.infer<typeof updateUserSchema>;
 export const changeUserPasswordSchema = z.object({
   currentPassword: z
     .string({
-      required_error: 'Password is required',
+      required_error: "Password is required",
     })
     .min(1),
   newPassword: commonValidations.password,
@@ -38,8 +41,10 @@ export const changeUserPasswordFormSchema = changeUserPasswordSchema
     confirmNewPassword: z.string().min(1),
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmNewPassword'],
+    message: "Passwords do not match",
+    path: ["confirmNewPassword"],
   });
 
-export type ChangeUserPasswordForm = z.infer<typeof changeUserPasswordFormSchema>;
+export type ChangeUserPasswordForm = z.infer<
+  typeof changeUserPasswordFormSchema
+>;

@@ -1,8 +1,8 @@
 'use client';
 
 import Spinner from '@/components/Spinner';
-import { Button, ButtonProps } from '@repo/ui/button';
 import { cn } from '@/lib/utils';
+import { Button, type ButtonProps } from '@repo/ui/button';
 
 interface LoaderButtonProps extends ButtonProps {
   isPending: boolean;
