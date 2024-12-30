@@ -35,7 +35,7 @@ const VerificationEmail = ({ username, token }: VerificationEmailProps) => {
             <Section className="text-center my-8">
               <Button
                 className="bg-green-500 text-white px-7 py-4 rounded-md font-semibold text-base no-underline inline-block hover:bg-green-600"
-                href={`${env.APP_ORIGIN}/verify-email?token=${token}`}
+                href={`${env.APP_ORIGIN}/verify-email/${token}`}
               >
                 Verify Email Address
               </Button>

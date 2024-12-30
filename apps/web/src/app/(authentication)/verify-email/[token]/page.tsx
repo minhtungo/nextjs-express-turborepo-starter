@@ -6,11 +6,10 @@ import { Suspense } from 'react';
 export default async function VerifyEmail({ params }: { params: Promise<{ token: string }> }) {
   return (
     <AuthFormWrapper
-      title='Verify Email'
-      description='Verifying your email address...'
+      title="Verify Email"
       noBorderMobile
       backButtonHref={authRoutes.signIn}
-      backButtonLabel='Back to Sign In'
+      backButtonLabel="Back to Sign In"
     >
       <Suspense fallback={<div>Loading...</div>}>
         <VerifyEmailForm params={params} />

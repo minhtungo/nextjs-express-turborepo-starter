@@ -88,8 +88,6 @@ const signUp = async ({
         trx,
       );
 
-      console.log("signup", user);
-
       const token = await authRepository.createVerificationToken(user.id, trx);
 
       await emailService.sendVerificationEmail(email, name, token);

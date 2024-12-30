@@ -1,14 +1,18 @@
 import { env } from "@/common/lib/env";
+import { logger } from "@/server";
 import { render } from "@repo/email";
 import { PasswordResetEmail, VerificationEmail } from "@repo/email/templates";
 import nodemailer from "nodemailer";
 
 // Configure MailHog transport
 const transporter = nodemailer.createTransport({
-  host: "mailhog", // Docker service name
-  port: env.EMAIL_SERVER_PORT, // MailHog SMTP port
+  host: env.EMAIL_SERVER_HOST,
+  port: env.EMAIL_SERVER_PORT,
   secure: false,
-  ignoreTLS: true, // MailHog doesn't support TLS
+  auth: {
+    user: env.EMAIL_SERVER_USER,
+    pass: env.EMAIL_SERVER_PASSWORD,
+  },
 });
 
 interface EmailOptions {
@@ -27,11 +31,11 @@ export const emailService = {
         html,
       });
 
-      console.log("Email sent:", info);
+      logger.info(`Email sent to ${to}`);
 
       return { success: true, messageId: info.messageId };
     } catch (error) {
-      console.error("Error sending email:", error);
+      logger.error("Error sending email:", error);
       throw error;
     }
   },

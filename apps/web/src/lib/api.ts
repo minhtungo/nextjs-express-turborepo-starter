@@ -54,11 +54,14 @@ export const authFetch = async (
     endpoint,
     isServer ? env.EXTERNAL_SERVER_URL : `${env.NEXT_PUBLIC_BASE_URL}/api`,
   );
+
   const options = createBaseConfig(baseOptions);
 
   const sessionCookie = isServer
     ? await getSessionToken()
     : getClientSessionToken();
+
+  console.log("sessionCookie", sessionCookie);
 
   options.headers = {
     ...options.headers,
@@ -67,7 +70,9 @@ export const authFetch = async (
       : {}),
   };
 
-  const response = await fetch(url, options);
+  console.log("url", url);
+
+  const response = await fetch(url.toString(), options);
 
   return response;
 };
