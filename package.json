@@ -15,7 +15,7 @@
     "@changesets/changelog-github": "latest",
     "@changesets/cli": "latest",
     "knip": "^5.41.1",
-    "lint-staged": "^15.2.11",
+    "lint-staged": "^15.3.0",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.9",
     "turbo": "latest"
@@ -23,7 +23,7 @@
   "lint-staged": {
     "*.{ts,tsx,md}": "prettier --write"
   },
-  "packageManager": "pnpm@9.15.1",
+  "packageManager": "pnpm@9.15.2",
   "engines": {
     "node": ">=20"
   }

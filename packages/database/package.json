@@ -23,7 +23,7 @@
     "generate": "drizzle-kit generate:pg"
   },
   "dependencies": {
-    "drizzle-orm": "^0.35.3",
+    "drizzle-orm": "^0.38.3",
     "drizzle-zod": "^0.5.1",
     "pg": "^8.13.0",
     "zod": "^3.24.1",
