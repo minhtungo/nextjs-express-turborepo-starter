@@ -1,12 +1,25 @@
-'use client';
+"use client";
 
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@repo/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@repo/ui/form';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@repo/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@repo/ui/form";
 
-import LoaderButton from '@/components/LoaderButton';
-import PasswordInput from '@/components/PasswordInput';
-import FormResponse from '@/features/auth/components/FormResponse';
-import { useChangeUserPassword } from '@/features/user/hooks/useChangeUserPassword';
+import LoaderButton from "@/components/LoaderButton";
+import PasswordInput from "@/components/PasswordInput";
+import FormResponse from "@/features/auth/components/FormResponse";
+import { useChangeUserPassword } from "@/features/user/hooks/useChangeUserPassword";
 
 const ChangeUserPasswordForm = () => {
   const { form, onSubmit, isPending, error } = useChangeUserPassword();
@@ -63,7 +76,13 @@ const ChangeUserPasswordForm = () => {
               />
             </div>
           </CardContent>
-          {error && <FormResponse variant="destructive" description={error} title="Error" />}
+          {error && (
+            <FormResponse
+              variant="destructive"
+              description={error}
+              title="Error"
+            />
+          )}
           <CardFooter className="justify-end pt-3">
             <LoaderButton type="submit" isPending={isPending}>
               Change Password

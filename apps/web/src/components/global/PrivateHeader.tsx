@@ -1,7 +1,7 @@
-import Container from '@/components/layout/Container';
-import SignOutButton from '@/components/SignOutButton';
-import ThemeToggle from '@/components/ThemeToggle';
-import Link from 'next/link';
+import SignOutButton from "@/components/SignOutButton";
+import ThemeToggle from "@/components/ThemeToggle";
+import Container from "@/components/layout/Container";
+import Link from "next/link";
 
 const PrivateHeader = () => {
   return (

@@ -1,5 +1,5 @@
-import { assertAuthenticated } from '@/lib/auth/auth';
-import { createMiddleware, createSafeActionClient } from 'next-safe-action';
+import { assertAuthenticated } from "@/lib/auth/auth";
+import { createMiddleware, createSafeActionClient } from "next-safe-action";
 
 export const actionClient = createSafeActionClient();
 

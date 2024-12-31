@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useUser } from '@/components/providers/AuthProvider';
-import { changeUserPasswordAction } from '@/features/user/actions/user';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useToast } from '@repo/ui/hooks/use-toast';
-import { changeUserPasswordFormSchema } from '@repo/validation/user';
-import { useAction } from 'next-safe-action/hooks';
-import { useForm } from 'react-hook-form';
-import type { z } from 'zod';
+import { useUser } from "@/components/providers/AuthProvider";
+import { changeUserPasswordAction } from "@/features/user/actions/user";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useToast } from "@repo/ui/hooks/use-toast";
+import { changeUserPasswordFormSchema } from "@repo/validation/user";
+import { useAction } from "next-safe-action/hooks";
+import { useForm } from "react-hook-form";
+import type { z } from "zod";
 
 export const useChangeUserPassword = () => {
   const { user } = useUser();
@@ -23,24 +23,26 @@ export const useChangeUserPassword = () => {
   const form = useForm<z.infer<typeof changeUserPasswordFormSchema>>({
     resolver: zodResolver(changeUserPasswordFormSchema),
     defaultValues: {
-      currentPassword: '',
-      newPassword: '',
-      confirmNewPassword: '',
+      currentPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof changeUserPasswordFormSchema>) => {
+  const onSubmit = async (
+    values: z.infer<typeof changeUserPasswordFormSchema>,
+  ) => {
     execute(values);
     if (hasSucceeded) {
       form.reset();
       toast({
-        title: 'Password changed',
-        description: 'Your password has been successfully changed.',
+        title: "Password changed",
+        description: "Your password has been successfully changed.",
       });
     } else {
       toast({
-        title: 'Failed to change password',
-        description: 'Please check your current password and try again.',
+        title: "Failed to change password",
+        description: "Please check your current password and try again.",
       });
     }
   };

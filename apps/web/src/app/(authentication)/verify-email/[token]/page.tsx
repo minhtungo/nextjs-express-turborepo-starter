@@ -1,9 +1,11 @@
-import { authRoutes } from '@/config';
-import AuthFormWrapper from '@/features/auth/components/AuthFormWrapper';
-import VerifyEmailForm from '@/features/auth/components/VerifyEmailForm';
-import { Suspense } from 'react';
+import { authRoutes } from "@/config";
+import AuthFormWrapper from "@/features/auth/components/AuthFormWrapper";
+import VerifyEmailForm from "@/features/auth/components/VerifyEmailForm";
+import { Suspense } from "react";
 
-export default async function VerifyEmail({ params }: { params: Promise<{ token: string }> }) {
+export default async function VerifyEmail({
+  params,
+}: { params: Promise<{ token: string }> }) {
   return (
     <AuthFormWrapper
       title="Verify Email"

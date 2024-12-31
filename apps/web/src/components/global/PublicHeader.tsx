@@ -1,10 +1,10 @@
-import Container from '@/components/layout/Container';
-import SignOutButton from '@/components/SignOutButton';
-import ThemeToggle from '@/components/ThemeToggle';
-import { authRoutes } from '@/config';
-import { getCurrentUser } from '@/lib/auth';
-import Link from 'next/link';
-import { Suspense } from 'react';
+import SignOutButton from "@/components/SignOutButton";
+import ThemeToggle from "@/components/ThemeToggle";
+import Container from "@/components/layout/Container";
+import { authRoutes } from "@/config";
+import { getCurrentUser } from "@/lib/auth";
+import Link from "next/link";
+import { Suspense } from "react";
 
 const PublicHeader = () => {
   return (
@@ -14,7 +14,7 @@ const PublicHeader = () => {
         <Link href="/dashboard">Dashboard</Link>
         <div className="flex gap-x-2 items-center ml-auto">
           <ThemeToggle />
-          <Suspense fallback={'Loading...'}>
+          <Suspense fallback={"Loading..."}>
             <AuthButtons />
           </Suspense>
         </div>

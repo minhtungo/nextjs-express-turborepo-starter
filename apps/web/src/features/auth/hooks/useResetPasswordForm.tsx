@@ -1,9 +1,9 @@
-import { resetPasswordAction } from '@/features/auth/actions/auth';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { resetPasswordSchema } from '@repo/validation/auth';
-import { useAction } from 'next-safe-action/hooks';
-import { useForm } from 'react-hook-form';
-import type { z } from 'zod';
+import { resetPasswordAction } from "@/features/auth/actions/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { resetPasswordSchema } from "@repo/validation/auth";
+import { useAction } from "next-safe-action/hooks";
+import { useForm } from "react-hook-form";
+import type { z } from "zod";
 
 export const useResetPasswordForm = (token: string) => {
   const {
@@ -16,8 +16,8 @@ export const useResetPasswordForm = (token: string) => {
   const form = useForm<z.infer<typeof resetPasswordSchema>>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      password: '',
-      confirm_password: '',
+      password: "",
+      confirm_password: "",
       token,
     },
   });

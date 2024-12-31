@@ -1,9 +1,9 @@
-import { signUpAction } from '@/features/auth/actions/auth';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { signUpSchema } from '@repo/validation/auth';
-import { useAction } from 'next-safe-action/hooks';
-import { useForm } from 'react-hook-form';
-import type { z } from 'zod';
+import { signUpAction } from "@/features/auth/actions/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signUpSchema } from "@repo/validation/auth";
+import { useAction } from "next-safe-action/hooks";
+import { useForm } from "react-hook-form";
+import type { z } from "zod";
 
 export const useSignUpForm = () => {
   const {
@@ -16,10 +16,10 @@ export const useSignUpForm = () => {
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      email: '',
-      password: '',
-      confirm_password: '',
-      name: '',
+      email: "",
+      password: "",
+      confirm_password: "",
+      name: "",
     },
   });
 

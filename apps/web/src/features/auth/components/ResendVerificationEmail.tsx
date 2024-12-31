@@ -1,14 +1,17 @@
-import LoaderButton from '@/components/LoaderButton';
-import { sendVerificationEmailAction } from '@/features/auth/actions/auth';
-import FormResponse from '@/features/auth/components/FormResponse';
-import { cn } from '@/lib/utils';
-import { useAction } from 'next-safe-action/hooks';
+import LoaderButton from "@/components/LoaderButton";
+import { sendVerificationEmailAction } from "@/features/auth/actions/auth";
+import FormResponse from "@/features/auth/components/FormResponse";
+import { cn } from "@/lib/utils";
+import { useAction } from "next-safe-action/hooks";
 
-interface ResendVerificationEmailProps extends React.ComponentProps<'button'> {
+interface ResendVerificationEmailProps extends React.ComponentProps<"button"> {
   token: string;
 }
 
-const ResendVerificationEmail = ({ className, token }: ResendVerificationEmailProps) => {
+const ResendVerificationEmail = ({
+  className,
+  token,
+}: ResendVerificationEmailProps) => {
   const {
     result: { serverError: error },
     execute,
@@ -22,11 +25,24 @@ const ResendVerificationEmail = ({ className, token }: ResendVerificationEmailPr
 
   return (
     <>
-      {error && <FormResponse variant='destructive' className='mt-4' description={error} title='Error' />}
-      {hasSucceeded && <FormResponse variant='success' title='Success' description='Verification email sent' />}
+      {error && (
+        <FormResponse
+          variant="destructive"
+          className="mt-4"
+          description={error}
+          title="Error"
+        />
+      )}
+      {hasSucceeded && (
+        <FormResponse
+          variant="success"
+          title="Success"
+          description="Verification email sent"
+        />
+      )}
       <LoaderButton
-        type='button'
-        className={cn('w-full', className)}
+        type="button"
+        className={cn("w-full", className)}
         onClick={onResendVerificationEmail}
         isPending={isPending}
       >

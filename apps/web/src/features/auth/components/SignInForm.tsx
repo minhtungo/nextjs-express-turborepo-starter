@@ -3,17 +3,16 @@
 import LoaderButton from '@/components/LoaderButton';
 import PasswordInput from '@/components/PasswordInput';
 import FormResponse from '@/features/auth/components/FormResponse';
+import { useSignInForm } from '@/features/auth/hooks/useSignInForm';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@repo/ui/form';
 import { Input } from '@repo/ui/input';
-
-import { useSignInForm } from '@/features/auth/hooks/useSignInForm';
 
 const SignInForm = () => {
   const { form, onSubmit, isPending, error, urlError, isTwoFactorEnabled } = useSignInForm();
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="mt-4 space-y-4">
         {!isTwoFactorEnabled ? (
           <>
             <FormField

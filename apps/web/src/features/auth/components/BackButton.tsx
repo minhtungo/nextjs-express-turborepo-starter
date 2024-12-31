@@ -1,7 +1,7 @@
-import Link from 'next/link';
-import { cn } from '@/lib/utils';
-import { buttonVariants } from '@repo/ui/button';
-import { VariantProps } from 'class-variance-authority';
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@repo/ui/button";
+import type { VariantProps } from "class-variance-authority";
+import Link from "next/link";
 
 interface BackButtonProps extends VariantProps<typeof buttonVariants> {
   href: string;
@@ -9,9 +9,18 @@ interface BackButtonProps extends VariantProps<typeof buttonVariants> {
   className: string;
 }
 
-const BackButton = ({ variant, size, className, href, label }: BackButtonProps) => {
+const BackButton = ({
+  variant,
+  size,
+  className,
+  href,
+  label,
+}: BackButtonProps) => {
   return (
-    <Link className={cn(buttonVariants({ variant, size, className }), 'w-full')} href={href}>
+    <Link
+      className={cn(buttonVariants({ variant, size, className }), "w-full")}
+      href={href}
+    >
       {label}
     </Link>
   );

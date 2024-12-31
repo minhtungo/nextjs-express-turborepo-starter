@@ -1,7 +1,7 @@
 /** @type {import(' ').KnipConfig} */
 const config = {
   workspaces: {
-    'packages/shared': {
+    "packages/shared": {
       includeEntryExports: true,
     },
   },

@@ -1,27 +1,26 @@
 import cors from "cors";
 import express, { type Express } from "express";
 import helmet from "helmet";
-import { pino } from "pino";
 
 import { openAPIRouter } from "@/api-docs/openAPIRouter";
-import { authRouter } from "@/api/auth/authRouter";
-import "@/api/auth/strategies/google";
-import "@/api/auth/strategies/local";
-import { healthCheckRouter } from "@/api/healthCheck/healthCheckRouter";
-import { userRouter } from "@/api/user/userRouter";
+import { authRouter } from "@/modules/auth/authRouter";
+import "@/common/strategies/google";
+import "@/common/strategies/local";
 import { env } from "@/common/lib/env";
-import errorHandler from "@/middleware/errorHandler";
+import errorHandler from "@/middlewares/errorHandler";
+import { healthCheckRouter } from "@/modules/healthCheck/healthCheckRouter";
+import { userRouter } from "@/modules/user/userRouter";
 
-import notFoundHandler from "@/middleware/notFoundHandler";
-import requestLogger from "@/middleware/requestLogger";
+import notFoundHandler from "@/middlewares/notFoundHandler";
+import requestLogger from "@/middlewares/requestLogger";
 import { pool } from "@repo/database";
 import connectPgSimple from "connect-pg-simple";
 import session from "express-session";
 import passport from "passport";
 
-import assertAuthenticated from "@/middleware/assertAuthenticated";
+import assertAuthenticated from "@/middlewares/assertAuthenticated";
 
-import rateLimiter from "@/middleware/rateLimiter";
+import rateLimiter from "@/middlewares/rateLimiter";
 import { v4 as uuidv4 } from "uuid";
 
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
@@ -29,7 +28,6 @@ import { z } from "zod";
 
 extendZodWithOpenApi(z);
 
-const logger = pino({ name: "server start" });
 const app: Express = express();
 
 // Set the application to trust the reverse proxy
@@ -106,4 +104,4 @@ app.use(notFoundHandler);
 // Error handlers
 app.use(errorHandler());
 
-export { app, logger };
+export { app };

@@ -1,16 +1,16 @@
-import { Alert, AlertDescription, AlertTitle } from '@repo/ui/alert';
-import { cva, VariantProps } from 'class-variance-authority';
-import { Info } from '@repo/ui/icons';
+import { Alert, AlertDescription, AlertTitle } from "@repo/ui/alert";
+import { Info } from "@repo/ui/icons";
+import { type VariantProps, cva } from "class-variance-authority";
 
-const formResponseVariants = cva('', {
+const formResponseVariants = cva("", {
   variants: {
     variant: {
-      success: '',
-      destructive: '',
+      success: "",
+      destructive: "",
     },
   },
   defaultVariants: {
-    variant: 'success',
+    variant: "success",
   },
 });
 
@@ -21,7 +21,13 @@ export interface FormResponseProps
   description: string;
 }
 
-const FormResponse = ({ title, description, className, variant, ...props }: FormResponseProps) => {
+const FormResponse = ({
+  title,
+  description,
+  className,
+  variant,
+  ...props
+}: FormResponseProps) => {
   return (
     <Alert variant={variant} className={className} {...props}>
       <Info className="size-4" />

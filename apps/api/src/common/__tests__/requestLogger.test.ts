@@ -2,15 +2,17 @@ import express from "express";
 import { StatusCodes } from "http-status-codes";
 import request from "supertest";
 
-import errorHandler from "@/middleware/errorHandler";
-import requestLogger from "@/middleware/requestLogger";
+import errorHandler from "@/middlewares/errorHandler";
+import requestLogger from "@/middlewares/requestLogger";
 
 describe("Request Logger Middleware", () => {
   const app = express();
 
   beforeAll(() => {
     app.use(requestLogger);
-    app.get("/success", (req, res) => res.status(StatusCodes.OK).send("Success"));
+    app.get("/success", (req, res) =>
+      res.status(StatusCodes.OK).send("Success"),
+    );
     app.get("/redirect", (req, res) => res.redirect("/success"));
     app.get("/error", () => {
       throw new Error("Test error");
@@ -26,7 +28,9 @@ describe("Request Logger Middleware", () => {
 
     it("checks existing request id", async () => {
       const requestId = "test-request-id";
-      const response = await request(app).get("/success").set("X-Request-Id", requestId);
+      const response = await request(app)
+        .get("/success")
+        .set("X-Request-Id", requestId);
       expect(response.status).toBe(StatusCodes.OK);
     });
   });

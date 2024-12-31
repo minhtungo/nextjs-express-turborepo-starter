@@ -1,5 +1,5 @@
 import { env } from "@/common/lib/env";
-import { logger } from "@/server";
+import { logger } from "@/common/lib/logger";
 import { render } from "@repo/email";
 import { PasswordResetEmail, VerificationEmail } from "@repo/email/templates";
 import nodemailer from "nodemailer";

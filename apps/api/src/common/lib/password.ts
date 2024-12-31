@@ -1,4 +1,4 @@
-import { hash, verify } from 'argon2';
+import { hash, verify } from "argon2";
 
 const hashPassword = async (password: string) => {
   return await hash(password, {
@@ -7,7 +7,10 @@ const hashPassword = async (password: string) => {
   });
 };
 
-const verifyPassword = async (hashedPassword: string, plainTextPassword: string) => {
+const verifyPassword = async (
+  hashedPassword: string,
+  plainTextPassword: string,
+) => {
   return await verify(hashedPassword, plainTextPassword);
 };
 

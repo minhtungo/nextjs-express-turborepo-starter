@@ -1,2 +1,2 @@
-export { default as VerificationEmail } from './VerificationEmail';
-export { default as PasswordResetEmail } from './PasswordResetEmail';
+export { default as VerificationEmail } from "./VerificationEmail";
+export { default as PasswordResetEmail } from "./PasswordResetEmail";

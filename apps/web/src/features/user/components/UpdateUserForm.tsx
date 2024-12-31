@@ -1,13 +1,26 @@
-'use client';
+"use client";
 
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@repo/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@repo/ui/form';
-import { Input } from '@repo/ui/input';
-import { Label } from '@repo/ui/label';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@repo/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@repo/ui/form";
+import { Input } from "@repo/ui/input";
+import { Label } from "@repo/ui/label";
 
-import LoaderButton from '@/components/LoaderButton';
-import FormResponse from '@/features/auth/components/FormResponse';
-import { useUpdateUserForm } from '@/features/user/hooks/useUpdateUserForm';
+import LoaderButton from "@/components/LoaderButton";
+import FormResponse from "@/features/auth/components/FormResponse";
+import { useUpdateUserForm } from "@/features/user/hooks/useUpdateUserForm";
 
 const UpdateUserForm = () => {
   const { form, onSubmit, isPending, error, user } = useUpdateUserForm();
@@ -40,7 +53,13 @@ const UpdateUserForm = () => {
               />
             </div>
           </CardContent>
-          {error && <FormResponse variant="destructive" description={error} title="Error" />}
+          {error && (
+            <FormResponse
+              variant="destructive"
+              description={error}
+              title="Error"
+            />
+          )}
           <CardFooter className="justify-end pt-3">
             <LoaderButton type="submit" isPending={isPending}>
               Save Changes

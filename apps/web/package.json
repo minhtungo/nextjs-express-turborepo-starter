@@ -24,8 +24,9 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@repo/validation": "workspace:*",
+    "@repo/eslint-config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
+    "@repo/validation": "workspace:*",
     "@types/node": "22.10.2",
     "@types/react": "19.0.2",
     "@types/react-dom": "19.0.2",

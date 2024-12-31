@@ -1,8 +1,8 @@
-import PrivateHeader from '@/components/global/PrivateHeader';
-import Container from '@/components/layout/Container';
-import { AuthProvider } from '@/components/providers/AuthProvider';
-import { getCurrentUser } from '@/lib/auth';
-import { Toaster } from '@repo/ui/toaster';
+import PrivateHeader from "@/components/global/PrivateHeader";
+import Container from "@/components/layout/Container";
+import { AuthProvider } from "@/components/providers/AuthProvider";
+import { getCurrentUser } from "@/lib/auth";
+import { Toaster } from "@repo/ui/toaster";
 
 export default function PrivateLayout({
   children,

@@ -10,7 +10,12 @@
     "build": "tsup",
     "start": "node dist/index.js",
     "clean": "rimraf dist coverage",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:dev": "vitest dev",
+    "test:cov": "vitest run --coverage",
+    "lint": "eslint src/",
+    "lint:fix": "eslint --fix",
+    "format": "prettier --config .prettierrc --write ."
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.0.0",
@@ -40,6 +45,7 @@
   "devDependencies": {
     "@repo/validation": "workspace:*",
     "@repo/tsconfig": "workspace:*",
+    "@repo/eslint-config": "workspace:*",
     "@types/connect-pg-simple": "^7.0.3",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",

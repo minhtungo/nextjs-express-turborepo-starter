@@ -1,5 +1,5 @@
-import ChangeUserPasswordForm from '@/features/user/components/ChangePasswordForm';
-import UpdateUserForm from '@/features/user/components/UpdateUserForm';
+import ChangeUserPasswordForm from "@/features/user/components/ChangePasswordForm";
+import UpdateUserForm from "@/features/user/components/UpdateUserForm";
 
 const SettingsPage = async () => {
   return (

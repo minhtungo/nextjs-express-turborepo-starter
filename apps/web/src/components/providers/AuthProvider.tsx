@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import type { SessionUser } from '@repo/validation/user';
-import { createContext, use, useContext, useEffect, useState } from 'react';
+import type { SessionUser } from "@repo/validation/user";
+import { createContext, use, useContext, useEffect, useState } from "react";
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -19,7 +19,7 @@ export const useUser = () => {
   const context = useContext(AuthContext);
 
   if (context === null) {
-    throw new Error('useAuth must be used within a UserProvider');
+    throw new Error("useAuth must be used within a UserProvider");
   }
 
   return context;
