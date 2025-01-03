@@ -6,6 +6,7 @@
   },
   "exports": {
     ".": "./src/index.ts",
+    "./utils": "./src/utils.ts",
     "./schema/users": "./src/schema/users/index.ts",
     "./schema/accounts": "./src/schema/accounts/index.ts",
     "./schema/userSettings": "./src/schema/userSettings/index.ts",

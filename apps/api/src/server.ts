@@ -13,7 +13,7 @@ import { userRouter } from '@/modules/user/userRouter';
 
 import notFoundHandler from '@/middlewares/notFoundHandler';
 import requestLogger from '@/middlewares/requestLogger';
-import { pool } from '@repo/database';
+import { pool } from '@repo/database/src/db';
 import connectPgSimple from 'connect-pg-simple';
 import session from 'express-session';
 import passport from 'passport';
