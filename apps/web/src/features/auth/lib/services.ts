@@ -1,64 +1,57 @@
-import { apiRoutes } from "@/config";
-import type {
+import { apiRoutes } from '@/config';
+
+import { apiClient } from '@/lib/api-client';
+import type { ApiResponse } from '@repo/validation/api';
+import {
+  forgotPasswordProps,
   resetPasswordProps,
   sendVerificationEmailProps,
   signInProps,
   signUpProps,
-} from "@/features/auth/lib/schemas";
-import { api } from "@/lib/api";
-import type { ApiResponse } from "@repo/validation/api";
+} from '@repo/validation/auth';
 
 export const signUpService = async (values: signUpProps) => {
-  const response = await api.post(apiRoutes.auth.signUp, {
+  console.log('signUpService', values);
+  const response = await apiClient.post(apiRoutes.auth.signUp, {
     body: values,
   });
 
   return response;
 };
 
-export const signInService = async (
-  values: signInProps,
-): Promise<ApiResponse> => {
-  const response = await api.post(apiRoutes.auth.signIn, {
+export const signInService = async (values: signInProps): Promise<ApiResponse> => {
+  const response = await apiClient.post(apiRoutes.auth.signIn, {
     body: values,
   });
 
   return response;
 };
 
-export const forgotPasswordService = async (
-  email: string,
-): Promise<ApiResponse> => {
-  const response = await api.post(apiRoutes.auth.forgotPassword, {
-    body: { email },
+export const forgotPasswordService = async (values: forgotPasswordProps): Promise<ApiResponse> => {
+  const response = await apiClient.post(apiRoutes.auth.forgotPassword, {
+    body: values,
   });
   return response;
 };
 
-export const verifyEmailService = async (
-  token: string,
-): Promise<ApiResponse> => {
-  const response = await api.post(apiRoutes.auth.verifyEmail, {
+export const verifyEmailService = async (token: string): Promise<ApiResponse> => {
+  const response = await apiClient.post(apiRoutes.auth.verifyEmail, {
     body: { token },
   });
 
   return response;
 };
 
-export const resetPasswordService = async (
-  values: resetPasswordProps,
-): Promise<ApiResponse> => {
-  const response = await api.post(apiRoutes.auth.resetPassword, {
+export const resetPasswordService = async (values: resetPasswordProps): Promise<ApiResponse> => {
+  const response = await apiClient.post(apiRoutes.auth.resetPassword, {
     body: values,
   });
 
   return response;
 };
 
-export const sendVerificationEmailService = async ({
-  token,
-}: sendVerificationEmailProps): Promise<ApiResponse> => {
-  const response = await api.post(apiRoutes.auth.signIn, {
+export const sendVerificationEmailService = async ({ token }: sendVerificationEmailProps): Promise<ApiResponse> => {
+  const response = await apiClient.post(apiRoutes.auth.signIn, {
     body: { token },
   });
 
@@ -66,6 +59,6 @@ export const sendVerificationEmailService = async ({
 };
 
 export const signOutService = async (): Promise<ApiResponse> => {
-  const response = await api.post<string>(apiRoutes.auth.signOut);
+  const response = await apiClient.post(apiRoutes.auth.signOut);
   return response;
 };

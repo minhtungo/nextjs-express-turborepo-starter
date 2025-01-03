@@ -1,13 +1,14 @@
-import { env } from "@/common/lib/env";
+import { env } from '@/common/lib/env';
 
 export const config = {
   sessionCookie: {
     name: env.SESSION_COOKIE_NAME,
-    maxAge: env.SESSION_COOKIE_MAX_AGE,
+    secret: env.SESSION_SECRET,
+    maxAge: 60 * 1000 * 60,
     httpOnly: true,
     secure: true,
-    sameSite: "lax",
-    renewThreshold: 1000 * 60 * 60 * 24 * 3,
+    sameSite: 'lax',
+    renewThreshold: 60 * 30 * 1000,
   },
   resetPasswordToken: {
     length: 32,

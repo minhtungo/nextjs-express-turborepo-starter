@@ -1,26 +1,18 @@
-"use client";
+'use client';
 
-import LoaderButton from "@/components/LoaderButton";
-import FormResponse from "@/features/auth/components/FormResponse";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@repo/ui/form";
+import LoaderButton from '@/components/LoaderButton';
+import FormResponse from '@/features/auth/components/FormResponse';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@repo/ui/form';
 
-import PasswordInput from "@/components/PasswordInput";
-import { useResetPasswordForm } from "@/features/auth/hooks/useResetPasswordForm";
+import PasswordInput from '@/components/PasswordInput';
+import { useResetPasswordForm } from '@/features/auth/hooks/useResetPasswordForm';
 
 interface ResetPasswordFormProps {
   token: string;
 }
 
 const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
-  const { form, onSubmit, isPending, error, success } =
-    useResetPasswordForm(token);
-
+  const { form, onSubmit, isPending, error, success } = useResetPasswordForm(token);
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -48,20 +40,8 @@ const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
             </FormItem>
           )}
         />
-        {error && (
-          <FormResponse
-            variant="destructive"
-            description={error}
-            title="Error"
-          />
-        )}
-        {success && (
-          <FormResponse
-            description={success}
-            title="Success"
-            variant="success"
-          />
-        )}
+        {error && <FormResponse variant="destructive" description={error} title="Error" />}
+        {success && <FormResponse description={success} title="Success" variant="success" />}
         <LoaderButton className="w-full" isPending={isPending}>
           Reset Password
         </LoaderButton>

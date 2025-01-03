@@ -1,12 +1,10 @@
-import Spinner from "@/components/Spinner";
-import { authRoutes } from "@/config";
-import AuthFormWrapper from "@/features/auth/components/AuthFormWrapper";
-import ResetPassword from "@/features/auth/components/ResetPassword";
-import { Suspense } from "react";
+import Spinner from '@/components/Spinner';
+import { authRoutes } from '@/config';
+import AuthFormWrapper from '@/features/auth/components/AuthFormWrapper';
+import ResetPassword from '@/features/auth/components/ResetPassword';
+import { Suspense } from 'react';
 
-export default async function ResetPasswordPage({
-  params,
-}: { params: Promise<{ token: string }> }) {
+export default async function ResetPasswordPage({ params }: { params: Promise<{ token: string }> }) {
   return (
     <AuthFormWrapper
       title="Reset Password"

@@ -1,19 +1,24 @@
-"use client";
+'use client';
 
-import LoaderButton from "@/components/LoaderButton";
-import { signOutAction } from "@/features/auth/actions/auth";
-import { useAction } from "next-safe-action/hooks";
+import LoaderButton from '@/components/LoaderButton';
+import { useSignOutMutation } from '@/features/auth/api/mutations';
+import { useRouter } from 'next/navigation';
 
 const SignOutButton = () => {
-  const { execute: signOut, isPending } = useAction(signOutAction);
+  const router = useRouter();
+  const { mutate: signOut, isPending } = useSignOutMutation();
+
+  const handleSignOut = () => {
+    signOut(undefined, {
+      onSuccess: () => {
+        router.push('/sign-in');
+        router.refresh();
+      },
+    });
+  };
 
   return (
-    <LoaderButton
-      type="button"
-      isPending={isPending}
-      onClick={() => signOut()}
-      size="sm"
-    >
+    <LoaderButton type="button" isPending={isPending} onClick={handleSignOut} size="sm">
       Sign out
     </LoaderButton>
   );

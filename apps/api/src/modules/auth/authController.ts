@@ -1,12 +1,13 @@
-import type { RequestHandler } from "express";
+import type { RequestHandler } from 'express';
 
-import { handleServiceResponse } from "@/common/lib/httpHandlers";
-import { authService } from "@/modules/auth/authService";
+import { handleServiceResponse } from '@/common/lib/httpHandlers';
+import { authService } from '@/modules/auth/authService';
 
-import { env } from "@/common/lib/env";
-import { ServiceResponse } from "@/common/models/serviceResponse";
-import type { signUpProps } from "@repo/validation/auth";
-import { StatusCodes } from "http-status-codes";
+import { env } from '@/common/lib/env';
+import { logger } from '@/common/lib/logger';
+import { ServiceResponse } from '@/common/models/serviceResponse';
+import type { signUpProps } from '@repo/validation/auth';
+import { StatusCodes } from 'http-status-codes';
 
 const signUp: RequestHandler = async (req, res) => {
   const { name, email, password } = req.body;
@@ -22,25 +23,14 @@ const signUp: RequestHandler = async (req, res) => {
 
 const signIn: RequestHandler = async (req, res) => {
   if (!req.user) {
-    return handleServiceResponse(
-      ServiceResponse.failure(
-        "Authentication failed",
-        null,
-        StatusCodes.UNAUTHORIZED,
-      ),
-      res,
-    );
+    return handleServiceResponse(ServiceResponse.failure('Authentication failed', null, StatusCodes.UNAUTHORIZED), res);
   }
 
   req.login(req.user, async (err) => {
     if (err) {
       return handleServiceResponse(
-        ServiceResponse.failure(
-          "Authentication failed",
-          null,
-          StatusCodes.UNAUTHORIZED,
-        ),
-        res,
+        ServiceResponse.failure('Authentication failed', null, StatusCodes.UNAUTHORIZED),
+        res
       );
     }
 
@@ -60,6 +50,8 @@ const forgotPassword: RequestHandler = async (req, res) => {
 
 const resetPassword: RequestHandler = async (req, res) => {
   const { password, token } = req.body;
+
+  console.log('resetPassword', req.body);
 
   const serviceResponse = await authService.resetPassword(token, password);
 
@@ -86,9 +78,7 @@ const handleGoogleCallback: RequestHandler = async (req, res) => {
   const user = req.user;
 
   if (!user) {
-    return res.redirect(
-      `${env.APP_ORIGIN}/sign-in?error=${encodeURIComponent("Authentication failed")}`,
-    );
+    return res.redirect(`${env.APP_ORIGIN}/sign-in?error=${encodeURIComponent('Authentication failed')}`);
   }
 
   return res.redirect(`${env.APP_ORIGIN}/dashboard`);
@@ -108,13 +98,15 @@ const signOut: RequestHandler = async (req, res, next) => {
   //   });
   // });
 
-  req.logOut(async (err) => {
+  req.session.destroy(async (err) => {
     if (err) {
-      return next(err);
+      logger.error('Failed to destroy session:', err);
+      return res.status(500).send('Error logging out');
     }
 
+    // Clear the session cookie
+    res.clearCookie(env.SESSION_COOKIE_NAME); // 'connect.sid' is the default session cookie name
     const serviceResponse = await authService.signOut();
-
     return handleServiceResponse(serviceResponse, res);
   });
 };
