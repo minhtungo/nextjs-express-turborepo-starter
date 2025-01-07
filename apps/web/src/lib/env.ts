@@ -7,7 +7,6 @@ export const env = createEnv({
     EXTERNAL_SERVER_URL: z.string().min(1),
 
     SESSION_COOKIE_NAME: z.string().min(1),
-    SESSION_COOKIE_MAX_AGE: z.coerce.number().min(1),
   },
   client: {
     NEXT_PUBLIC_BASE_URL: z.string().url(),
