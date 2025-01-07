@@ -1,14 +1,14 @@
-import { logger } from "@/common/lib/logger";
-import { authService } from "@/modules/auth/authService";
-import { userRepository } from "@/modules/user/userRepository";
-import type { SessionUser } from "@repo/validation/user";
-import passport from "passport";
-import { type IStrategyOptionsWithRequest, Strategy } from "passport-local";
+import { logger } from '@/common/lib/logger';
+import { authService } from '@/modules/auth/authService';
+import { userRepository } from '@/modules/user/userRepository';
+import type { SessionUser } from '@repo/validation/user';
+import passport from 'passport';
+import { type IStrategyOptionsWithRequest, Strategy } from 'passport-local';
 
 const opts: IStrategyOptionsWithRequest = {
   session: true,
-  usernameField: "email",
-  passwordField: "password",
+  usernameField: 'email',
+  passwordField: 'password',
   passReqToCallback: true,
 };
 
@@ -16,24 +16,25 @@ passport.use(
   new Strategy(opts, async (req, email, password, done) => {
     try {
       const { code } = req.body;
-      const user = await authService.validateCredentials(email, password, code);
 
-      if (!user) {
+      const result = await authService.authenticateUser(email, password, code);
+
+      if (!result.success) {
         return done(null, false, {
-          message: "Invalid credentials",
+          message: 'Invalid credentials',
         });
       }
 
-      return done(null, user);
+      return done(null, result.data);
     } catch (error) {
-      logger.error("Local strategy error:", error);
+      logger.error('Local strategy error:', error);
       return done(error);
     }
-  }),
+  })
 );
 
 passport.serializeUser((user, done) => {
-  console.log("serializeUser", user);
+  console.log('serializeUser', user);
   done(null, user.id);
 });
 

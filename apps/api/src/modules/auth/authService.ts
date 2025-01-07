@@ -13,15 +13,8 @@ import { createTransaction } from '@repo/database';
 import type { signUpProps } from '@repo/validation/auth';
 import type { SessionUser } from '@repo/validation/user';
 
-const signIn = async () => {
-  const serviceResponse = ServiceResponse.success('Sign in successfully', null, StatusCodes.OK);
-
-  return serviceResponse;
-};
-
 const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceResponse<{ id: string } | null>> => {
   try {
-    console.log('signUp', email, name, password);
     const existingUser = await userRepository.getUserByEmail(email);
 
     if (existingUser) {
@@ -84,18 +77,18 @@ const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceRe
   }
 };
 
-const validateCredentials = async (email: string, password: string, code?: string): Promise<SessionUser | null> => {
+const authenticateUser = async (email: string, password: string, code?: string): Promise<SessionUser | null> => {
   try {
     const user = await userRepository.getUserByEmail(email);
 
     if (!user?.id || !user.password || !user.emailVerified) {
-      return null;
+      return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
     }
 
     const isValidPassword = await verifyPassword(user.password, password);
 
     if (!isValidPassword) {
-      return null;
+      return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
     }
 
     const userSettings = await userRepository.getUserSettingsByUserId(user.id);
@@ -103,19 +96,23 @@ const validateCredentials = async (email: string, password: string, code?: strin
     if (userSettings?.isTwoFactorEnabled) {
       const isValidTwoFactor = await validateTwoFactorAuth(user.id, email, code);
       if (!isValidTwoFactor) {
-        return null;
+        return ServiceResponse.failure('Invalid credentials', null, StatusCodes.UNAUTHORIZED);
       }
     }
 
-    return {
-      id: user.id,
-      email: user.email,
-      image: user.image,
-      name: user.name,
-    };
-  } catch (error) {
-    logger.error('Error validating credentials:', error);
-    return null;
+    return ServiceResponse.success(
+      'Sign in successfully',
+      {
+        id: user.id,
+        email: user.email,
+        image: user.image,
+        name: user.name,
+      },
+      StatusCodes.OK
+    );
+  } catch (ex) {
+    console.error('Error validating credentials:', ex);
+    return handleServiceError(ex as Error, 'Authenticating User');
   }
 };
 
@@ -280,14 +277,47 @@ const getSession = async (user: Express.User | undefined): Promise<ServiceRespon
   );
 };
 
+const createSession = async (user: SessionUser, req: Express.Request): Promise<ServiceResponse<null>> => {
+  try {
+    await new Promise<void>((resolve, reject) => {
+      req.login(user, (err) => {
+        if (err) reject(err);
+        resolve();
+      });
+    });
+
+    return ServiceResponse.success('Session created successfully', null);
+  } catch (error) {
+    logger.error('Error creating session:', error);
+    return ServiceResponse.failure('Failed to create session', null, StatusCodes.INTERNAL_SERVER_ERROR);
+  }
+};
+
+const destroySession = async (req: Express.Request): Promise<ServiceResponse<null>> => {
+  try {
+    await new Promise<void>((resolve) => {
+      req.session.destroy((err) => {
+        if (err) logger.error('Session destruction error:', err);
+        resolve();
+      });
+    });
+
+    return ServiceResponse.success('Session destroyed successfully', null);
+  } catch (error) {
+    logger.error('Error destroying session:', error);
+    return ServiceResponse.failure('Failed to destroy session', null, StatusCodes.INTERNAL_SERVER_ERROR);
+  }
+};
+
 export const authService = {
   signUp,
   getSession,
-  validateCredentials,
+  authenticateUser,
   forgotPassword,
   resetPassword,
   verifyEmail,
   signOut,
   sendVerificationEmail,
-  signIn,
+  createSession,
+  destroySession,
 };

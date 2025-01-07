@@ -2,12 +2,12 @@
   "extends": "@repo/tsconfig/base.json",
   "compilerOptions": {
     "target": "ESNext",
-    "module": "CommonJS",
+    "module": "ESNext",
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     },
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "outDir": "dist",
     "importsNotUsedAsValues": "remove",
     "strict": true,

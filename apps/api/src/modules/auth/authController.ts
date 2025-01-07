@@ -4,7 +4,6 @@ import { handleServiceResponse } from '@/common/lib/httpHandlers';
 import { authService } from '@/modules/auth/authService';
 
 import { env } from '@/common/lib/env';
-import { logger } from '@/common/lib/logger';
 import { ServiceResponse } from '@/common/models/serviceResponse';
 import type { signUpProps } from '@repo/validation/auth';
 import { StatusCodes } from 'http-status-codes';
@@ -26,18 +25,12 @@ const signIn: RequestHandler = async (req, res) => {
     return handleServiceResponse(ServiceResponse.failure('Authentication failed', null, StatusCodes.UNAUTHORIZED), res);
   }
 
-  req.login(req.user, async (err) => {
-    if (err) {
-      return handleServiceResponse(
-        ServiceResponse.failure('Authentication failed', null, StatusCodes.UNAUTHORIZED),
-        res
-      );
-    }
+  const sessionResult = await authService.createSession(req.user, req);
+  if (!sessionResult.success) {
+    return handleServiceResponse(sessionResult, res);
+  }
 
-    const serviceResponse = await authService.signIn();
-
-    return handleServiceResponse(serviceResponse, res);
-  });
+  return handleServiceResponse(ServiceResponse.success('Successfully signed in', null), res);
 };
 
 const forgotPassword: RequestHandler = async (req, res) => {
@@ -89,26 +82,12 @@ const handleGoogleCallback: RequestHandler = async (req, res) => {
   // );
 };
 
-const signOut: RequestHandler = async (req, res, next) => {
-  // await new Promise((resolve) => {
-  //   req.session.destroy((err) => {
-  //     if (err) console.error('Session destruction error:', err);
-  //     res.clearCookie(session.name);
-  //     resolve(true);
-  //   });
-  // });
-
-  req.session.destroy(async (err) => {
-    if (err) {
-      logger.error('Failed to destroy session:', err);
-      return res.status(500).send('Error logging out');
-    }
-
-    // Clear the session cookie
-    res.clearCookie(env.SESSION_COOKIE_NAME); // 'connect.sid' is the default session cookie name
-    const serviceResponse = await authService.signOut();
-    return handleServiceResponse(serviceResponse, res);
-  });
+const signOut: RequestHandler = async (req, res) => {
+  const result = await authService.destroySession(req);
+  if (result.success) {
+    res.clearCookie(env.SESSION_COOKIE_NAME);
+  }
+  return handleServiceResponse(result, res);
 };
 
 const getSession: RequestHandler = async (req, res) => {

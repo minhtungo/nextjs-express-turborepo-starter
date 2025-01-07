@@ -58,6 +58,14 @@ export const apiClient = {
 
     return handleResponse<T>(response);
   },
+  patch: async <T>(endpoint: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
+    const response = await fetcher(`${API_BASE_URL}${endpoint}`, {
+      ...options,
+      method: 'PATCH',
+    });
+
+    return handleResponse<T>(response);
+  },
   delete: async <T>(endpoint: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
     const response = await fetcher(`${API_BASE_URL}${endpoint}`, {
       ...options,
