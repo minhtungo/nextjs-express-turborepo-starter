@@ -1,7 +1,7 @@
 import { config } from '@/common/lib/config';
 import { generateToken } from '@/common/lib/token';
 import { db } from '@repo/database';
-import { type InsertAccount, accounts } from '@repo/database/schema/accounts';
+import { accounts, InsertAccount } from '@repo/database/schema/accounts';
 import { resetPasswordTokens } from '@repo/database/schema/resetPasswordTokens';
 import { twoFactorConfirmations } from '@repo/database/schema/twoFactorConfirmations';
 import { twoFactorTokens } from '@repo/database/schema/twoFactorTokens';

@@ -9,7 +9,7 @@ import { logger } from '@/common/lib/logger';
 import { verifyPassword } from '@/common/lib/password';
 import { handleServiceError } from '@/common/lib/utils';
 import { userRepository } from '@/modules/user/userRepository';
-import { createTransaction } from '@repo/database';
+import { createTransaction } from '@repo/database/utils';
 import type { signUpProps } from '@repo/validation/auth';
 import type { SessionUser } from '@repo/validation/user';
 
@@ -77,7 +77,7 @@ const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceRe
   }
 };
 
-const authenticateUser = async (email: string, password: string, code?: string): Promise<SessionUser | null> => {
+const authenticateUser = async (email: string, password: string, code?: string): Promise<ServiceResponse<{ id: string } | null>> => {
   try {
     const user = await userRepository.getUserByEmail(email);
 
@@ -142,10 +142,7 @@ const validateTwoFactorAuth = async (userId: string, email: string, code?: strin
 
 const forgotPassword = async (email: string): Promise<ServiceResponse<null>> => {
   try {
-    const user = await userRepository.getUserByEmail(email, {
-      id: true,
-      emailVerified: true,
-    });
+    const user = await userRepository.getUserByEmail(email);
 
     if (!user || !user.emailVerified || !user.id) {
       return ServiceResponse.success(
@@ -208,6 +205,7 @@ const verifyEmail = async (token: string): Promise<ServiceResponse<null>> => {
         { emailVerified: new Date(), plan: 'free' },
         trx
       );
+
       await authRepository.deleteVerificationToken(token, trx);
     });
 

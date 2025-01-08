@@ -1,11 +1,10 @@
 {
-  "extends": "@repo/tsconfig/base.json",
-  "exclude": ["node_modules"],
+  "extends": "@repo/tsconfig/react-library.json",
   "compilerOptions": {
-    "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     }
-  }
+  },
+  "exclude": ["node_modules"]
 }

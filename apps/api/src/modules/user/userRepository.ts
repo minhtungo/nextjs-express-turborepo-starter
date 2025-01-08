@@ -1,7 +1,7 @@
 import { hashPassword } from '@/common/lib/password';
 import { db } from '@repo/database';
-import { type InsertUser, type SelectUser, users } from '@repo/database/schema/users';
-import { type InsertUserSettings, userSettings } from '@repo/database/schema/userSettings';
+import { type InsertUser, type User, users } from '@repo/database/schema/users';
+import { type InsertUserSetting, userSettings } from '@repo/database/schema/userSettings';
 
 import { eq } from 'drizzle-orm';
 
@@ -17,6 +17,10 @@ const createUser = async (data: InsertUser, trx: typeof db = db) => {
       id: users.id,
     });
 
+  if (!user) {
+    throw new Error('User not created');
+  }
+
   // Create default user settings
   await trx.insert(userSettings).values({
     userId: user.id,
@@ -26,23 +30,20 @@ const createUser = async (data: InsertUser, trx: typeof db = db) => {
   return user;
 };
 
-const createUserSettings = async (data: InsertUserSettings, trx: typeof db = db) => {
+const createUserSettings = async (data: InsertUserSetting, trx: typeof db = db) => {
   await trx.insert(userSettings).values(data);
 };
 
 const getUserByEmail = async (email: string) => {
   const user = await db.query.users.findFirst({
     where: eq(users.email, email),
-    with: {
-      userSettings: true,
-    },
   });
 
   return user;
 };
 
 type UserColumns = {
-  [key in keyof SelectUser]?: boolean;
+  [key in keyof User]?: boolean;
 };
 
 const getUserById = async <T>(id: string, columns?: UserColumns) => {
@@ -68,7 +69,7 @@ const updateUser = async (userId: string, data: Partial<InsertUser>, trx: typeof
   return user[0];
 };
 
-const updateUserSettings = async ({ userId, data }: { userId: string; data: Partial<InsertUserSettings> }) => {
+const updateUserSettings = async ({ userId, data }: { userId: string; data: Partial<InsertUserSetting> }) => {
   await db.update(userSettings).set(data).where(eq(userSettings.userId, userId));
 };
 

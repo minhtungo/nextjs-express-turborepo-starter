@@ -1,20 +1,12 @@
 {
-  "extends": "@repo/tsconfig/base.json",
+  "extends": "@repo/tsconfig/express.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
+    "outDir": "dist",
+    "types": ["vitest/globals"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    },
-    "moduleResolution": "bundler",
-    "outDir": "dist",
-    "importsNotUsedAsValues": "remove",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "types": ["vitest/globals"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]

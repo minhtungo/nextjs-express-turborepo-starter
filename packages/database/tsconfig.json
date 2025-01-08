@@ -9,3 +9,19 @@
     }
   }
 }
+
+// {
+//   "extends": "@repo/tsconfig/base.json",
+//   "compilerOptions": {
+//     "moduleResolution": "NodeNext",
+//     "module": "NodeNext",
+//     "baseUrl": ".",
+//     "paths": {
+//       "@/*": ["./src/*"]
+//     },
+//     "emitDecoratorMetadata": true,
+//     "experimentalDecorators": true
+//   },
+//   "include": ["**/*.ts", "**/*.tsx"],
+//   "exclude": ["dist", "build", "node_modules"]
+// }
