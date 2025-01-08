@@ -18,7 +18,6 @@ export const useSignUpForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof signUpSchema>) => {
-    console.log(values);
     signUp(values, {
       onSuccess: () => {
         form.reset();

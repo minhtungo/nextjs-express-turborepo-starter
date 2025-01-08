@@ -1,7 +1,7 @@
 import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { users } from '../users/users';
 
-export const verificationTokens = pgTable('verificationToken', {
+export const verificationTokens = pgTable('verificationTokens', {
   id: text()
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),

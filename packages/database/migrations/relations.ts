@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm/relations";
+import { relations } from 'drizzle-orm/relations';
 import {
   account,
   refreshToken,
@@ -7,7 +7,7 @@ import {
   user,
   userSetting,
   verificationToken,
-} from "./schema";
+} from './schema';
 
 export const userSettingRelations = relations(userSetting, ({ one }) => ({
   user: one(user, {
@@ -25,25 +25,19 @@ export const userRelations = relations(user, ({ many }) => ({
   resetPasswordTokens: many(resetPasswordToken),
 }));
 
-export const twoFactorConfirmationRelations = relations(
-  twoFactorConfirmation,
-  ({ one }) => ({
-    user: one(user, {
-      fields: [twoFactorConfirmation.userId],
-      references: [user.id],
-    }),
+export const twoFactorConfirmationRelations = relations(twoFactorConfirmation, ({ one }) => ({
+  user: one(user, {
+    fields: [twoFactorConfirmation.userId],
+    references: [user.id],
   }),
-);
+}));
 
-export const verificationTokenRelations = relations(
-  verificationToken,
-  ({ one }) => ({
-    user: one(user, {
-      fields: [verificationToken.userId],
-      references: [user.id],
-    }),
+export const verificationTokenRelations = relations(verificationToken, ({ one }) => ({
+  user: one(user, {
+    fields: [verificationToken.userId],
+    references: [user.id],
   }),
-);
+}));
 
 export const refreshTokenRelations = relations(refreshToken, ({ one }) => ({
   user: one(user, {
@@ -59,12 +53,9 @@ export const accountRelations = relations(account, ({ one }) => ({
   }),
 }));
 
-export const resetPasswordTokenRelations = relations(
-  resetPasswordToken,
-  ({ one }) => ({
-    user: one(user, {
-      fields: [resetPasswordToken.userId],
-      references: [user.id],
-    }),
+export const resetPasswordTokenRelations = relations(resetPasswordToken, ({ one }) => ({
+  user: one(user, {
+    fields: [resetPasswordToken.userId],
+    references: [user.id],
   }),
-);
+}));

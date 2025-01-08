@@ -11,8 +11,7 @@ const SignOutButton = () => {
   const handleSignOut = () => {
     signOut(undefined, {
       onSuccess: () => {
-        router.push('/sign-in');
-        router.refresh();
+        router.push('/');
       },
     });
   };

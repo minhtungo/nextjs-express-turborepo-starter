@@ -1,23 +1,18 @@
-import type { Request, RequestHandler, Response } from "express";
-import { StatusCodes } from "http-status-codes";
+import type { Request, RequestHandler, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
-import { handleServiceResponse } from "@/common/lib/httpHandlers";
-import { ServiceResponse } from "@/common/models/serviceResponse";
-import {
-  changeUserPasswordSchema,
-  updateUserSchema,
-} from "@repo/validation/user";
+import { handleServiceResponse } from '@/common/lib/httpHandlers';
+import { ServiceResponse } from '@/common/models/serviceResponse';
+import { changeUserPasswordSchema, updateUserSchema } from '@repo/validation/user';
 
-import { userService } from "@/modules/user/userService";
+import { userService } from '@/modules/user/userService';
 
-const getUser: RequestHandler = async (_req: Request, res: Response) => {
-  const serviceResponse = ServiceResponse.success(
-    "Hello",
-    null,
-    StatusCodes.OK,
-  );
+const getCurrentUser: RequestHandler = async (req, res) => {
+  if (!req.user) {
+    return handleServiceResponse(ServiceResponse.failure('Unauthorized', null, StatusCodes.UNAUTHORIZED), res);
+  }
 
-  return handleServiceResponse(serviceResponse, res);
+  return handleServiceResponse(ServiceResponse.success('User retrieved successfully', req.user), res);
 };
 
 const updateUser: RequestHandler = async (req: Request, res: Response) => {
@@ -25,14 +20,7 @@ const updateUser: RequestHandler = async (req: Request, res: Response) => {
   const data = updateUserSchema.parse(req.body);
 
   if (!user) {
-    return handleServiceResponse(
-      ServiceResponse.failure(
-        "Authentication failed",
-        null,
-        StatusCodes.UNAUTHORIZED,
-      ),
-      res,
-    );
+    return handleServiceResponse(ServiceResponse.failure('Authentication failed', null, StatusCodes.UNAUTHORIZED), res);
   }
 
   const serviceResponse = await userService.updateUser(user.id, data);
@@ -40,18 +28,11 @@ const updateUser: RequestHandler = async (req: Request, res: Response) => {
   return handleServiceResponse(serviceResponse, res);
 };
 
-const changePassword = async (req: Request, res: Response) => {
+const changePassword: RequestHandler = async (req: Request, res: Response) => {
   const user = req.user;
-  console.log("changePassword", user);
+  console.log('changePassword', user);
   if (!user) {
-    return handleServiceResponse(
-      ServiceResponse.failure(
-        "Authentication failed",
-        null,
-        StatusCodes.UNAUTHORIZED,
-      ),
-      res,
-    );
+    return handleServiceResponse(ServiceResponse.failure('Authentication failed', null, StatusCodes.UNAUTHORIZED), res);
   }
 
   const data = changeUserPasswordSchema.parse(req.body);
@@ -62,7 +43,7 @@ const changePassword = async (req: Request, res: Response) => {
 };
 
 export const userController: Record<string, RequestHandler> = {
-  getUser,
+  getCurrentUser,
   updateUser,
   changePassword,
 };

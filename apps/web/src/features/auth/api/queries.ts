@@ -1,19 +1,14 @@
-import { apiRoutes } from '@/config';
-import { apiClient } from '@/lib/api-client';
-import type { Session } from '@repo/validation/user';
+import { getCurrentUserService } from '@/features/auth/lib/services';
 import { useQuery } from '@tanstack/react-query';
 
 export const authKeys = {
-  session: ['session'],
+  getCurrentUser: ['currentUser'],
 } as const;
 
-export const useSession = () => {
+export const useCurrentUser = () => {
   return useQuery({
-    queryKey: authKeys.session,
-    queryFn: async () => {
-      const response = await apiClient.get<Session>(apiRoutes.auth.session);
-      if (!response.success) return null;
-      return response.data;
-    },
+    queryKey: authKeys.getCurrentUser,
+    queryFn: getCurrentUserService,
+    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
   });
 };

@@ -1,4 +1,4 @@
-import { authRoutes } from '@/config';
+import { authRoutes } from '@/lib/config';
 import AuthFormWrapper from '@/features/auth/components/AuthFormWrapper';
 import GoogleSignInButton from '@/features/auth/components/GoogleSignInButton';
 import SignInForm from '@/features/auth/components/SignInForm';

@@ -73,16 +73,6 @@ authRegistry.registerPath({
 authRouter.post('/sign-up', validateRequest(z.object({ body: signUpSchema })), authController.signUp);
 
 authRegistry.registerPath({
-  method: 'get',
-  tags: ['Auth'],
-  path: '/auth/session',
-  request: {},
-  responses: createApiResponse(z.undefined(), 'Returns the current session'),
-});
-
-authRouter.get('/session', authController.getSession);
-
-authRegistry.registerPath({
   method: 'post',
   tags: ['Auth'],
   path: '/auth/reset-password',

@@ -26,6 +26,7 @@ const signIn: RequestHandler = async (req, res) => {
   }
 
   const sessionResult = await authService.createSession(req.user, req);
+
   if (!sessionResult.success) {
     return handleServiceResponse(sessionResult, res);
   }
@@ -90,12 +91,6 @@ const signOut: RequestHandler = async (req, res) => {
   return handleServiceResponse(result, res);
 };
 
-const getSession: RequestHandler = async (req, res) => {
-  const serviceResponse = await authService.getSession(req.user);
-
-  return handleServiceResponse(serviceResponse, res);
-};
-
 export const authController: Record<string, RequestHandler> = {
   signUp,
   signIn,
@@ -105,5 +100,4 @@ export const authController: Record<string, RequestHandler> = {
   verifyEmail,
   sendVerificationEmail,
   handleGoogleCallback,
-  getSession,
 };

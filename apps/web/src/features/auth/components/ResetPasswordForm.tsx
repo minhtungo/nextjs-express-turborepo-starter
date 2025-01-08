@@ -6,6 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@repo/ui/fo
 
 import PasswordInput from '@/components/PasswordInput';
 import { useResetPasswordForm } from '@/features/auth/hooks/useResetPasswordForm';
+import { Button } from '@repo/ui/button';
 
 interface ResetPasswordFormProps {
   token: string;

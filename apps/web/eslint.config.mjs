@@ -1,5 +1,5 @@
 const eslintConfig = {
-  extends: ["@repo/eslint-config/next.js"],
+  extends: ['plugin:@tanstack/query/recommended', '@repo/eslint-config/next.js'],
 };
 
 export default eslintConfig;

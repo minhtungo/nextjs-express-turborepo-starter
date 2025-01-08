@@ -1,5 +1,5 @@
 import Spinner from '@/components/Spinner';
-import { authRoutes } from '@/config';
+import { authRoutes } from '@/lib/config';
 import AuthFormWrapper from '@/features/auth/components/AuthFormWrapper';
 import ResetPassword from '@/features/auth/components/ResetPassword';
 import { Suspense } from 'react';

@@ -3,17 +3,17 @@ import express, { type Express } from 'express';
 import helmet from 'helmet';
 
 import { openAPIRouter } from '@/api-docs/openAPIRouter';
-import { env } from '@/common/lib/env';
+import { authRouter } from '@/modules/auth/authRouter';
 import '@/common/strategies/google';
 import '@/common/strategies/local';
+import { env } from '@/common/lib/env';
 import errorHandler from '@/middlewares/errorHandler';
-import { authRouter } from '@/modules/auth/authRouter';
 import { healthCheckRouter } from '@/modules/healthCheck/healthCheckRouter';
 import { userRouter } from '@/modules/user/userRouter';
 
 import notFoundHandler from '@/middlewares/notFoundHandler';
 import requestLogger from '@/middlewares/requestLogger';
-import { pool } from '@repo/database/src/db';
+import { pool } from '@repo/database';
 import connectPgSimple from 'connect-pg-simple';
 import session from 'express-session';
 import passport from 'passport';
@@ -23,9 +23,10 @@ import assertAuthenticated from '@/middlewares/assertAuthenticated';
 import rateLimiter from '@/middlewares/rateLimiter';
 import { v4 as uuidv4 } from 'uuid';
 
-import { config } from '@/common/lib/config';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
+
+import { config } from '@/common/lib/config';
 
 extendZodWithOpenApi(z);
 

@@ -1,6 +1,6 @@
-import { apiRoutes } from '@/config';
+import { apiRoutes } from '@/lib/config';
 
-import { apiClient } from '@/lib/api-client';
+import { apiClient } from '@/lib/api';
 import type { ApiResponse } from '@repo/validation/api';
 import {
   forgotPasswordProps,
@@ -9,9 +9,14 @@ import {
   signInProps,
   signUpProps,
 } from '@repo/validation/auth';
+import { SessionUser } from '@repo/validation/user';
+
+export const getCurrentUserService = async (): Promise<ApiResponse<SessionUser | null>> => {
+  const response = await apiClient.get<SessionUser | null>(apiRoutes.user.getCurrentUser);
+  return response;
+};
 
 export const signUpService = async (values: signUpProps) => {
-  console.log('signUpService', values);
   const response = await apiClient.post(apiRoutes.auth.signUp, {
     body: values,
   });
@@ -60,5 +65,6 @@ export const sendVerificationEmailService = async ({ token }: sendVerificationEm
 
 export const signOutService = async (): Promise<ApiResponse> => {
   const response = await apiClient.post(apiRoutes.auth.signOut);
+
   return response;
 };

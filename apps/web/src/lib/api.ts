@@ -1,32 +1,24 @@
-import { setSessionTokenCookie } from '@/lib/auth';
-import { getClientSessionToken, getSessionToken } from '@/lib/auth';
+import { getSessionToken } from '@/lib/auth';
 import { env } from '@/lib/env';
 import type { ApiResponse } from '@repo/validation/api';
 
-export interface FetchOptions extends RequestInit {
+interface FetchOptions extends RequestInit {
   body: any;
 }
 
-const handleApiResponse = async <T>(response: Response): Promise<ApiResponse<T>> => {
-  try {
-    const setCookieHeader = response.headers.get('Set-Cookie');
+const API_BASE_URL = env.NEXT_PUBLIC_EXTERNAL_SERVER_URL;
 
-    if (setCookieHeader) {
-      const cookieValue = setCookieHeader.split(';')[0].split('=').slice(1).join('=');
-      setSessionTokenCookie(cookieValue);
-    }
+const createBaseConfig = async (options: Partial<FetchOptions>) => {
+  const isServer = typeof window === 'undefined';
 
-    return await response.json();
-  } catch (error) {
-    return {
-      success: false,
-      message: 'Server error',
-      statusCode: 500,
-    } as ApiResponse<T>;
+  if (isServer) {
+    const sessionToken = await getSessionToken();
+
+    options.headers = {
+      Cookie: `${env.SESSION_COOKIE_NAME}=${sessionToken}`,
+    };
   }
-};
 
-const createBaseConfig = (options?: Partial<FetchOptions>) => {
   return {
     ...options,
     ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
@@ -38,66 +30,60 @@ const createBaseConfig = (options?: Partial<FetchOptions>) => {
   };
 };
 
-export const authFetch = async (endpoint: string, baseOptions: Partial<FetchOptions>) => {
-  const isServer = typeof window === 'undefined';
+async function handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
+  const data = await response.json();
 
-  const url = new URL(endpoint, isServer ? env.EXTERNAL_SERVER_URL : `${env.NEXT_PUBLIC_BASE_URL}/api`);
+  if (!data.success) {
+    throw new Error(data.message || 'An error occurred please try later.');
+  }
 
-  const options = createBaseConfig(baseOptions);
+  return data as ApiResponse<T>;
+}
 
-  const sessionCookie = isServer ? await getSessionToken() : getClientSessionToken();
-
-  options.headers = {
-    ...options.headers,
-    ...(sessionCookie ? { Cookie: `${env.SESSION_COOKIE_NAME}=${sessionCookie}` } : {}),
-  };
-
-  console.log('url', url);
-
-  const response = await fetch(url.toString(), options);
-
-  return response;
+const fetcher = async <T>(url: string, options: Partial<FetchOptions> = {}) => {
+  const config = await createBaseConfig(options);
+  return await fetch(url, config);
 };
 
-export const api = {
+export const apiClient = {
   get: async <T>(endpoint: string, options?: Omit<FetchOptions, 'method' | 'body'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${endpoint}`, {
+    const response = await fetcher(`${API_BASE_URL}${endpoint}`, {
       ...options,
       method: 'GET',
     });
 
-    return handleApiResponse<T>(response);
+    return handleResponse<T>(response);
   },
   post: async <T>(endpoint: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${endpoint}`, {
+    const response = await fetcher(`${API_BASE_URL}${endpoint}`, {
       ...options,
       method: 'POST',
     });
 
-    return handleApiResponse<T>(response);
+    return handleResponse<T>(response);
   },
   put: async <T>(endpoint: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${endpoint}`, {
+    const response = await fetcher(`${API_BASE_URL}${endpoint}`, {
       ...options,
       method: 'PUT',
     });
 
-    return handleApiResponse<T>(response);
+    return handleResponse<T>(response);
   },
   patch: async <T>(endpoint: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${endpoint}`, {
+    const response = await fetcher(`${API_BASE_URL}${endpoint}`, {
       ...options,
       method: 'PATCH',
     });
 
-    return handleApiResponse(response);
+    return handleResponse<T>(response);
   },
   delete: async <T>(endpoint: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await authFetch(`${endpoint}`, {
+    const response = await fetcher(`${API_BASE_URL}${endpoint}`, {
       ...options,
       method: 'DELETE',
     });
 
-    return handleApiResponse(response);
+    return handleResponse<T>(response);
   },
 };

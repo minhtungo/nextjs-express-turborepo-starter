@@ -1,4 +1,4 @@
-import { afterLoginUrl } from '@/config';
+import { afterLoginUrl } from '@/lib/config';
 import { useSignInMutation } from '@/features/auth/api/mutations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signInSchema } from '@repo/validation/auth';

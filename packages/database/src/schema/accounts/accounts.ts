@@ -2,7 +2,7 @@ import { integer, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { accountTypeSchema } from '../constants';
 import { users } from '../users';
 
-export const accounts = pgTable('account', {
+export const accounts = pgTable('accounts', {
   id: uuid().primaryKey().defaultRandom(),
   userId: uuid()
     .notNull()

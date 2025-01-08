@@ -1,3 +1,4 @@
+import { createSessionUserDTO } from '@/common/lib/dto';
 import { logger } from '@/common/lib/logger';
 import { authService } from '@/modules/auth/authService';
 import { userRepository } from '@/modules/user/userRepository';
@@ -34,23 +35,19 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-  console.log('serializeUser', user);
   done(null, user.id);
 });
 
 passport.deserializeUser(async (id: string, done) => {
-  const user = (await userRepository.getUserById<SessionUser>(id, {
-    id: true,
-    email: true,
-    image: true,
-    name: true,
-  })) as SessionUser;
+  const user = await userRepository.getUserById(id);
 
   if (!user) {
     return done(null, false);
   }
 
-  return done(null, user);
+  const sessionUser = createSessionUserDTO(user);
+
+  return done(null, sessionUser);
 });
 
 export default passport;

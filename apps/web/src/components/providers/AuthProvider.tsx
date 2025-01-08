@@ -1,11 +1,12 @@
-"use client";
+'use client';
 
-import type { SessionUser } from "@repo/validation/user";
-import { createContext, use, useContext, useEffect, useState } from "react";
+import { ApiResponse } from '@repo/validation/api';
+import type { SessionUser } from '@repo/validation/user';
+import { createContext, use, useContext, useEffect, useState } from 'react';
 
 interface AuthProviderProps {
   children: React.ReactNode;
-  userPromise: Promise<SessionUser | null>;
+  userPromise: Promise<ApiResponse<SessionUser | null>>;
 }
 
 interface AuthContextProps {
@@ -19,19 +20,20 @@ export const useUser = () => {
   const context = useContext(AuthContext);
 
   if (context === null) {
-    throw new Error("useAuth must be used within a UserProvider");
+    throw new Error('useAuth must be used within a UserProvider');
   }
 
   return context;
 };
 
 export const AuthProvider = ({ children, userPromise }: AuthProviderProps) => {
-  const initialUser = use(userPromise || null);
-  const [user, setUser] = useState<SessionUser | null>(initialUser);
+  const result = use(userPromise || null);
+  const [user, setUser] = useState<SessionUser | null>(result.data);
 
   useEffect(() => {
-    setUser(initialUser);
-  }, [initialUser]);
+    setUser(result.data);
+    console.log('initialUser', result.data);
+  }, [result.data]);
 
   return <AuthContext value={{ user, setUser }}>{children}</AuthContext>;
 };

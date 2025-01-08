@@ -77,7 +77,11 @@ const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceRe
   }
 };
 
-const authenticateUser = async (email: string, password: string, code?: string): Promise<ServiceResponse<{ id: string } | null>> => {
+const authenticateUser = async (
+  email: string,
+  password: string,
+  code?: string
+): Promise<ServiceResponse<{ id: string } | null>> => {
   try {
     const user = await userRepository.getUserByEmail(email);
 
@@ -209,7 +213,7 @@ const verifyEmail = async (token: string): Promise<ServiceResponse<null>> => {
       await authRepository.deleteVerificationToken(token, trx);
     });
 
-    return ServiceResponse.success<null>('Email verified', null, StatusCodes.OK);
+    return ServiceResponse.success<null>('Your email has been verified. You can now sign in.', null, StatusCodes.OK);
   } catch (ex) {
     return handleServiceError(ex as Error, 'Verifying Email');
   }

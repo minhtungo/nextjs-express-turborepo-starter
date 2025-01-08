@@ -5,7 +5,6 @@ export const env = createEnv({
   server: {
     BASE_URL: z.string().url(),
     EXTERNAL_SERVER_URL: z.string().min(1),
-
     SESSION_COOKIE_NAME: z.string().min(1),
   },
   client: {

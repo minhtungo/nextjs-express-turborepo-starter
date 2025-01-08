@@ -1,4 +1,4 @@
-import { authRoutes } from '@/config';
+import { authRoutes } from '@/lib/config';
 import AuthFormWrapper from '@/features/auth/components/AuthFormWrapper';
 import SignUpForm from '@/features/auth/components/SignUpForm';
 import Link from 'next/link';

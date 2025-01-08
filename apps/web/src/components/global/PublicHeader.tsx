@@ -1,20 +1,24 @@
-import SignOutButton from "@/components/SignOutButton";
-import ThemeToggle from "@/components/ThemeToggle";
-import Container from "@/components/layout/Container";
-import { authRoutes } from "@/config";
-import { getCurrentUser } from "@/lib/auth";
-import Link from "next/link";
-import { Suspense } from "react";
+import SignOutButton from '@/components/SignOutButton';
+import ThemeToggle from '@/components/ThemeToggle';
+import Container from '@/components/layout/Container';
+import { authRoutes } from '@/lib/config';
+import { getCurrentUser } from '@/lib/auth';
+import { publicNavLinks } from '@/lib/navigation';
+import Link from 'next/link';
+import { Suspense } from 'react';
 
 const PublicHeader = () => {
   return (
     <header className="h-14 border-b">
-      <Container className="flex p-4 h-full w-full items-center gap-x-4">
-        <Link href="/">Home</Link>
-        <Link href="/dashboard">Dashboard</Link>
-        <div className="flex gap-x-2 items-center ml-auto">
+      <Container className="flex h-full w-full items-center gap-x-4 p-4">
+        {publicNavLinks.map((link) => (
+          <Link key={link.href} href={link.href}>
+            {link.label}
+          </Link>
+        ))}
+        <div className="ml-auto flex items-center gap-x-2">
           <ThemeToggle />
-          <Suspense fallback={"Loading..."}>
+          <Suspense fallback={null}>
             <AuthButtons />
           </Suspense>
         </div>
@@ -27,7 +31,7 @@ const AuthButtons = async () => {
   const user = await getCurrentUser();
 
   return (
-    <div className="flex gap-x-2 items-center">
+    <div className="flex items-center gap-x-2">
       {user ? <SignOutButton /> : <Link href={authRoutes.signIn}>Sign In</Link>}
     </div>
   );

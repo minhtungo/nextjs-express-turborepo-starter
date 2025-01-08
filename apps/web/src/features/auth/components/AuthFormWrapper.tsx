@@ -32,7 +32,7 @@ const AuthFormWrapper = ({
       <CardContent className={cn(className)}>
         {children}
         {backButtonHref && backButtonLabel && (
-          <BackButton className="mt-2" href={backButtonHref} label={backButtonLabel} variant="outline" />
+          <BackButton className="mt-4" href={backButtonHref} label={backButtonLabel} variant="outline" />
         )}
       </CardContent>
     </Card>

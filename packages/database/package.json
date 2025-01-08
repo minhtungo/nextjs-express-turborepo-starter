@@ -25,16 +25,16 @@
   },
   "dependencies": {
     "drizzle-orm": "^0.38.3",
-    "drizzle-zod": "^0.5.1",
-    "pg": "^8.13.0",
+    "drizzle-zod": "^0.6.1",
+    "pg": "^8.13.1",
     "zod": "^3.24.1",
     "@t3-oss/env-core": "^0.11.1"
   },
   "devDependencies": {
     "@repo/tsconfig": "workspace:*",
-    "@types/node": "22.10.2",
+    "@types/node": "22.10.5",
     "@types/pg": "^8.11.10",
     "typescript": "^5.7.2",
-    "drizzle-kit": "^0.26.2"
+    "drizzle-kit": "^0.30.1"
   }
 }

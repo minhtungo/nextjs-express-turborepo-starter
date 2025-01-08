@@ -1,4 +1,4 @@
-import { afterLoginUrl, authRoutes, protectedRoutes } from '@/config';
+import { afterLoginUrl, authRoutes, protectedRoutes } from '@/lib/config';
 import { env } from '@/lib/env';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
@@ -26,7 +26,6 @@ export async function middleware(req: NextRequest) {
   }
 
   if (!isProtectedRoute) {
-    console.log('not protected or auth route');
     return NextResponse.next();
   }
 

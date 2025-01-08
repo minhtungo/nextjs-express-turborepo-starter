@@ -46,7 +46,7 @@ type UserColumns = {
   [key in keyof User]?: boolean;
 };
 
-const getUserById = async <T>(id: string, columns?: UserColumns) => {
+const getUserById = async (id: string) => {
   const user = await db.query.users.findFirst({
     where: eq(users.id, id),
   });
