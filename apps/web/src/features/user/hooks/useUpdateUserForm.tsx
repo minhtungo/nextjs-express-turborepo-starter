@@ -21,7 +21,6 @@ export const useUpdateUserForm = () => {
   const onSubmit = async (values: z.infer<typeof updateUserSchema>) => {
     updateUser(values, {
       onSuccess: () => {
-        form.reset();
         toast({
           title: 'Profile updated',
           description: 'Your profile has been successfully updated.',

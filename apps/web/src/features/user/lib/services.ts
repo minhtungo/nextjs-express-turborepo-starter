@@ -10,7 +10,7 @@ export const getUserInfoService = async (): Promise<UserDTO> => {
   return result.data;
 };
 
-export const updateUserService = async (data: UpdateUser): Promise<ApiResponse> => {
+export const updateUserService = async (data: UpdateUser): Promise<ApiResponse<UserDTO>> => {
   const result = await apiClient.patch<UserDTO>(apiRoutes.user.updateUser, {
     body: data,
   });

@@ -11,11 +11,11 @@ export const config = {
     renewThreshold: 60 * 30 * 1000,
   },
   resetPasswordToken: {
-    length: 32,
+    length: 48,
     maxAge: 1000 * 60 * 5,
   },
   verificationEmailToken: {
-    length: 32,
+    length: 48,
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
 };

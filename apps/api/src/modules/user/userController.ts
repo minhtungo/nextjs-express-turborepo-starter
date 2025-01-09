@@ -17,6 +17,7 @@ const getCurrentUser: RequestHandler = async (req, res) => {
 
 const updateUser: RequestHandler = async (req: Request, res: Response) => {
   const user = req.user;
+  console.log('updateUser', user);
   const data = updateUserSchema.parse(req.body);
 
   if (!user) {

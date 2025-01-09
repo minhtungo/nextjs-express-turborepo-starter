@@ -45,8 +45,6 @@ const forgotPassword: RequestHandler = async (req, res) => {
 const resetPassword: RequestHandler = async (req, res) => {
   const { password, token } = req.body;
 
-  console.log('resetPassword', req.body);
-
   const serviceResponse = await authService.resetPassword(token, password);
 
   return handleServiceResponse(serviceResponse, res);

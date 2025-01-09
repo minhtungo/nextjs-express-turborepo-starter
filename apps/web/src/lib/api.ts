@@ -30,24 +30,28 @@ const createBaseConfig = async (options: Partial<FetchOptions>) => {
   };
 };
 
-async function handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
+const handleResponse = async <T>(response: Response): Promise<ApiResponse<T>> => {
+  if (!response.ok) {
+    throw new Error('An error occurred please try later.');
+  }
+
   const data = await response.json();
 
   if (!data.success) {
     throw new Error(data.message || 'An error occurred please try later.');
   }
 
-  return data as ApiResponse<T>;
-}
+  return data;
+};
 
-const fetcher = async <T>(url: string, options: Partial<FetchOptions> = {}) => {
+const request = async <T>(url: string, options: Partial<FetchOptions> = {}) => {
   const config = await createBaseConfig(options);
   return await fetch(url, config);
 };
 
 export const apiClient = {
   get: async <T>(endpoint: string, options?: Omit<FetchOptions, 'method' | 'body'>): Promise<ApiResponse<T>> => {
-    const response = await fetcher(`${API_BASE_URL}${endpoint}`, {
+    const response = await request(`${API_BASE_URL}${endpoint}`, {
       ...options,
       method: 'GET',
     });
@@ -55,7 +59,7 @@ export const apiClient = {
     return handleResponse<T>(response);
   },
   post: async <T>(endpoint: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await fetcher(`${API_BASE_URL}${endpoint}`, {
+    const response = await request(`${API_BASE_URL}${endpoint}`, {
       ...options,
       method: 'POST',
     });
@@ -63,7 +67,7 @@ export const apiClient = {
     return handleResponse<T>(response);
   },
   put: async <T>(endpoint: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await fetcher(`${API_BASE_URL}${endpoint}`, {
+    const response = await request(`${API_BASE_URL}${endpoint}`, {
       ...options,
       method: 'PUT',
     });
@@ -71,7 +75,7 @@ export const apiClient = {
     return handleResponse<T>(response);
   },
   patch: async <T>(endpoint: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await fetcher(`${API_BASE_URL}${endpoint}`, {
+    const response = await request(`${API_BASE_URL}${endpoint}`, {
       ...options,
       method: 'PATCH',
     });
@@ -79,7 +83,7 @@ export const apiClient = {
     return handleResponse<T>(response);
   },
   delete: async <T>(endpoint: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await fetcher(`${API_BASE_URL}${endpoint}`, {
+    const response = await request(`${API_BASE_URL}${endpoint}`, {
       ...options,
       method: 'DELETE',
     });
