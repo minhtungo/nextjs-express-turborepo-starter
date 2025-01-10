@@ -1,16 +1,17 @@
 'use client';
 
 import { useUser } from '@/components/providers/AuthProvider';
-import { useChangeUserPasswordMutation } from '@/features/user/api/mutations';
+import { useChangePassword } from '@/features/user/api/changePassword';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from '@repo/ui/hooks/use-toast';
 import { changeUserPasswordFormSchema } from '@repo/validation/user';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
-export const useChangeUserPassword = () => {
+export const useChangeUserPasswordForm = () => {
   const { user } = useUser();
-  const { mutate: changeUserPassword, isPending, error, isSuccess } = useChangeUserPasswordMutation();
+  const { mutate: changeUserPassword, isPending, error, isSuccess } = useChangePassword();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof changeUserPasswordFormSchema>>({

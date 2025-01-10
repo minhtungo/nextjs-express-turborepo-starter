@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import { handleServiceResponse } from '@/common/lib/httpHandlers';
 import { ServiceResponse } from '@/common/models/serviceResponse';
-import { changeUserPasswordSchema, updateUserSchema } from '@repo/validation/user';
+import { changeUserPasswordSchema, updateProfileSchema } from '@repo/validation/user';
 
 import { userService } from '@/modules/user/userService';
 
@@ -18,7 +18,7 @@ const getCurrentUser: RequestHandler = async (req, res) => {
 const updateUser: RequestHandler = async (req: Request, res: Response) => {
   const user = req.user;
   console.log('updateUser', user);
-  const data = updateUserSchema.parse(req.body);
+  const data = updateProfileSchema.parse(req.body);
 
   if (!user) {
     return handleServiceResponse(ServiceResponse.failure('Authentication failed', null, StatusCodes.UNAUTHORIZED), res);

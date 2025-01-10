@@ -1,8 +1,14 @@
 import { getCurrentUserService } from '@/features/auth/lib/services';
-import { getSessionToken } from '@/lib/auth/session.server';
 import type { Session, SessionUser } from '@repo/validation/user';
 import { unauthorized } from 'next/navigation';
 import { cache } from 'react';
+
+import { env } from '@/lib/env';
+import { cookies } from 'next/headers';
+
+export const getSessionToken = async () => {
+  return (await cookies()).get(env.SESSION_COOKIE_NAME)?.value;
+};
 
 export const verifySessionToken = cache(async (token: string): Promise<Session | null> => {
   const result = await getCurrentUserService();

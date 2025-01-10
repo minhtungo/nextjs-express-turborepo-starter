@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
 import { userController } from '@/modules/user/userController';
 import { UserSchema } from '@/modules/user/userModel';
-import { changeUserPasswordSchema, updateUserSchema } from '@repo/validation/user';
+import { changeUserPasswordSchema, updateProfileSchema } from '@repo/validation/user';
 import { validateRequest } from '@/common/lib/httpHandlers';
 
 export const userRegistry = new OpenAPIRegistry();
@@ -30,7 +30,7 @@ userRegistry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: updateUserSchema,
+          schema: updateProfileSchema,
         },
       },
     },
@@ -38,7 +38,7 @@ userRegistry.registerPath({
   responses: createApiResponse(z.string(), 'User updated successfully'),
 });
 
-userRouter.patch('/me', validateRequest(z.object({ body: updateUserSchema })), userController.updateUser);
+userRouter.patch('/me', validateRequest(z.object({ body: updateProfileSchema })), userController.updateUser);
 
 userRegistry.registerPath({
   method: 'patch',

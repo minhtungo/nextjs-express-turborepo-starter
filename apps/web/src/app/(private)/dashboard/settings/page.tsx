@@ -1,10 +1,10 @@
 import ChangeUserPasswordForm from '@/features/user/components/ChangePasswordForm';
-import UpdateUserForm from '@/features/user/components/UpdateUserForm';
+import UpdateProfileForm from '@/features/user/components/UpdateProfileForm';
 
 const SettingsPage = async () => {
   return (
     <div className="space-y-8">
-      <UpdateUserForm />
+      <UpdateProfileForm />
       <ChangeUserPasswordForm />
     </div>
   );

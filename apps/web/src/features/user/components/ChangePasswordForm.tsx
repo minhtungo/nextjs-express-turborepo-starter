@@ -5,11 +5,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 
 import LoaderButton from '@/components/LoaderButton';
 import PasswordInput from '@/components/PasswordInput';
-import FormResponse from '@/features/auth/components/FormResponse';
-import { useChangeUserPassword } from '@/features/user/hooks/useChangeUserPassword';
+import { useChangeUserPasswordForm } from '@/features/user/hooks/useChangeUserPassword';
 
 const ChangeUserPasswordForm = () => {
-  const { form, onSubmit, isPending, error } = useChangeUserPassword();
+  const { form, onSubmit, isPending, error } = useChangeUserPasswordForm();
 
   return (
     <Card className="w-full">

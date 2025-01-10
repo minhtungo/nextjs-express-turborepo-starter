@@ -8,7 +8,7 @@ import { Label } from '@repo/ui/label';
 import LoaderButton from '@/components/LoaderButton';
 import { useUpdateUserForm } from '@/features/user/hooks/useUpdateUserForm';
 
-const UpdateUserForm = () => {
+const UpdateProfileForm = () => {
   const { form, onSubmit, isPending, error, user } = useUpdateUserForm();
 
   return (
@@ -51,4 +51,4 @@ const UpdateUserForm = () => {
   );
 };
 
-export default UpdateUserForm;
+export default UpdateProfileForm;

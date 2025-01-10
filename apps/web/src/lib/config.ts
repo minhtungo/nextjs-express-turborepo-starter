@@ -38,7 +38,7 @@ export const apiRoutes = {
   },
   user: {
     getCurrentUser: '/user/me',
-    updateUser: '/user/me',
+    updateProfile: '/user/me',
     changePassword: '/user/me/change-password',
   },
 };
