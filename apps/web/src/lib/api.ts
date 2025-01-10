@@ -1,93 +1,81 @@
-import { getSessionToken } from '@/lib/auth';
 import { env } from '@/lib/env';
+import { buildUrlWithParams } from '@/lib/utils';
 import type { ApiResponse } from '@repo/validation/api';
 
-interface FetchOptions extends RequestInit {
-  body: any;
-}
+export type RequestOptions = {
+  method?: string;
+  headers?: Record<string, string>;
+  body?: any;
+  cookie?: string;
+  params?: Record<string, string | number | boolean | undefined | null>;
+  cache?: RequestCache;
+  next?: NextFetchRequestConfig;
+};
 
-const API_BASE_URL = env.NEXT_PUBLIC_EXTERNAL_SERVER_URL;
+const getServerCookies = () => {
+  if (typeof window !== 'undefined') return '';
 
-const createBaseConfig = async (options: Partial<FetchOptions>) => {
-  const isServer = typeof window === 'undefined';
+  return import('next/headers').then(async ({ cookies }) => {
+    try {
+      const cookieStore = await cookies();
+      return cookieStore
+        .getAll()
+        .map((c: { name: string; value: string }) => `${c.name}=${c.value}`)
+        .join('; ');
+    } catch (error) {
+      return '';
+    }
+  });
+};
 
-  if (isServer) {
-    const sessionToken = await getSessionToken();
+const fetchApi = async <T>(url: string, options: RequestOptions = {}): Promise<ApiResponse<T>> => {
+  const { method = 'GET', headers = {}, body, cookie, params, cache = 'no-store', next } = options;
 
-    options.headers = {
-      Cookie: `${env.SESSION_COOKIE_NAME}=${sessionToken}`,
-    };
+  let cookieHeader = cookie;
+  if (typeof window === 'undefined' && !cookie) {
+    cookieHeader = await getServerCookies();
   }
 
-  return {
-    ...options,
-    ...(options?.body ? { body: JSON.stringify(options.body) } : {}),
+  const fullUrl = buildUrlWithParams(`${env.NEXT_PUBLIC_EXTERNAL_SERVER_URL}${url}`, params);
+
+  const response = await fetch(fullUrl, {
+    method,
     headers: {
       'Content-Type': 'application/json',
-      ...(options?.headers ?? {}),
+      Accept: 'application/json',
+      ...headers,
+      ...(cookieHeader ? { Cookie: cookieHeader } : {}),
     },
-    credentials: 'include' as RequestCredentials,
-  };
-};
+    body: body ? JSON.stringify(body) : undefined,
+    credentials: 'include',
+    cache,
+    next,
+  });
 
-const handleResponse = async <T>(response: Response): Promise<ApiResponse<T>> => {
-  if (!response.ok) {
-    throw new Error('An error occurred please try later.');
+  const result = await response.json();
+
+  if (!response.ok || !result.success) {
+    throw new Error(result.message || result.statusText || 'An error occurred please try later.');
   }
 
-  const data = await response.json();
-
-  if (!data.success) {
-    throw new Error(data.message || 'An error occurred please try later.');
-  }
-
-  return data;
+  return result;
 };
 
-const request = async <T>(url: string, options: Partial<FetchOptions> = {}) => {
-  const config = await createBaseConfig(options);
-  return await fetch(url, config);
-};
-
-export const apiClient = {
-  get: async <T>(endpoint: string, options?: Omit<FetchOptions, 'method' | 'body'>): Promise<ApiResponse<T>> => {
-    const response = await request(`${API_BASE_URL}${endpoint}`, {
-      ...options,
-      method: 'GET',
-    });
-
-    return handleResponse<T>(response);
+export const api = {
+  get<T>(url: string, options?: RequestOptions): Promise<ApiResponse<T>> {
+    return fetchApi<T>(url, { ...options, method: 'GET' });
   },
-  post: async <T>(endpoint: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await request(`${API_BASE_URL}${endpoint}`, {
-      ...options,
-      method: 'POST',
-    });
-
-    return handleResponse<T>(response);
+  post<T>(url: string, body?: any, options?: RequestOptions): Promise<ApiResponse<T>> {
+    console.log('body', JSON.stringify(body, null, 2));
+    return fetchApi<T>(url, { ...options, method: 'POST', body });
   },
-  put: async <T>(endpoint: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await request(`${API_BASE_URL}${endpoint}`, {
-      ...options,
-      method: 'PUT',
-    });
-
-    return handleResponse<T>(response);
+  put<T>(url: string, body?: any, options?: RequestOptions): Promise<ApiResponse<T>> {
+    return fetchApi<T>(url, { ...options, method: 'PUT', body });
   },
-  patch: async <T>(endpoint: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await request(`${API_BASE_URL}${endpoint}`, {
-      ...options,
-      method: 'PATCH',
-    });
-
-    return handleResponse<T>(response);
+  patch<T>(url: string, body?: any, options?: RequestOptions): Promise<ApiResponse<T>> {
+    return fetchApi<T>(url, { ...options, method: 'PATCH', body });
   },
-  delete: async <T>(endpoint: string, options?: Omit<FetchOptions, 'method'>): Promise<ApiResponse<T>> => {
-    const response = await request(`${API_BASE_URL}${endpoint}`, {
-      ...options,
-      method: 'DELETE',
-    });
-
-    return handleResponse<T>(response);
+  delete<T>(url: string, options?: RequestOptions): Promise<ApiResponse<T>> {
+    return fetchApi<T>(url, { ...options, method: 'DELETE' });
   },
 };

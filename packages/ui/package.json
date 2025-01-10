@@ -1,7 +1,9 @@
 {
   "name": "@repo/ui",
   "version": "0.0.1",
-  "sideEffects": ["**/*.css"],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
     "./styles.css": "./src/styles/globals.css",
     "./postcss.config": "./postcss.config.mjs",
@@ -13,7 +15,8 @@
   },
   "scripts": {
     "check-types": "tsc --noEmit",
-    "ui:add": "pnpm dlx shadcn@latest add"
+    "ui:add": "pnpm dlx shadcn@latest add",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -31,6 +34,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@types/react": "19.0.2",
     "postcss": "^8.4.49",

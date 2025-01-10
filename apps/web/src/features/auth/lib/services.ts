@@ -1,6 +1,6 @@
 import { apiRoutes } from '@/lib/config';
 
-import { apiClient } from '@/lib/api';
+import { api } from '@/lib/api';
 import type { ApiResponse } from '@repo/validation/api';
 import {
   forgotPasswordProps,
@@ -12,59 +12,47 @@ import {
 import { SessionUser } from '@repo/validation/user';
 
 export const getCurrentUserService = async (): Promise<ApiResponse<SessionUser | null>> => {
-  const response = await apiClient.get<SessionUser | null>(apiRoutes.user.getCurrentUser);
+  const response = await api.get<SessionUser | null>(apiRoutes.user.getCurrentUser);
   return response;
 };
 
 export const signUpService = async (values: signUpProps) => {
-  const response = await apiClient.post(apiRoutes.auth.signUp, {
-    body: values,
-  });
+  const response = await api.post(apiRoutes.auth.signUp, values);
 
   return response;
 };
 
 export const signInService = async (values: signInProps): Promise<ApiResponse> => {
-  const response = await apiClient.post(apiRoutes.auth.signIn, {
-    body: values,
-  });
+  const response = await api.post(apiRoutes.auth.signIn, values);
 
   return response;
 };
 
 export const forgotPasswordService = async (values: forgotPasswordProps): Promise<ApiResponse> => {
-  const response = await apiClient.post(apiRoutes.auth.forgotPassword, {
-    body: values,
-  });
+  const response = await api.post(apiRoutes.auth.forgotPassword, values);
   return response;
 };
 
 export const verifyEmailService = async (token: string): Promise<ApiResponse> => {
-  const response = await apiClient.post(apiRoutes.auth.verifyEmail, {
-    body: { token },
-  });
+  const response = await api.post(apiRoutes.auth.verifyEmail, { token });
 
   return response;
 };
 
 export const resetPasswordService = async (values: resetPasswordProps): Promise<ApiResponse> => {
-  const response = await apiClient.post(apiRoutes.auth.resetPassword, {
-    body: values,
-  });
+  const response = await api.post(apiRoutes.auth.resetPassword, values);
 
   return response;
 };
 
-export const sendVerificationEmailService = async ({ token }: sendVerificationEmailProps): Promise<ApiResponse> => {
-  const response = await apiClient.post(apiRoutes.auth.signIn, {
-    body: { token },
-  });
+export const sendVerificationEmailService = async (token: sendVerificationEmailProps): Promise<ApiResponse> => {
+  const response = await api.post(apiRoutes.auth.sendVerificationEmail, token);
 
   return response;
 };
 
 export const signOutService = async (): Promise<ApiResponse> => {
-  const response = await apiClient.post(apiRoutes.auth.signOut);
+  const response = await api.post(apiRoutes.auth.signOut);
 
   return response;
 };
