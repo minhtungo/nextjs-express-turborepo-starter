@@ -1,4 +1,4 @@
-import { env } from '@/lib/env';
+import { env } from '@/config/env';
 import { buildUrlWithParams } from '@/lib/utils';
 import type { ApiResponse } from '@repo/validation/api';
 

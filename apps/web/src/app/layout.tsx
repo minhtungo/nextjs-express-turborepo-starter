@@ -1,5 +1,5 @@
 import '@/assets/styles/globals.css';
-import { QueryProvider } from '@/components/providers/QueryProvider';
+import { QueryClientProvider } from '@/components/providers/QueryClientProvider';
 import ThemeProvider from '@/components/providers/ThemeProvider';
 import '@repo/ui/styles.css';
 import type { Metadata } from 'next';
@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <ThemeProvider>
-          <QueryProvider>{children}</QueryProvider>
+          <QueryClientProvider>{children}</QueryClientProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,5 +1,6 @@
+import { apiPaths } from '@/config/paths';
 import { api } from '@/lib/api';
-import { apiRoutes } from '@/lib/config';
+import { useUser } from '@/lib/auth';
 import { MutationConfig } from '@/lib/react-query';
 import { ApiResponse } from '@repo/validation/api';
 import { updateProfileSchema } from '@repo/validation/user';
@@ -17,7 +18,7 @@ export const updateProfile = async (
     id: string;
   }>
 > => {
-  return await api.patch(apiRoutes.user.updateProfile, data);
+  return await api.patch(apiPaths.user.updateProfile, data);
 };
 
 type UseUpdateProfileOptions = {
@@ -25,8 +26,15 @@ type UseUpdateProfileOptions = {
 };
 
 export const useUpdateProfile = ({ mutationConfig }: UseUpdateProfileOptions = {}) => {
+  const { refetch: refetchUser } = useUser();
+  const { onSuccess, ...restConfig } = mutationConfig || {};
+
   return useMutation({
+    onSuccess: (...args) => {
+      refetchUser();
+      onSuccess?.(...args);
+    },
+    ...restConfig,
     mutationFn: updateProfile,
-    ...mutationConfig,
   });
 };

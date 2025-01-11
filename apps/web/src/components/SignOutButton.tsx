@@ -1,19 +1,19 @@
 'use client';
 
 import LoaderButton from '@/components/LoaderButton';
-import { useSignOutMutation } from '@/features/auth/api/mutations';
+import { useSignOut } from '@/features/auth/api/signOut';
 import { useRouter } from 'next/navigation';
 
 const SignOutButton = () => {
   const router = useRouter();
-  const { mutate: signOut, isPending } = useSignOutMutation();
+  const { mutate: signOut, isPending } = useSignOut({
+    onSuccess: () => {
+      router.push('/');
+    },
+  });
 
   const handleSignOut = () => {
-    signOut(undefined, {
-      onSuccess: () => {
-        router.push('/');
-      },
-    });
+    signOut();
   };
 
   return (

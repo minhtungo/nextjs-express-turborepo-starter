@@ -1,23 +1,27 @@
 import PrivateHeader from '@/components/global/PrivateHeader';
 import Container from '@/components/layout/Container';
-import { AuthProvider } from '@/components/providers/AuthProvider';
-import { getCurrentUserService } from '@/features/auth/lib/services';
+import { getUserQueryOptions } from '@/lib/auth';
 import { Toaster } from '@repo/ui/toaster';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
-export default function PrivateLayout({
+export default async function PrivateLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const userPromise = getCurrentUserService();
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery(getUserQueryOptions());
+
+  const dehydratedState = dehydrate(queryClient);
 
   return (
-    <AuthProvider userPromise={userPromise}>
+    <HydrationBoundary state={dehydratedState}>
       <PrivateHeader />
       <Container tag="main" className="py-6">
         {children}
       </Container>
       <Toaster />
-    </AuthProvider>
+    </HydrationBoundary>
   );
 }

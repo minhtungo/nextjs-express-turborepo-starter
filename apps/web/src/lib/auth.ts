@@ -1,39 +1,39 @@
-import { getCurrentUserService } from '@/features/auth/lib/services';
-import type { Session, SessionUser } from '@repo/validation/user';
-import { unauthorized } from 'next/navigation';
-import { cache } from 'react';
+import { apiPaths } from '@/config/paths';
+import { api } from '@/lib/api';
+import { ApiResponse } from '@repo/validation/api';
+import { SessionUser } from '@repo/validation/user';
+import { queryOptions, useQuery } from '@tanstack/react-query';
 
-import { env } from '@/lib/env';
-import { cookies } from 'next/headers';
-
-export const getSessionToken = async () => {
-  return (await cookies()).get(env.SESSION_COOKIE_NAME)?.value;
+export const getUser = async (): Promise<ApiResponse<SessionUser>> => {
+  const result = await api.get<SessionUser>(apiPaths.user.getCurrentUser);
+  return result;
 };
 
-export const verifySessionToken = cache(async (token: string): Promise<Session | null> => {
-  const result = await getCurrentUserService();
-  if (!result.success) return null;
+export const userQueryKey = ['user'] as const;
 
-  return result.data ? { user: result.data } : null;
-});
-
-export const verifySession = async (): Promise<Session | null> => {
-  const sessionToken = await getSessionToken();
-
-  if (!sessionToken) return null;
-
-  return await verifySessionToken(sessionToken);
+export const getUserQueryOptions = () => {
+  return queryOptions({
+    queryKey: userQueryKey,
+    queryFn: getUser,
+  });
 };
 
-export const getCurrentUser = async (): Promise<SessionUser | null> => {
-  const session = await verifySession();
-  return session?.user ?? null;
-};
+export const useUser = () => useQuery(getUserQueryOptions());
 
-export const assertAuthenticated = async () => {
-  const user = await getCurrentUser();
-  if (!user) {
-    unauthorized();
-  }
-  return user;
-};
+// export const useAuth = () => {
+//   const router = useRouter();
+//   const pathname = usePathname();
+//   const { data: user, isLoading, isError } = useUser();
+
+//   useEffect(() => {
+//     if (!isLoading && !user && isError) {
+//       router.push(paths.auth.signIn.getHref(pathname));
+//     }
+//   }, [user, isLoading, isError, pathname]);
+
+//   return {
+//     user,
+//     isLoading,
+//     isAuthenticated: !!user,
+//   };
+// };

@@ -42,6 +42,5 @@ export const useUpdateUserForm = () => {
     isPending,
     error: error?.message,
     success: isSuccess ? 'Your profile has been successfully updated.' : null,
-    user,
   };
 };

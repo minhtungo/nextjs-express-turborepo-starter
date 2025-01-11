@@ -12,7 +12,7 @@ const SignInForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="mt-4 space-y-4">
+      <form onSubmit={onSubmit} className="mt-4 space-y-4">
         {!isTwoFactorEnabled ? (
           <>
             <FormField

@@ -6,7 +6,6 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@repo/ui/fo
 
 import PasswordInput from '@/components/PasswordInput';
 import { useResetPasswordForm } from '@/features/auth/hooks/useResetPasswordForm';
-import { Button } from '@repo/ui/button';
 
 interface ResetPasswordFormProps {
   token: string;
@@ -14,9 +13,10 @@ interface ResetPasswordFormProps {
 
 const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
   const { form, onSubmit, isPending, error, success } = useResetPasswordForm(token);
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={onSubmit} className="space-y-4">
         <FormField
           control={form.control}
           name="password"

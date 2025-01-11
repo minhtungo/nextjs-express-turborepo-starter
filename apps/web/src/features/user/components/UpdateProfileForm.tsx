@@ -7,9 +7,11 @@ import { Label } from '@repo/ui/label';
 
 import LoaderButton from '@/components/LoaderButton';
 import { useUpdateUserForm } from '@/features/user/hooks/useUpdateUserForm';
+import { useUser } from '@/lib/auth';
 
 const UpdateProfileForm = () => {
-  const { form, onSubmit, isPending, error, user } = useUpdateUserForm();
+  const { data: user } = useUser();
+  const { form, onSubmit, isPending } = useUpdateUserForm();
 
   return (
     <Card className="w-full">
@@ -22,7 +24,7 @@ const UpdateProfileForm = () => {
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label>Email</Label>
-                <Input placeholder="Email" value={user?.email!} disabled />
+                <Input placeholder="Email" value={user?.data?.email} disabled />
               </div>
               <FormField
                 control={form.control}

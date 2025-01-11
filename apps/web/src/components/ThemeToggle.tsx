@@ -3,7 +3,7 @@
 import { Moon, Sun } from '@repo/ui/icons';
 import { useTheme } from 'next-themes';
 
-import { useIsMounted } from '@/lib/hooks/use-is-mouted';
+import { useIsMounted } from '@/hooks/use-is-mouted';
 import { Button } from '@repo/ui/button';
 import { Skeleton } from '@repo/ui/skeleton';
 

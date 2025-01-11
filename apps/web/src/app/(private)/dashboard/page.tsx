@@ -1,4 +1,4 @@
-import { assertAuthenticated } from '@/lib/auth';
+import { assertAuthenticated } from '@/lib/session';
 
 const DashBoard = async () => {
   const user = await assertAuthenticated();

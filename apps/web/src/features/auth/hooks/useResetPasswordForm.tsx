@@ -1,5 +1,5 @@
-import { authRoutes } from '@/lib/config';
-import { useResetPasswordMutation } from '@/features/auth/api/mutations';
+import { paths } from '@/config/paths';
+import { useResetPassword } from '@/features/auth/api/resetPassword';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { commonValidations } from '@repo/validation/common';
 import { useRouter } from 'next/navigation';
@@ -22,7 +22,16 @@ export const resetPasswordFormSchema = z
 
 export const useResetPasswordForm = (token: string) => {
   const router = useRouter();
-  const { mutate: resetPassword, isPending, error, isSuccess } = useResetPasswordMutation();
+  const {
+    mutate: resetPassword,
+    isPending,
+    error,
+    isSuccess,
+  } = useResetPassword({
+    onSuccess: () => {
+      router.push(paths.auth.signIn.getHref());
+    },
+  });
 
   const form = useForm<z.infer<typeof resetPasswordFormSchema>>({
     resolver: zodResolver(resetPasswordFormSchema),
@@ -33,19 +42,12 @@ export const useResetPasswordForm = (token: string) => {
   });
 
   const onSubmit = async (values: z.infer<typeof resetPasswordFormSchema>) => {
-    resetPassword(
-      { password: values.password, token },
-      {
-        onSuccess: () => {
-          router.push(authRoutes.signIn);
-        },
-      }
-    );
+    resetPassword({ password: values.password, token });
   };
 
   return {
     form,
-    onSubmit,
+    onSubmit: form.handleSubmit(onSubmit),
     isPending,
     error: error?.message,
     success: isSuccess ? 'Password has been reset successfully' : null,

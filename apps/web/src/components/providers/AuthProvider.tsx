@@ -32,7 +32,6 @@ export const AuthProvider = ({ children, userPromise }: AuthProviderProps) => {
 
   useEffect(() => {
     setUser(result.data);
-    console.log('initialUser', result.data);
   }, [result.data]);
 
   return <AuthContext value={{ user, setUser }}>{children}</AuthContext>;

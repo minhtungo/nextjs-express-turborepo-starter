@@ -3,15 +3,12 @@ import { buttonVariants } from '@repo/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/ui/card';
 import type { VariantProps } from 'class-variance-authority';
 import Link from 'next/link';
-import type { ReactNode } from 'react';
 
-interface AuthFormWrapperProps {
-  children?: ReactNode;
+interface AuthFormWrapperProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string;
   description?: string;
   backButtonLabel?: string;
   backButtonHref?: string;
-  className?: string;
   noBorderMobile?: boolean;
 }
 

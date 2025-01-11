@@ -1,8 +1,9 @@
 'use client';
 
 import LoaderButton from '@/components/LoaderButton';
+import { useSendVerificationEmail } from '@/features/auth/api/sendVerificationEmail';
 import FormResponse from '@/features/auth/components/FormResponse';
-import { useSendVerificationEmailMutation } from '@/features/auth/api/mutations';
+
 import { cn } from '@/lib/utils';
 
 interface ResendVerificationEmailProps extends React.ComponentProps<'button'> {
@@ -10,7 +11,7 @@ interface ResendVerificationEmailProps extends React.ComponentProps<'button'> {
 }
 
 const ResendVerificationEmail = ({ className, token }: ResendVerificationEmailProps) => {
-  const { mutate: sendVerificationEmail, isPending, error, isSuccess } = useSendVerificationEmailMutation();
+  const { mutate: sendVerificationEmail, isPending, error, isSuccess } = useSendVerificationEmail({});
 
   const onResendVerificationEmail = async () => {
     sendVerificationEmail({ token });

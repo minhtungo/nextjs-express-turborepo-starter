@@ -1,5 +1,5 @@
-import { afterLoginUrl } from '@/lib/config';
-import { useSignInMutation } from '@/features/auth/api/mutations';
+import { paths } from '@/config/paths';
+import { useSignIn } from '@/features/auth/api/signIn';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signInSchema } from '@repo/validation/auth';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -12,7 +12,14 @@ export const useSignInForm = () => {
   const redirectTo = searchParams.get('redirect');
   const urlError = searchParams.get('error');
 
-  const { mutate: signIn, isPending, error } = useSignInMutation();
+  const {
+    mutate: signIn,
+    isPending,
+    error,
+  } = useSignIn({
+    onSuccess: () =>
+      router.replace(`${redirectTo ? `${decodeURIComponent(redirectTo)}` : paths.app.dashboard.getHref()}`),
+  });
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
@@ -23,16 +30,12 @@ export const useSignInForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof signInSchema>) => {
-    signIn(values, {
-      onSuccess: () => {
-        router.push(redirectTo ?? afterLoginUrl);
-      },
-    });
+    signIn(values);
   };
 
   return {
     form,
-    onSubmit,
+    onSubmit: form.handleSubmit(onSubmit),
     isPending,
     error: error?.message,
     urlError,
