@@ -1,7 +1,7 @@
 'use client';
 
-import { useUser } from '@/components/providers/AuthProvider';
 import { useChangePassword } from '@/features/user/api/changePassword';
+import { useUser } from '@/lib/auth';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from '@repo/ui/hooks/use-toast';
@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
 export const useChangeUserPasswordForm = () => {
-  const { user } = useUser();
+  const { data: user } = useUser();
   const { mutate: changeUserPassword, isPending, error, isSuccess } = useChangePassword();
   const { toast } = useToast();
 

@@ -1,9 +1,7 @@
-import { assertAuthenticated } from '@/lib/session';
+import Dashboard from '@/app/(private)/dashboard/_components/Dashboard';
 
-const DashBoard = async () => {
-  const user = await assertAuthenticated();
-
-  return <div className="max-w-3xl text-wrap">{JSON.stringify(user)}</div>;
+const DashBoardPage = async () => {
+  return <Dashboard />;
 };
 
-export default DashBoard;
+export default DashBoardPage;

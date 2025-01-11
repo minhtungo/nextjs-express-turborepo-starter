@@ -5,7 +5,7 @@ services:
     env_file:
       - .env
     ports:
-      - 1026:1025
-      - 8026:8025
+      - 1027:1025
+      - 8027:8025
     volumes:
       - ../../docker-data/mailhog:/maildir

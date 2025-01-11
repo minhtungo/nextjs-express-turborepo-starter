@@ -72,7 +72,6 @@ const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceRe
       StatusCodes.OK
     );
   } catch (ex) {
-    console.log('signUp error', ex);
     return handleServiceError(ex as Error, 'Signing Up');
   }
 };
@@ -173,8 +172,6 @@ const forgotPassword = async (email: string): Promise<ServiceResponse<null>> => 
 const resetPassword = async (token: string, newPassword: string): Promise<ServiceResponse<null>> => {
   try {
     const existingToken = await authRepository.getResetPasswordTokenByToken(token);
-    console.log('token', token);
-    console.log('existingToken', existingToken);
     if (!existingToken || existingToken.expires < new Date()) {
       return ServiceResponse.failure('Invalid or expired token ', null, StatusCodes.UNAUTHORIZED);
     }
@@ -204,11 +201,7 @@ const verifyEmail = async (token: string): Promise<ServiceResponse<null>> => {
     }
 
     await createTransaction(async (trx) => {
-      const user = await userRepository.updateUser(
-        existingToken.userId,
-        { emailVerified: new Date(), plan: 'free' },
-        trx
-      );
+      await userRepository.updateUser(existingToken.userId, { emailVerified: new Date(), plan: 'free' }, trx);
 
       await authRepository.deleteVerificationToken(token, trx);
     });

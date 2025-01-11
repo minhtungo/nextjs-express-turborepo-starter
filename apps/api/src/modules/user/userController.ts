@@ -17,7 +17,6 @@ const getCurrentUser: RequestHandler = async (req, res) => {
 
 const updateUser: RequestHandler = async (req: Request, res: Response) => {
   const user = req.user;
-  console.log('updateUser', user);
   const data = updateProfileSchema.parse(req.body);
 
   if (!user) {
@@ -31,7 +30,6 @@ const updateUser: RequestHandler = async (req: Request, res: Response) => {
 
 const changePassword: RequestHandler = async (req: Request, res: Response) => {
   const user = req.user;
-  console.log('changePassword', user);
   if (!user) {
     return handleServiceResponse(ServiceResponse.failure('Authentication failed', null, StatusCodes.UNAUTHORIZED), res);
   }

@@ -66,7 +66,6 @@ export const api = {
     return fetchApi<T>(url, { ...options, method: 'GET' });
   },
   post<T>(url: string, body?: any, options?: RequestOptions): Promise<ApiResponse<T>> {
-    console.log('body', JSON.stringify(body, null, 2));
     return fetchApi<T>(url, { ...options, method: 'POST', body });
   },
   put<T>(url: string, body?: any, options?: RequestOptions): Promise<ApiResponse<T>> {

@@ -186,8 +186,6 @@ authRouter.get('/google/callback', (req: Request, res: Response, next: NextFunct
   const { state } = req.query;
   const { redirect } = JSON.parse(Buffer.from(state as string, 'base64').toString());
 
-  console.log('redirect', redirect);
-
   passport.authenticate('google', { session: true }, (error: any, user: Express.User | false) => {
     if (error || !user) {
       return res.redirect(`${env.APP_ORIGIN}/sign-in?error=${encodeURIComponent('Authentication failed')}`);

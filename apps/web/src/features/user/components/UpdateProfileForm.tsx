@@ -6,12 +6,12 @@ import { Input } from '@repo/ui/input';
 import { Label } from '@repo/ui/label';
 
 import LoaderButton from '@/components/LoaderButton';
-import { useUpdateUserForm } from '@/features/user/hooks/useUpdateUserForm';
+import { useUpdateProfileForm } from '@/features/user/hooks/useUpdateProfileForm';
 import { useUser } from '@/lib/auth';
 
 const UpdateProfileForm = () => {
   const { data: user } = useUser();
-  const { form, onSubmit, isPending } = useUpdateUserForm();
+  const { form, onSubmit, isPending } = useUpdateProfileForm();
 
   return (
     <Card className="w-full">

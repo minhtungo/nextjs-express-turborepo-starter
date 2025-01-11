@@ -16,7 +16,7 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps | null>(null);
 
-export const useUser = () => {
+export const useAuth = () => {
   const context = useContext(AuthContext);
 
   if (context === null) {

@@ -1,12 +1,12 @@
 import { apiPaths } from '@/config/paths';
 import { api } from '@/lib/api';
-import { ApiResponse } from '@repo/validation/api';
 import { SessionUser } from '@repo/validation/user';
 import { queryOptions, useQuery } from '@tanstack/react-query';
 
-export const getUser = async (): Promise<ApiResponse<SessionUser>> => {
+export const getUser = async (): Promise<SessionUser> => {
   const result = await api.get<SessionUser>(apiPaths.user.getCurrentUser);
-  return result;
+
+  return result.data;
 };
 
 export const userQueryKey = ['user'] as const;

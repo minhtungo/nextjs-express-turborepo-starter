@@ -7,7 +7,6 @@ import Link from 'next/link';
 
 const AuthButtons = () => {
   const { data: user } = useUser();
-  console.log('user', user);
 
   return (
     <div className="flex items-center gap-x-2">

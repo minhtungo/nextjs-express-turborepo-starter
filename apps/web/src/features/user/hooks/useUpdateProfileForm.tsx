@@ -1,5 +1,5 @@
-import { useUser } from '@/components/providers/AuthProvider';
 import { useUpdateProfile } from '@/features/user/api/updateProfile';
+import { useUser } from '@/lib/auth';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from '@repo/ui/hooks/use-toast';
@@ -7,8 +7,8 @@ import { updateProfileSchema } from '@repo/validation/user';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
-export const useUpdateUserForm = () => {
-  const { user } = useUser();
+export const useUpdateProfileForm = () => {
+  const { data: user } = useUser();
   const { mutate: updateUser, isPending, error, isSuccess } = useUpdateProfile();
 
   const form = useForm<z.infer<typeof updateProfileSchema>>({
