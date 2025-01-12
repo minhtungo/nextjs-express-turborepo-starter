@@ -5,7 +5,7 @@ import { ServiceResponse } from '@/common/models/serviceResponse';
 import { authRepository } from './authRepository';
 
 import { emailService } from '@/common/lib/emailService';
-import { logger } from '@/common/lib/logger';
+import { logger } from '@repo/logger';
 import { verifyPassword } from '@/common/lib/password';
 import { handleServiceError } from '@/common/lib/utils';
 import { userRepository } from '@/modules/user/userRepository';

@@ -1,5 +1,5 @@
 import { createSessionUserDTO } from '@/common/lib/dto';
-import { logger } from '@/common/lib/logger';
+import { logger } from '@repo/logger';
 import { authService } from '@/modules/auth/authService';
 import { userRepository } from '@/modules/user/userRepository';
 import type { SessionUser } from '@repo/validation/user';

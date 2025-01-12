@@ -9,7 +9,12 @@
     "dev": "turbo dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "type-check": "turbo type-check",
-    "clean": "turbo clean"
+    "clean": "turbo clean",
+    "db:up": "pnpm run --filter=@repo/database up",
+    "db:push": "pnpm run --filter=@repo/database push",
+    "db:pull": "pnpm run --filter=@repo/database pull",
+    "db:generate": "pnpm run --filter=@repo/database generate",
+    "db:studio": "pnpm run --filter=@repo/database studio"
   },
   "devDependencies": {
     "@changesets/changelog-github": "latest",

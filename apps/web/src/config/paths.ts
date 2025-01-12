@@ -4,9 +4,11 @@ export const paths = {
   },
   public: {
     pricing: {
+      title: 'Pricing',
       getHref: () => '/pricing',
     },
     contact: {
+      title: 'Contact',
       getHref: () => '/contact',
     },
   },

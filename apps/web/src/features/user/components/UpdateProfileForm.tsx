@@ -12,7 +12,7 @@ import { useUser } from '@/lib/auth';
 const UpdateProfileForm = () => {
   const { data: user } = useUser();
   const { form, onSubmit, isPending } = useUpdateProfileForm();
-
+  console.log('user', user);
   return (
     <Card className="w-full">
       <CardHeader className="mb-6">
@@ -24,7 +24,7 @@ const UpdateProfileForm = () => {
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label>Email</Label>
-                <Input placeholder="Email" value={user?.data?.email} disabled />
+                <Input placeholder="Email" defaultValue={user?.email} disabled />
               </div>
               <FormField
                 control={form.control}

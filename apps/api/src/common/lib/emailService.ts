@@ -1,8 +1,9 @@
-import { env } from "@/common/lib/env";
-import { logger } from "@/common/lib/logger";
-import { render } from "@repo/email";
-import { PasswordResetEmail, VerificationEmail } from "@repo/email/templates";
-import nodemailer from "nodemailer";
+import { env } from '@/common/lib/env';
+import { logger } from '@repo/logger';
+import { render } from '@repo/email';
+import { PasswordResetEmail } from '@repo/email/templates/PasswordResetEmail';
+import { VerificationEmail } from '@repo/email/templates/VerificationEmail';
+import nodemailer from 'nodemailer';
 
 // Configure MailHog transport
 const transporter = nodemailer.createTransport({
@@ -26,7 +27,7 @@ export const emailService = {
     try {
       const info = await transporter.sendMail({
         from: env.EMAIL_FROM,
-        to: Array.isArray(to) ? to.join(", ") : to,
+        to: Array.isArray(to) ? to.join(', ') : to,
         subject,
         html,
       });
@@ -35,7 +36,7 @@ export const emailService = {
 
       return { success: true, messageId: info.messageId };
     } catch (error) {
-      logger.error("Error sending email:", error);
+      logger.error('Error sending email:', error);
       throw error;
     }
   },
@@ -45,7 +46,7 @@ export const emailService = {
       await transporter.verify();
       return true;
     } catch (error) {
-      console.error("Error verifying email connection:", error);
+      console.error('Error verifying email connection:', error);
       return false;
     }
   },
@@ -55,11 +56,11 @@ export const emailService = {
       VerificationEmail({
         username,
         token,
-      }),
+      })
     );
     return this.sendEmail({
       to,
-      subject: "Verify Your Email Address",
+      subject: 'Verify Your Email Address',
       html,
     });
   },
@@ -69,11 +70,11 @@ export const emailService = {
       PasswordResetEmail({
         username,
         token,
-      }),
+      })
     );
     return this.sendEmail({
       to,
-      subject: "Reset Your Password",
+      subject: 'Reset Your Password',
       html,
     });
   },

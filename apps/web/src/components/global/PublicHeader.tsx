@@ -11,7 +11,7 @@ const PublicHeader = () => {
       <Container className="flex h-full w-full items-center gap-x-4 p-4">
         {Object.values(paths.public).map((link) => (
           <Link key={link.getHref()} href={link.getHref()}>
-            {link.getHref()}
+            {link.title}
           </Link>
         ))}
         <div className="ml-auto flex items-center gap-x-2">

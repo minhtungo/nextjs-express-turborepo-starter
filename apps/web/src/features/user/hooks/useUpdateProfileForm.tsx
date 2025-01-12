@@ -13,7 +13,7 @@ export const useUpdateProfileForm = () => {
 
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
-    defaultValues: {
+    values: {
       name: user?.name || '',
       image: user?.image || '',
     },

@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    ".": "./src/index.ts",
-    "./templates": "./src/emails/index.tsx"
+    "./templates/*": "./src/emails/*.tsx",
+    ".": "./src/index.ts"
   },
   "scripts": {
     "dev": "email dev -p 3002 --dir ./src/emails",

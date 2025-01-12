@@ -1,10 +1,12 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   typescript: {
     ignoreBuildErrors: true,
   },
+  serverExternalPackages: ['@repo/logger'],
+
   experimental: {
     authInterrupts: true,
   },
@@ -16,7 +18,7 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: "/api/:path*",
+        source: '/api/:path*',
         destination: `${process.env.EXTERNAL_SERVER_URL}/:path*`,
       },
     ];
