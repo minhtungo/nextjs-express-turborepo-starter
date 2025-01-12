@@ -7,6 +7,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./utils": "./src/utils.ts",
+    "./orm": "./src/orm.ts",
     "./schema/users": "./src/schema/users/index.ts",
     "./schema/accounts": "./src/schema/accounts/index.ts",
     "./schema/userSettings": "./src/schema/userSettings/index.ts",
@@ -34,7 +35,7 @@
     "@repo/tsconfig": "workspace:*",
     "@types/node": "22.10.5",
     "@types/pg": "^8.11.10",
-    "typescript": "^5.7.2",
+    "typescript": "^5.7.3",
     "drizzle-kit": "^0.30.1"
   }
 }

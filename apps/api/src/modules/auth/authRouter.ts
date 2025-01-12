@@ -3,7 +3,7 @@ import express, { type NextFunction, type Request, type Response, type Router } 
 import { z } from 'zod';
 
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
-import { authController } from '@/modules/auth/authController';
+import AuthController from '@/modules/auth/authController';
 
 import { handleServiceResponse, validateRequest } from '@/common/lib/httpHandlers';
 import { ServiceResponse } from '@/common/models/serviceResponse';
@@ -51,7 +51,7 @@ authRouter.post(
       next();
     })(req, res, next);
   },
-  authController.signIn
+  AuthController.signIn
 );
 
 authRegistry.registerPath({
@@ -70,7 +70,7 @@ authRegistry.registerPath({
   responses: createApiResponse(z.null(), 'Successfully signed up'),
 });
 
-authRouter.post('/sign-up', validateRequest(z.object({ body: signUpSchema })), authController.signUp);
+authRouter.post('/sign-up', validateRequest(z.object({ body: signUpSchema })), AuthController.signUp);
 
 authRegistry.registerPath({
   method: 'post',
@@ -91,7 +91,7 @@ authRegistry.registerPath({
 authRouter.post(
   '/reset-password',
   validateRequest(z.object({ body: resetPasswordSchema })),
-  authController.resetPassword
+  AuthController.resetPassword
 );
 
 authRegistry.registerPath({
@@ -113,7 +113,7 @@ authRegistry.registerPath({
 authRouter.post(
   '/forgot-password',
   validateRequest(z.object({ body: forgotPasswordSchema })),
-  authController.forgotPassword
+  AuthController.forgotPassword
 );
 
 authRegistry.registerPath({
@@ -132,7 +132,7 @@ authRegistry.registerPath({
   responses: createApiResponse(z.null(), 'Email verification successful'),
 });
 
-authRouter.post('/verify-email', validateRequest(z.object({ body: verifyEmailSchema })), authController.verifyEmail);
+authRouter.post('/verify-email', validateRequest(z.object({ body: verifyEmailSchema })), AuthController.verifyEmail);
 
 authRegistry.registerPath({
   method: 'post',
@@ -140,7 +140,7 @@ authRegistry.registerPath({
   tags: ['Auth'],
   responses: createApiResponse(z.null(), 'Successfully signed out'),
 });
-authRouter.post('/sign-out', authController.signOut);
+authRouter.post('/sign-out', AuthController.signOut);
 
 authRegistry.registerPath({
   method: 'post',
@@ -158,7 +158,7 @@ authRegistry.registerPath({
   responses: createApiResponse(z.string().nullable(), 'Success'),
 });
 
-authRouter.post('/send-verification-email', validateRequest(verifyEmailSchema), authController.sendVerificationEmail);
+authRouter.post('/send-verification-email', validateRequest(verifyEmailSchema), AuthController.sendVerificationEmail);
 
 authRegistry.registerPath({
   method: 'get',
@@ -166,7 +166,7 @@ authRegistry.registerPath({
   tags: ['Auth'],
   description: 'Initiate Google OAuth flow',
   responses: {
-    [StatusCodes.FOUND]: {
+    [StatusCodes.ACCEPTED]: {
       description: 'Redirect to Google OAuth',
     },
   },

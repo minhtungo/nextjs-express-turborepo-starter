@@ -5,8 +5,10 @@ import type { ZodError, ZodSchema } from 'zod';
 import { ServiceResponse } from '@/common/models/serviceResponse';
 
 export const handleServiceResponse = (serviceResponse: ServiceResponse<any>, response: Response) => {
-  return response.status(serviceResponse.statusCode).send(serviceResponse);
+  response.status(serviceResponse.statusCode).send(serviceResponse);
 };
+
+export type HandleServiceResponse = (serviceResponse: ServiceResponse<any>, response: Response) => Response;
 
 export const validateRequest = (schema: ZodSchema) => (req: Request, res: Response, next: NextFunction) => {
   try {

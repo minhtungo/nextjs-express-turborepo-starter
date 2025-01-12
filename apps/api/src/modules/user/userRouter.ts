@@ -3,7 +3,7 @@ import express, { type Router } from 'express';
 import { z } from 'zod';
 
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
-import { userController } from '@/modules/user/userController';
+import UserController from '@/modules/user/userController';
 import { UserSchema } from '@/modules/user/userModel';
 import { changeUserPasswordSchema, updateProfileSchema } from '@repo/validation/user';
 import { validateRequest } from '@/common/lib/httpHandlers';
@@ -20,7 +20,7 @@ userRegistry.registerPath({
   responses: createApiResponse(UserSchema, 'Returns current user information'),
 });
 
-userRouter.get('/me', userController.getCurrentUser);
+userRouter.get('/me', UserController.getCurrentUser);
 
 userRegistry.registerPath({
   method: 'patch',
@@ -38,7 +38,7 @@ userRegistry.registerPath({
   responses: createApiResponse(z.string(), 'User updated successfully'),
 });
 
-userRouter.patch('/me', validateRequest(z.object({ body: updateProfileSchema })), userController.updateUser);
+userRouter.patch('/me', validateRequest(z.object({ body: updateProfileSchema })), UserController.updateUser);
 
 userRegistry.registerPath({
   method: 'patch',
@@ -59,5 +59,5 @@ userRegistry.registerPath({
 userRouter.patch(
   '/me/change-password',
   validateRequest(z.object({ body: changeUserPasswordSchema })),
-  userController.changePassword
+  UserController.changePassword
 );

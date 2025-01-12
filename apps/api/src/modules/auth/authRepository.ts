@@ -1,12 +1,12 @@
 import { config } from '@/common/lib/config';
 import { generateToken } from '@/common/lib/token';
 import { db } from '@repo/database';
-import { accounts } from '@repo/database/schema/accounts';
+import { accounts, InsertAccount } from '@repo/database/schema/accounts';
 import { resetPasswordTokens } from '@repo/database/schema/resetPasswordTokens';
 import { twoFactorConfirmations } from '@repo/database/schema/twoFactorConfirmations';
 import { twoFactorTokens } from '@repo/database/schema/twoFactorTokens';
 import { verificationTokens } from '@repo/database/schema/verificationTokens';
-import { eq } from 'drizzle-orm';
+import { eq } from '@repo/database/orm';
 
 // Reset Password Token operations
 const createResetPasswordToken = async (userId: string) => {
@@ -137,7 +137,7 @@ const getPasswordResetTokenByToken = async (hashedToken: string) => {
   });
 };
 
-export const authRepository = {
+export default {
   createResetPasswordToken,
   getResetPasswordTokenByToken,
   deleteResetPasswordToken,
@@ -153,4 +153,4 @@ export const authRepository = {
   getVerificationTokenByUserId,
   deleteVerificationToken: deleteVerificationEmailToken,
   getPasswordResetTokenByToken,
-};
+} as const;

@@ -1,8 +1,7 @@
 import { createSessionUserDTO } from '@/common/lib/dto';
+import AuthService from '@/modules/auth/authService';
+import UserRepository from '@/modules/user/userRepository';
 import { logger } from '@repo/logger';
-import { authService } from '@/modules/auth/authService';
-import { userRepository } from '@/modules/user/userRepository';
-import type { SessionUser } from '@repo/validation/user';
 import passport from 'passport';
 import { type IStrategyOptionsWithRequest, Strategy } from 'passport-local';
 
@@ -18,7 +17,7 @@ passport.use(
     try {
       const { code } = req.body;
 
-      const result = await authService.authenticateUser(email, password, code);
+      const result = await AuthService.authenticateUser(email, password, code);
 
       if (!result.success) {
         return done(null, false, {
@@ -39,7 +38,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser(async (id: string, done) => {
-  const user = await userRepository.getUserById(id);
+  const user = await UserRepository.getUserById(id);
 
   if (!user) {
     return done(null, false);

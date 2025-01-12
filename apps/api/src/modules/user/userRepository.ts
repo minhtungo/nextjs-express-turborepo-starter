@@ -1,9 +1,8 @@
-import { hashPassword } from '@/common/lib/password';
 import { db } from '@repo/database';
-import { type InsertUser, type User, users } from '@repo/database/schema/users';
-import { type InsertUserSetting, userSettings } from '@repo/database/schema/userSettings';
-
-import { eq } from 'drizzle-orm';
+import { hashPassword } from '@/common/lib/password';
+import { eq } from '@repo/database/orm';
+import { InsertUser, users } from '@repo/database/schema/users';
+import { InsertUserSetting, userSettings } from '@repo/database/schema/userSettings';
 
 const createUser = async (data: InsertUser, trx: typeof db = db) => {
   const { password: plainPassword, ...rest } = data;
@@ -40,10 +39,6 @@ const getUserByEmail = async (email: string) => {
   });
 
   return user;
-};
-
-type UserColumns = {
-  [key in keyof User]?: boolean;
 };
 
 const getUserById = async (id: string) => {
@@ -87,7 +82,7 @@ const updatePassword = async ({
   await trx.update(users).set({ password: hashedPassword }).where(eq(users.id, userId));
 };
 
-export const userRepository = {
+export default {
   createUser,
   createUserSettings,
   getUserByEmail,
@@ -96,4 +91,4 @@ export const userRepository = {
   updateUser,
   updateUserSettings,
   updatePassword,
-};
+} as const;

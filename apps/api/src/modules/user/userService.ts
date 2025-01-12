@@ -1,14 +1,14 @@
 import { verifyPassword } from '@/common/lib/password';
 import { handleServiceError } from '@/common/lib/utils';
 import { ServiceResponse } from '@/common/models/serviceResponse';
-import { userRepository } from '@/modules/user/userRepository';
+import UserRepository from '@/modules/user/userRepository';
 import { db } from '@repo/database';
 import type { ChangeUserPassword, UpdateUser } from '@repo/validation/user';
 import { StatusCodes } from 'http-status-codes';
 
 const updateUser = async (userId: string, data: UpdateUser, trx: typeof db = db) => {
   try {
-    const user = await userRepository.updateUser(userId, data, trx);
+    const user = await UserRepository.updateUser(userId, data, trx);
 
     return ServiceResponse.success(
       'User updated',
@@ -24,7 +24,7 @@ const updateUser = async (userId: string, data: UpdateUser, trx: typeof db = db)
 
 const changePassword = async (userId: string, data: ChangeUserPassword) => {
   try {
-    const existingUser = await userRepository.getUserById(userId);
+    const existingUser = await UserRepository.getUserById(userId);
 
     if (!existingUser) {
       return ServiceResponse.failure('User not found', null, StatusCodes.NOT_FOUND);
@@ -42,7 +42,7 @@ const changePassword = async (userId: string, data: ChangeUserPassword) => {
       return ServiceResponse.failure('Invalid password', null, StatusCodes.UNAUTHORIZED);
     }
 
-    await userRepository.updatePassword({ userId, newPassword });
+    await UserRepository.updatePassword({ userId, newPassword });
 
     return ServiceResponse.success('Password changed successfully', null, StatusCodes.OK);
   } catch (error) {

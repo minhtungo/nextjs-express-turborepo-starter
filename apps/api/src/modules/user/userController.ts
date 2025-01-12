@@ -15,7 +15,7 @@ const getCurrentUser: RequestHandler = async (req, res) => {
   return handleServiceResponse(ServiceResponse.success('User retrieved successfully', req.user), res);
 };
 
-const updateUser: RequestHandler = async (req: Request, res: Response) => {
+const updateUser = async (req: Request, res: Response) => {
   const user = req.user;
   const data = updateProfileSchema.parse(req.body);
 
@@ -28,7 +28,7 @@ const updateUser: RequestHandler = async (req: Request, res: Response) => {
   return handleServiceResponse(serviceResponse, res);
 };
 
-const changePassword: RequestHandler = async (req: Request, res: Response) => {
+const changePassword = async (req: Request, res: Response) => {
   const user = req.user;
   if (!user) {
     return handleServiceResponse(ServiceResponse.failure('Authentication failed', null, StatusCodes.UNAUTHORIZED), res);
@@ -41,8 +41,8 @@ const changePassword: RequestHandler = async (req: Request, res: Response) => {
   return handleServiceResponse(serviceResponse, res);
 };
 
-export const userController: Record<string, RequestHandler> = {
+export default {
   getCurrentUser,
   updateUser,
   changePassword,
-};
+} as const;

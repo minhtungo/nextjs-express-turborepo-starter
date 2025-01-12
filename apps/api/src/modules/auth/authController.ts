@@ -1,17 +1,17 @@
-import type { RequestHandler } from 'express';
+import type { Request, Response } from 'express';
 
 import { handleServiceResponse } from '@/common/lib/httpHandlers';
-import { authService } from '@/modules/auth/authService';
+import AuthService from '@/modules/auth/authService';
 
 import { env } from '@/common/lib/env';
 import { ServiceResponse } from '@/common/models/serviceResponse';
 import type { signUpProps } from '@repo/validation/auth';
 import { StatusCodes } from 'http-status-codes';
 
-const signUp: RequestHandler = async (req, res) => {
+const signUp = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
 
-  const serviceResponse = await authService.signUp({
+  const serviceResponse = await AuthService.signUp({
     name,
     email,
     password,
@@ -20,12 +20,12 @@ const signUp: RequestHandler = async (req, res) => {
   return handleServiceResponse(serviceResponse, res);
 };
 
-const signIn: RequestHandler = async (req, res) => {
+const signIn = async (req: Request, res: Response) => {
   if (!req.user) {
     return handleServiceResponse(ServiceResponse.failure('Authentication failed', null, StatusCodes.UNAUTHORIZED), res);
   }
 
-  const sessionResult = await authService.createSession(req.user, req);
+  const sessionResult = await AuthService.createSession(req);
 
   if (!sessionResult.success) {
     return handleServiceResponse(sessionResult, res);
@@ -34,39 +34,39 @@ const signIn: RequestHandler = async (req, res) => {
   return handleServiceResponse(ServiceResponse.success('Successfully signed in', null), res);
 };
 
-const forgotPassword: RequestHandler = async (req, res) => {
+const forgotPassword = async (req: Request, res: Response) => {
   const { email } = req.body;
 
-  const serviceResponse = await authService.forgotPassword(email);
+  const serviceResponse = await AuthService.forgotPassword(email);
 
   return handleServiceResponse(serviceResponse, res);
 };
 
-const resetPassword: RequestHandler = async (req, res) => {
+const resetPassword = async (req: Request, res: Response) => {
   const { password, token } = req.body;
 
-  const serviceResponse = await authService.resetPassword(token, password);
+  const serviceResponse = await AuthService.resetPassword(token, password);
 
   return handleServiceResponse(serviceResponse, res);
 };
 
-const verifyEmail: RequestHandler = async (req, res) => {
+const verifyEmail = async (req: Request, res: Response) => {
   const { token } = req.body;
 
-  const serviceResponse = await authService.verifyEmail(token);
+  const serviceResponse = await AuthService.verifyEmail(token);
 
   return handleServiceResponse(serviceResponse, res);
 };
 
-const sendVerificationEmail: RequestHandler = async (req, res) => {
+const sendVerificationEmail = async (req: Request, res: Response) => {
   const { token } = req.body;
 
-  const serviceResponse = await authService.sendVerificationEmail(token);
+  const serviceResponse = await AuthService.sendVerificationEmail(token);
 
   return handleServiceResponse(serviceResponse, res);
 };
 
-const handleGoogleCallback: RequestHandler = async (req, res) => {
+const handleGoogleCallback = async (req: Request, res: Response) => {
   const user = req.user;
 
   if (!user) {
@@ -81,15 +81,15 @@ const handleGoogleCallback: RequestHandler = async (req, res) => {
   // );
 };
 
-const signOut: RequestHandler = async (req, res) => {
-  const result = await authService.destroySession(req);
+const signOut = async (req: Request, res: Response) => {
+  const result = await AuthService.destroySession(req);
   if (result.success) {
     res.clearCookie(env.SESSION_COOKIE_NAME);
   }
   return handleServiceResponse(result, res);
 };
 
-export const authController: Record<string, RequestHandler> = {
+export default {
   signUp,
   signIn,
   signOut,
@@ -98,4 +98,4 @@ export const authController: Record<string, RequestHandler> = {
   verifyEmail,
   sendVerificationEmail,
   handleGoogleCallback,
-};
+} as const;

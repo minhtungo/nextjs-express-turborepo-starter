@@ -1,10 +1,11 @@
 {
   "extends": "@repo/tsconfig/base.json",
   "compilerOptions": {
-    "outDir": "dist",
     "declaration": true,
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "moduleResolution": "node16",
+    "module": "Node16"
   },
   "include": ["src"],
   "exclude": ["node_modules"]
