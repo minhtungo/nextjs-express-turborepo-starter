@@ -4,7 +4,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "moduleResolution": "node16",
+    "module": "Node16"
   },
   "exclude": ["node_modules"]
 }
