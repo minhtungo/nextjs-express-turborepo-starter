@@ -2,13 +2,13 @@ import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express, { type NextFunction, type Request, type Response, type Router } from 'express';
 import { z } from 'zod';
 
-import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
-import AuthController from '@/modules/auth/authController';
+import { createApiResponse } from '@api/api-docs/openAPIResponseBuilders';
+import AuthController from '@api/modules/auth/authController';
 
-import { handleServiceResponse, validateRequest } from '@/common/lib/httpHandlers';
-import { ServiceResponse } from '@/common/models/serviceResponse';
+import { handleServiceResponse, validateRequest } from '@api/common/lib/httpHandlers';
+import { ServiceResponse } from '@api/common/models/serviceResponse';
 
-import { env } from '@/common/lib/env';
+import { env } from '@api/common/lib/env';
 import {
   forgotPasswordSchema,
   resetPasswordSchema,
