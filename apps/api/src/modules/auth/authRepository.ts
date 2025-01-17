@@ -1,5 +1,5 @@
-import { config } from '@/common/lib/config';
-import { generateToken } from '@/common/lib/token';
+import { config } from '@api/common/lib/config';
+import { generateToken } from '@api/common/lib/token';
 import { db } from '@repo/database';
 import { accounts, InsertAccount } from '@repo/database/schema/accounts';
 import { resetPasswordTokens } from '@repo/database/schema/resetPasswordTokens';

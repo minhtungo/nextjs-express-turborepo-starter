@@ -1,12 +1,13 @@
 import type { Request, Response } from 'express';
 
-import { handleServiceResponse } from '@/common/lib/httpHandlers';
-import AuthService from '@/modules/auth/authService';
+import { handleServiceResponse } from '@api/common/lib/httpHandlers';
+import AuthService from '@api/modules/auth/authService';
 
-import { env } from '@/common/lib/env';
-import { ServiceResponse } from '@/common/models/serviceResponse';
+import { env } from '@api/common/lib/env';
+import { ServiceResponse } from '@api/common/models/serviceResponse';
 import type { signUpProps } from '@repo/validation/auth';
 import { StatusCodes } from 'http-status-codes';
+import { SessionUser } from '@repo/validation/user';
 
 const signUp = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -25,7 +26,7 @@ const signIn = async (req: Request, res: Response) => {
     return handleServiceResponse(ServiceResponse.failure('Authentication failed', null, StatusCodes.UNAUTHORIZED), res);
   }
 
-  const sessionResult = await AuthService.createSession(req);
+  const sessionResult = await AuthService.createSession(req, req.user as SessionUser);
 
   if (!sessionResult.success) {
     return handleServiceResponse(sessionResult, res);

@@ -1,17 +1,17 @@
 import { StatusCodes } from 'http-status-codes';
 
-import { ServiceResponse } from '@/common/models/serviceResponse';
-import AuthRepository from '@/modules/auth/authRepository';
-import UserRepository from '@/modules/user/userRepository';
+import { ServiceResponse } from '@api/common/models/serviceResponse';
+import AuthRepository from '@api/modules/auth/authRepository';
+import UserRepository from '@api/modules/user/userRepository';
 
-import { emailService } from '@/common/lib/emailService';
-import { verifyPassword } from '@/common/lib/password';
-import { handleServiceError } from '@/common/lib/utils';
+import { emailService } from '@api/common/lib/emailService';
+import { verifyPassword } from '@api/common/lib/password';
+import { handleServiceError } from '@api/common/lib/utils';
 import { createTransaction } from '@repo/database/utils';
 import { logger } from '@repo/logger';
 import type { signUpProps } from '@repo/validation/auth';
 import type { SessionUser } from '@repo/validation/user';
-import { createSessionUserDTO } from '@/common/lib/dto';
+import { createSessionUserDTO } from '@api/common/lib/dto';
 
 const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceResponse<{ id: string } | null>> => {
   try {
