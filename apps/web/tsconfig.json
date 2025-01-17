@@ -9,30 +9,22 @@
     ],
     "baseUrl": "./",
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["./src/*"],
+      "@api/*": ["../api/src/*"]
     },
     "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "incremental": true,
     "resolveJsonModule": true,
     "allowJs": true,
     "jsx": "preserve"
   },
-  "include": [
-    "src",
-    "next.config.ts",
-    "next-env.d.ts",
-    ".next/types/**/*.ts"
+
+  "include": ["src", "next.config.ts", "next-env.d.ts", ".next/types/**/*.ts"],
+  "references": [
+    {
+      "path": "../api"
+    }
   ],
-  "exclude": [
-    "node_modules",
-    ".next",
-    "**/node_modules/*"
-  ]
+  "exclude": ["node_modules", ".next", "**/node_modules/*"]
 }

@@ -1,8 +1,7 @@
 import { apiPaths } from '@/config/paths';
 import { api } from '@/lib/api';
-import { userQueryKey } from '@/lib/auth';
+import { trpc } from '@/trpc/client';
 import { ApiResponse } from '@repo/validation/api';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const signOut = async (): Promise<ApiResponse> => {
   const response = await api.post(apiPaths.auth.signOut);
@@ -11,13 +10,11 @@ export const signOut = async (): Promise<ApiResponse> => {
 };
 
 export const useSignOut = ({ onSuccess }: { onSuccess?: () => void }) => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: signOut,
+  const utils = trpc.useUtils();
+
+  return trpc.auth.signOut.useMutation({
     onSuccess: () => {
-      queryClient.removeQueries({
-        queryKey: userQueryKey,
-      });
+      utils.user.me.invalidate();
       onSuccess?.();
     },
   });

@@ -1,7 +1,7 @@
-import { verifyPassword } from '@/common/lib/password';
-import { handleServiceError } from '@/common/lib/utils';
-import { ServiceResponse } from '@/common/models/serviceResponse';
-import UserRepository from '@/modules/user/userRepository';
+import { verifyPassword } from '@api/common/lib/password';
+import { handleServiceError } from '@api/common/lib/utils';
+import { ServiceResponse } from '@api/common/models/serviceResponse';
+import UserRepository from '@api/modules/user/userRepository';
 import { db } from '@repo/database';
 import type { ChangeUserPassword, UpdateUser } from '@repo/validation/user';
 import { StatusCodes } from 'http-status-codes';

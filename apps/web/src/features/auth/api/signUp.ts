@@ -1,9 +1,9 @@
-import { api } from '@/lib/api';
 import { apiPaths } from '@/config/paths';
+import { api } from '@/lib/api';
+import { trpc } from '@/trpc/client';
 import { ApiResponse } from '@repo/validation/api';
 import { signInProps, signUpSchema } from '@repo/validation/auth';
 import { SessionUser } from '@repo/validation/user';
-import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 
 export const signUpInputSchema = signUpSchema;
@@ -17,11 +17,8 @@ export const signUp = async (values: signInProps): Promise<ApiResponse<SessionUs
 };
 
 export const useSignUp = ({ onSuccess }: { onSuccess?: () => void }) => {
-  //   const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: signUp,
-    onSuccess: (result) => {
-      //   queryClient.setQueryData(userQueryKey, result.data);
+  return trpc.auth.signUp.useMutation({
+    onSuccess: () => {
       onSuccess?.();
     },
   });

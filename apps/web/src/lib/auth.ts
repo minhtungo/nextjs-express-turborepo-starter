@@ -1,5 +1,6 @@
 import { apiPaths } from '@/config/paths';
 import { api } from '@/lib/api';
+import { trpc } from '@/trpc/client';
 import { SessionUser } from '@repo/validation/user';
 import { queryOptions, useQuery } from '@tanstack/react-query';
 
@@ -18,7 +19,11 @@ export const getUserQueryOptions = () => {
   });
 };
 
-export const useUser = () => useQuery(getUserQueryOptions());
+// export const useUser = () => useQuery(getUserQueryOptions());
+
+export const useUser = () => {
+  return trpc.user.me.useQuery();
+};
 
 // export const useAuth = () => {
 //   const router = useRouter();

@@ -14,6 +14,7 @@
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "moduleResolution": "node16"
   }
 }

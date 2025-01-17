@@ -1,4 +1,4 @@
-import { env } from '@/common/lib/env';
+import { env } from '@api/common/lib/env';
 
 export const config = {
   sessionCookie: {

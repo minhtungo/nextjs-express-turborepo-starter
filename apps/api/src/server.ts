@@ -2,31 +2,29 @@ import cors from 'cors';
 import express, { type Express } from 'express';
 import helmet from 'helmet';
 
-import { openAPIRouter } from '@/api-docs/openAPIRouter';
-import { authRouter } from '@/modules/auth/authRouter';
-import '@/common/strategies/google';
-import '@/common/strategies/local';
-import { env } from '@/common/lib/env';
-import errorHandler from '@/middlewares/errorHandler';
-import { healthCheckRouter } from '@/modules/healthCheck/healthCheckRouter';
-import { userRouter } from '@/modules/user/userRouter';
+import { openAPIRouter } from '@api/api-docs/openAPIRouter';
+import { env } from '@api/common/lib/env';
+import '@api/common/strategies/google';
+import '@api/common/strategies/local';
+import errorHandler from '@api/middlewares/errorHandler';
 
-import notFoundHandler from '@/middlewares/notFoundHandler';
-import requestLogger from '@/middlewares/requestLogger';
+import notFoundHandler from '@api/middlewares/notFoundHandler';
+import requestLogger from '@api/middlewares/requestLogger';
 import { pool } from '@repo/database';
 import connectPgSimple from 'connect-pg-simple';
 import session from 'express-session';
 import passport from 'passport';
 
-import assertAuthenticated from '@/middlewares/assertAuthenticated';
-
-import rateLimiter from '@/middlewares/rateLimiter';
 import { v4 as uuidv4 } from 'uuid';
 
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
 
-import { config } from '@/common/lib/config';
+import { config } from '@api/common/lib/config';
+import rateLimiter from '@api/middlewares/rateLimiter';
+import { appRouter } from '@api/router';
+import * as trpcExpress from '@trpc/server/adapters/express';
+import { createContext } from './trpc';
 
 extendZodWithOpenApi(z);
 
@@ -85,10 +83,18 @@ app.use(passport.session());
 // Request logging
 app.use(requestLogger);
 
+app.use(
+  '/trpc',
+  trpcExpress.createExpressMiddleware({
+    router: appRouter,
+    createContext,
+  })
+);
+
 // Routes
-app.use('/health-check', healthCheckRouter);
-app.use('/auth', authRouter);
-app.use('/user', assertAuthenticated, userRouter);
+// app.use('/health-check', healthCheckRouter);
+// app.use('/auth', authRouter);
+// app.use('/user', assertAuthenticated, userRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

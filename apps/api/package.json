@@ -1,10 +1,13 @@
 {
-  "name": "api",
+  "name": "@repo/api",
   "version": "1.0.0",
   "description": "",
   "license": "MIT",
   "main": "index.ts",
   "private": true,
+  "exports": {
+    ".": "./src/router.ts"
+  },
   "scripts": {
     "dev": "tsx watch --clear-screen=false src/index.ts | pino-pretty",
     "build": "tsup",
@@ -22,6 +25,7 @@
     "@repo/database": "workspace:*",
     "@repo/email": "workspace:*",
     "@repo/logger": "workspace:*",
+    "@trpc/server": "11.0.0-rc.700",
     "argon2": "^0.41.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",

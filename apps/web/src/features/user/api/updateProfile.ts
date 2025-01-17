@@ -1,10 +1,8 @@
 import { apiPaths } from '@/config/paths';
 import { api } from '@/lib/api';
-import { useUser } from '@/lib/auth';
-import { MutationConfig } from '@/lib/react-query';
+import { ReactQueryOptions, trpc } from '@/trpc/client';
 import { ApiResponse } from '@repo/validation/api';
 import { updateProfileSchema } from '@repo/validation/user';
-import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 
 export const updateProfileInputSchema = updateProfileSchema;
@@ -21,20 +19,16 @@ export const updateProfile = async (
   return await api.patch(apiPaths.user.updateProfile, data);
 };
 
-type UseUpdateProfileOptions = {
-  mutationConfig?: MutationConfig<typeof updateProfile>;
-};
+type UpdateProfiledOptions = ReactQueryOptions['user']['updateProfile'];
 
-export const useUpdateProfile = ({ mutationConfig }: UseUpdateProfileOptions = {}) => {
-  const { refetch: refetchUser } = useUser();
-  const { onSuccess, ...restConfig } = mutationConfig || {};
+export const useUpdateProfile = (options?: UpdateProfiledOptions) => {
+  const utils = trpc.useUtils();
 
-  return useMutation({
-    onSuccess: (...args) => {
-      refetchUser();
-      onSuccess?.(...args);
+  return trpc.user.updateProfile.useMutation({
+    ...options,
+    onSuccess(data, variables, context) {
+      utils.user.me.invalidate();
+      options?.onSuccess?.(data, variables, context);
     },
-    ...restConfig,
-    mutationFn: updateProfile,
   });
 };

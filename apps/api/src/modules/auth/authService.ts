@@ -11,6 +11,7 @@ import { createTransaction } from '@repo/database/utils';
 import { logger } from '@repo/logger';
 import type { signUpProps } from '@repo/validation/auth';
 import type { SessionUser } from '@repo/validation/user';
+import { createSessionUserDTO } from '@/common/lib/dto';
 
 const signUp = async ({ email, name, password }: signUpProps): Promise<ServiceResponse<{ id: string } | null>> => {
   try {
@@ -79,8 +80,9 @@ const authenticateUser = async (
   email: string,
   password: string,
   code?: string
-): Promise<ServiceResponse<{ id: string } | null>> => {
+): Promise<ServiceResponse<SessionUser | null>> => {
   try {
+    console.log('authenticateUser', email, password, code);
     const user = await UserRepository.getUserByEmail(email);
 
     if (!user?.id || !user.password || !user.emailVerified) {
@@ -105,10 +107,7 @@ const authenticateUser = async (
     return ServiceResponse.success(
       'Sign in successfully',
       {
-        id: user.id,
-        email: user.email,
-        image: user.image,
-        name: user.name,
+        ...createSessionUserDTO(user),
       },
       StatusCodes.OK
     );
@@ -271,9 +270,8 @@ const getSession = async (user: Express.User | undefined): Promise<ServiceRespon
   );
 };
 
-const createSession = async (req: Express.Request): Promise<ServiceResponse<null>> => {
+const createSession = async (req: Express.Request, user: SessionUser): Promise<ServiceResponse<null>> => {
   try {
-    const user = req.user as SessionUser;
     await new Promise<void>((resolve, reject) => {
       req.login(user, (err) => {
         if (err) reject(err);

@@ -1,5 +1,5 @@
 import { logger } from '@repo/logger';
-import { ServiceResponse } from '@/common/models/serviceResponse';
+import { ServiceResponse } from '@api/common/models/serviceResponse';
 import { StatusCodes } from 'http-status-codes';
 
 export const handleServiceError = (error: Error, operation: string) => {

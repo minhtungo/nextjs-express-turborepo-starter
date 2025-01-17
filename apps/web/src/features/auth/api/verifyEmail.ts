@@ -1,8 +1,8 @@
-import { api } from '@/lib/api';
 import { apiPaths } from '@/config/paths';
+import { api } from '@/lib/api';
+import { trpc } from '@/trpc/client';
 import { ApiResponse } from '@repo/validation/api';
 import { verifyEmailProps } from '@repo/validation/auth';
-import { useMutation } from '@tanstack/react-query';
 
 export const verifyEmail = async (values: verifyEmailProps): Promise<ApiResponse> => {
   const response = await api.post(apiPaths.auth.verifyEmail, values);
@@ -11,8 +11,7 @@ export const verifyEmail = async (values: verifyEmailProps): Promise<ApiResponse
 };
 
 export const useVerifyEmail = ({ onSuccess }: { onSuccess?: () => void }) => {
-  return useMutation({
-    mutationFn: verifyEmail,
+  return trpc.auth.verifyEmail.useMutation({
     onSuccess: () => {
       onSuccess?.();
     },

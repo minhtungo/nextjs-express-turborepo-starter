@@ -1,11 +1,11 @@
 import type { Request, RequestHandler, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { handleServiceResponse } from '@/common/lib/httpHandlers';
-import { ServiceResponse } from '@/common/models/serviceResponse';
+import { handleServiceResponse } from '@api/common/lib/httpHandlers';
+import { ServiceResponse } from '@api/common/models/serviceResponse';
 import { changeUserPasswordSchema, updateProfileSchema } from '@repo/validation/user';
 
-import { userService } from '@/modules/user/userService';
+import { userService } from '@api/modules/user/userService';
 
 const getCurrentUser: RequestHandler = async (req, res) => {
   if (!req.user) {

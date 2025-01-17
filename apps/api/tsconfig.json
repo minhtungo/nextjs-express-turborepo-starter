@@ -5,10 +5,10 @@
     "types": ["vitest/globals"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@api/*": ["./src/*"]
     },
-    "jsx": "react-jsx",
-    "moduleResolution": "node16"
+    "moduleResolution": "node16",
+    "jsx": "react-jsx"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]

@@ -1,6 +1,6 @@
 import '@/assets/styles/globals.css';
-import { QueryClientProvider } from '@/components/providers/QueryClientProvider';
 import ThemeProvider from '@/components/providers/ThemeProvider';
+import { TRPCProvider } from '@/trpc/client';
 import '@repo/ui/styles.css';
 import type { Metadata } from 'next';
 
@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <ThemeProvider>
-          <QueryClientProvider>{children}</QueryClientProvider>
+          <TRPCProvider>{children}</TRPCProvider>
         </ThemeProvider>
       </body>
     </html>

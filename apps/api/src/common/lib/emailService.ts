@@ -1,4 +1,4 @@
-import { env } from '@/common/lib/env';
+import { env } from '@api/common/lib/env';
 import { logger } from '@repo/logger';
 import { render } from '@repo/email';
 import PasswordResetEmail from '@repo/email/templates/PasswordResetEmail';

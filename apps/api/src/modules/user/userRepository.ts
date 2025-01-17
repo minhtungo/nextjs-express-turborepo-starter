@@ -1,5 +1,5 @@
 import { db } from '@repo/database';
-import { hashPassword } from '@/common/lib/password';
+import { hashPassword } from '@api/common/lib/password';
 import { eq } from '@repo/database/orm';
 import { InsertUser, users } from '@repo/database/schema/users';
 import { InsertUserSetting, userSettings } from '@repo/database/schema/userSettings';

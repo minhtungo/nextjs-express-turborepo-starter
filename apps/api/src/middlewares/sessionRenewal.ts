@@ -1,5 +1,5 @@
-import { appConfig } from "@/common/config/config";
-import type { RequestHandler } from "express";
+import { appConfig } from '@api/common/config/config';
+import type { RequestHandler } from 'express';
 
 const sessionRenewal: RequestHandler = (req, res, next) => {
   if (!req.session) {

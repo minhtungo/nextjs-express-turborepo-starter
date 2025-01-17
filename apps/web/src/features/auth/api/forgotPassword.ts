@@ -1,8 +1,8 @@
 import { apiPaths } from '@/config/paths';
 import { api } from '@/lib/api';
+import { trpc } from '@/trpc/client';
 import { ApiResponse } from '@repo/validation/api';
 import { forgotPasswordProps } from '@repo/validation/auth';
-import { useMutation } from '@tanstack/react-query';
 
 export const forgotPassword = async (values: forgotPasswordProps): Promise<ApiResponse> => {
   const response = await api.post(apiPaths.auth.forgotPassword, values);
@@ -11,8 +11,7 @@ export const forgotPassword = async (values: forgotPasswordProps): Promise<ApiRe
 };
 
 export const useForgotPassword = ({ onSuccess }: { onSuccess?: () => void }) => {
-  return useMutation({
-    mutationFn: forgotPassword,
+  return trpc.auth.forgotPassword.useMutation({
     onSuccess: () => {
       onSuccess?.();
     },
